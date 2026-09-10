@@ -112,8 +112,9 @@ Mobile-first, named breakpoints only:
 - Fluid type via `clamp()`. Images `max-width:100%; height:auto`. No fixed-px containers. Touch targets ≥44px.
 - Test at 375px, 768px, 1440px, and one ultra-wide check.
 
-## 12. Design Tokens — STATUS: pending
-Working direction: dark, desaturated navy or graphite background, with a rich accent (Dark Amaranth `#840032` or Oxblood `#92140C`) reserved for tiny moments only — never a card background or large surface. Keep neutral/grayscale until fully confirmed.
+## 12. Design Tokens — STATUS: typeface confirmed, palette pending
+Typeface (confirmed 2026-09-10): Space Grotesk (headlines) / DM Sans (body/values) / Geist Pixel (micro-labels) — see `css/tokens.css`'s `--font-headline`/`--font-body`/`--font-label` and `docs/superpowers/specs/2026-09-10-typography-system-design.md`.
+Palette (still pending): working direction is a dark, desaturated navy or graphite background, with a rich accent (Dark Amaranth `#840032` or Oxblood `#92140C`) reserved for tiny moments only — never a card background or large surface. Keep neutral/grayscale until fully confirmed.
 
 ## 13. Quality Floor
 - Responsive down to mobile everywhere, including the intro, grid, rail/tab bar, prompt box.

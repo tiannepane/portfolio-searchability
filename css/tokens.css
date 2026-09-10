@@ -1,10 +1,11 @@
 /*
   css/tokens.css — design tokens.
 
-  STATUS: visual direction (palette, typeface) is still pending — CLAUDE.md §10.
-  Everything below is neutral/grayscale placeholder styling only, not a chosen
-  palette or typeface. Replace with real tokens once direction is confirmed;
-  nothing outside this file should hardcode a color or font (§12).
+  STATUS: typeface is confirmed (Space Grotesk / DM Sans / Geist Pixel, see
+  the font tokens below and docs/superpowers/specs/2026-09-10-typography-system-design.md).
+  Palette is still pending — colors below remain neutral/grayscale
+  placeholder styling only. Nothing outside this file should hardcode a
+  color or font (§12).
 
   Named breakpoints mirror CLAUDE.md §9. CSS custom properties can't be read
   inside @media conditions, so layout.css/components.css repeat these as
@@ -44,6 +45,15 @@
      bento card thumbnail) — grayscale (black + alpha), not a new hue. */
   --scrim: rgba(0, 0, 0, 0.65);
 
-  /* System font stack placeholder — not a chosen typeface, see status note above */
-  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Typeface system (CLAUDE.md §12 confirmed 2026-09-10 — see
+     docs/superpowers/specs/2026-09-10-typography-system-design.md).
+     Headline: Space Grotesk, weight 700 — H1s and every H2-equivalent
+     sub-headline. Body: DM Sans — paragraphs, ledes, metadata values,
+     UI chrome. Label: Geist Pixel, weight 400 (its only weight) —
+     short all-caps eyebrows/metadata labels only, never a value or a
+     sentence. Loaded via Google Fonts in every page's <head> — see any
+     page for the exact <link> tags. Palette (color) is still pending. */
+  --font-headline: "Space Grotesk", Georgia, serif;
+  --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-label: "Geist Pixel", var(--font-body);
 }
