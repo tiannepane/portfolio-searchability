@@ -395,32 +395,6 @@ p.case-study-callout {
   border-radius: 0;
 }
 
-/* Positioning-line diagram (Market Research). Fixed pixel size (not
-   width:100%) so its text never shrinks past legible on narrow screens —
-   .case-study-scroll handles the rest the same way it does for the wide
-   process-flow diagram above. Line/dots/text stay on tokens.css (black
-   line, gray dots, black sans-serif labels); the Intelkin point's fill
-   is the one deliberate accent color, reusing the same green already
-   introduced for the terminal card rather than adding a third one-off
-   hue — see that component's comment for the grayscale-exception note. */
-.positioning-line {
-  display: block;
-  width: 640px;
-  height: 140px;
-  /* reset.css caps every svg at max-width:100%, which would silently
-     shrink this back down to the column width (and its text past
-     legible) despite the fixed attributes above — same override
-     .case-study-scroll img already needs for the same reason. */
-  max-width: none;
-}
-
-.positioning-line-label {
-  font-family: var(--font-base);
-  font-size: 14px;
-  fill: var(--color-text);
-  text-anchor: middle;
-}
-
 /* Sub-beat: a smaller headline + one line + its own visual, nested under a
    section's main lede (e.g. the three "How It Works" steps). */
 .case-study-subbeat {

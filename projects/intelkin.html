@@ -69,37 +69,28 @@
       <p>Retention tools and pre-launch testing solve different problems, but they share one requirement: something has to actually ship before either produces an answer.</p>
 
       <div class="case-study-scroll">
-        <svg
-          class="positioning-line"
-          width="640" height="140" viewBox="0 0 640 140"
-          role="img"
-          aria-label="Positioning line, left to right: Churnkey and ChurnZero act after it happens; A/B testing acts after it ships; Intelkin acts before it ships"
-        >
-          <line x1="50" y1="70" x2="598" y2="70" stroke="var(--color-text)" stroke-width="2" />
-          <polygon points="598,61 620,70 598,79" fill="var(--color-text)" />
-
-          <circle cx="110" cy="70" r="7" fill="var(--color-text-muted)" />
-          <text class="positioning-line-label" x="110" y="42">After it happens</text>
-          <text class="positioning-line-label" x="110" y="104">Churnkey / ChurnZero</text>
-
-          <circle cx="350" cy="70" r="7" fill="var(--color-text-muted)" />
-          <text class="positioning-line-label" x="350" y="42">After it ships</text>
-          <text class="positioning-line-label" x="350" y="104">A/B testing</text>
-
-          <circle cx="560" cy="70" r="7" fill="#27c93f" />
-          <text class="positioning-line-label" x="560" y="42">Before it ships</text>
-          <text class="positioning-line-label" x="560" y="104">Intelkin</text>
-        </svg>
+        <img
+          src="/assets/images/intelkin-marketresearch.jpg"
+          alt="Positioning line, left to right: Churnkey and ChurnZero act after it happens; A/B testing acts after it ships; Intelkin acts before it ships"
+        />
       </div>
 
-      <h3>Reactive Retention Tools</h3>
-      <p>Churnkey and ChurnZero are both built on data from customers already using the product: cancellation sessions, billing events, usage and onboarding patterns. Churnkey's own Intelligence Suite is powered by examining tens of millions of cancellation sessions and 500 million billing events. That's real signal, but it only exists after a customer has already lived through whatever's driving them to leave.</p>
+      <div class="intelkin-columns intelkin-columns--3">
+        <div class="intelkin-column">
+          <h3>Reactive Retention Tools</h3>
+          <p>Churnkey and ChurnZero are both built on data from customers already using the product: cancellation sessions, billing events, usage and onboarding patterns. Churnkey's own Intelligence Suite is powered by examining tens of millions of cancellation sessions and 500 million billing events. That's real signal, but it only exists after a customer has already lived through whatever's driving them to leave.</p>
+        </div>
 
-      <h3>A/B Testing &amp; Sampling</h3>
-      <p>The current alternative to waiting for churn data is testing a change with a smaller group of real customers before a full rollout. Faster than waiting for churn patterns to emerge at scale, but it still means shipping to real people and waiting for real usage to accumulate before there's an answer.</p>
+        <div class="intelkin-column">
+          <h3>A/B Testing &amp; Sampling</h3>
+          <p>The current alternative to waiting for churn data is testing a change with a smaller group of real customers before a full rollout. Faster than waiting for churn patterns to emerge at scale, but it still means shipping to real people and waiting for real usage to accumulate before there's an answer.</p>
+        </div>
 
-      <h3>Intelkin</h3>
-      <p>Runs the design through a predictive model before either of those has to happen. No customer has to churn, get sampled into a test, or use the product at all for the read to exist.</p>
+        <div class="intelkin-column">
+          <h3>Intelkin</h3>
+          <p>Runs the design through a predictive model before either of those has to happen. No customer has to churn, get sampled into a test, or use the product at all for the read to exist.</p>
+        </div>
+      </div>
     </section>
 
     <section class="case-study-section">
@@ -115,19 +106,21 @@
     <section class="case-study-section">
       <h2>Key Friction Points Found</h2>
 
-      <div class="friction-point">
-        <h3>Confirmation Gap<span class="friction-meta">Amygdala: High Risk → Low Risk</span></h3>
-        <p>A checkmark only confirmed a file had arrived, not that anything in it was understood; naming exactly what the Vision, Document, and Audio agents extracted turned that uncertainty into visible progress.</p>
-      </div>
+      <div class="intelkin-columns intelkin-columns--3">
+        <div class="friction-point">
+          <h3>Confirmation Gap<span class="friction-meta">Amygdala: High Risk → Low Risk</span></h3>
+          <p>A checkmark only confirmed a file had arrived, not that anything in it was understood; naming exactly what the Vision, Document, and Audio agents extracted turned that uncertainty into visible progress.</p>
+        </div>
 
-      <div class="friction-point">
-        <h3>Context Void<span class="friction-meta">Visual Cortex: Medium Risk → Low Risk</span></h3>
-        <p>"Connect your building data" gave the user nothing to anchor to, so naming the actual building up front removes that scanning effort before a single file gets uploaded.</p>
-      </div>
+        <div class="friction-point">
+          <h3>Context Void<span class="friction-meta">Visual Cortex: Medium Risk → Low Risk</span></h3>
+          <p>"Connect your building data" gave the user nothing to anchor to, so naming the actual building up front removes that scanning effort before a single file gets uploaded.</p>
+        </div>
 
-      <div class="friction-point">
-        <h3>Unscoped Commitment<span class="friction-meta">Prefrontal Cortex: Medium Risk → Low Risk</span></h3>
-        <p>Nothing signaled how much was left, so a visible step count turns an unbounded task into a scoped one.</p>
+        <div class="friction-point">
+          <h3>Unscoped Commitment<span class="friction-meta">Prefrontal Cortex: Medium Risk → Low Risk</span></h3>
+          <p>Nothing signaled how much was left, so a visible step count turns an unbounded task into a scoped one.</p>
+        </div>
       </div>
     </section>
 
@@ -213,12 +206,12 @@
       <h2>Where It Is Now</h2>
       <p>Still a prototype, in two pieces. A clickable version shows what it looks like end to end, though it's a UI shell only. Nothing in the demo calls Tribe V2 live yet.</p>
 
-      <div class="media-placeholder" role="img" aria-label="GIF — clickable prototype thumbnail pending">
-        GIF placeholder: clickable prototype thumbnail pending
-      </div>
+      <figure class="case-study-figure">
+        <img src="/assets/images/intelkin-landing.gif" alt="Intelkin's prototype landing screen — 'Read the signal, not the survey,' a funnel diagram showing visual-hierarchy and trust-signal drop-off, and a Start a Neural Audit button" />
+      </figure>
 
       <p>
-        <!-- TODO: paste actual URL --><a href="#">View the prototype →</a>
+        <a href="https://intelkin-neural-audit.vercel.app/">View the prototype →</a>
       </p>
 
       <div
@@ -256,14 +249,16 @@
       <h2>Reflection</h2>
       <h3>What I Learned</h3>
 
-      <div class="reflection-item">
-        <h4>Being too close to your own product is real</h4>
-        <p>Proximity is a blind spot, not just a figure of speech. A team staring at the same screens for weeks stops seeing them clearly. That gap is the actual reason this tool needed to exist.</p>
-      </div>
+      <div class="intelkin-columns intelkin-columns--2">
+        <div class="reflection-item">
+          <h4>Being too close to your own product is real</h4>
+          <p>Proximity is a blind spot, not just a figure of speech. A team staring at the same screens for weeks stops seeing them clearly. That gap is the actual reason this tool needed to exist.</p>
+        </div>
 
-      <div class="reflection-item">
-        <h4>Interpretation is the actual product</h4>
-        <p>The model doing the prediction turned out to be the easy part. Reading the brain-region output by hand is the real bottleneck right now, which is why automating that with Claude Vision matters more than the model itself did.</p>
+        <div class="reflection-item">
+          <h4>Interpretation is the actual product</h4>
+          <p>The model doing the prediction turned out to be the easy part. Reading the brain-region output by hand is the real bottleneck right now, which is why automating that with Claude Vision matters more than the model itself did.</p>
+        </div>
       </div>
     </section>
 
