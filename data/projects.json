@@ -28,12 +28,14 @@
     "title": "Intelkin",
     "category": "Projects",
     "size": "md",
-    "summary": "[NEEDS REAL CONTENT]",
+    "summary": "A tool that uses neuroscience to predict how the brain responds to a design before anyone sees it, catching churn risk before launch instead of after.",
     "previewPrompt": "Tell me about Intelkin.",
-    "tags": ["[NEEDS REAL CONTENT]"],
-    "narrative": "[NEEDS REAL CONTENT]",
+    "tags": ["User Research", "Prototyping", "AI Integration", "Neuroscience", "Claude API"],
+    "narrative": "Every retention tool on the market today is reactive — it watches what customers do after a feature ships, then reacts once the churn has already happened. I built Intelkin to move that read earlier: it runs a design through Tribe V2, Meta's brain-response model, before any real customer sees it, and returns which cognitive regions are overloaded and where. I dogfooded it on our own Recollab investor demo and it caught three friction points our team had gone blind to after six weeks staring at the same screens — that's the actual argument for the tool, not just the pitch. I'm upfront about the trade-off: it's predicting a general research population's brain responses, not Recollab's specific users, so it's a fast pre-launch signal, not a replacement for testing with real people. It's still a two-piece prototype (a clickable UI shell plus a working terminal pipeline) — the model itself turned out to be the easy part; reading its brain-region output by hand is the real bottleneck, which is why automating that with Claude Vision is the next step, not the model.",
     "links": { "caseStudy": "/projects/intelkin.html" },
-    "images": []
+    "images": [],
+    "thumbnail": "/assets/images/intelkin-thumbnail.gif",
+    "thumbnailPoster": "/assets/images/intelkin-thumbnail-poster.jpg"
   },
   {
     "id": "contact-support-ai",

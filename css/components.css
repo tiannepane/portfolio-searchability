@@ -355,6 +355,10 @@
   border-radius: var(--radius);
   background: var(--color-surface);
   transition: border-color 0.15s ease;
+  /* Inert for cards with no thumbnail — just gives .bento-card-thumb and
+     the has-thumbnail scrim below a positioning/clipping context. */
+  position: relative;
+  overflow: hidden;
 }
 
 .bento-card-link:hover {
@@ -371,6 +375,37 @@
 .bento-card-title {
   font-size: 1.125rem;
   font-weight: 600;
+}
+
+/* Card thumbnail (real project preview, once one exists — e.g. Intelkin).
+   Cards without a thumbnail are unaffected. */
+.bento-card-thumb {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bento-card.has-thumbnail .bento-card-link {
+  background: var(--color-text); /* dark fallback while the image loads */
+}
+
+.bento-card.has-thumbnail .bento-card-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to top, var(--scrim), transparent 65%);
+}
+
+.bento-card.has-thumbnail .bento-card-category,
+.bento-card.has-thumbnail .bento-card-title,
+.bento-card.has-thumbnail .bento-card-hint {
+  position: relative;
+  z-index: 2;
+  color: var(--color-bg);
 }
 
 /* Two-step tap preview state (touch devices only, see js/home.js §5).
@@ -441,6 +476,7 @@
 .chat-toggle:focus-visible,
 .tianne-panel-close:focus-visible,
 .tianne-panel-links a:focus-visible,
+.case-study-section a:focus-visible,
 .resume-download:focus-visible {
   outline: 2px solid var(--color-text);
   outline-offset: 2px;

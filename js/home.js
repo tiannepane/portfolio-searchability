@@ -29,6 +29,7 @@
   function createCard(project) {
     const article = document.createElement('article');
     article.className = `bento-card size-${project.size || 'sm'}`;
+    if (project.thumbnail) article.classList.add('has-thumbnail');
     article.dataset.category = project.category;
     article.dataset.projectId = project.id;
     article.dataset.previewed = 'false';
@@ -37,6 +38,16 @@
     link.className = 'bento-card-link';
     link.href = (project.links && project.links.caseStudy) || '#';
     link.setAttribute('aria-label', `${project.title} — ${project.category}`);
+
+    if (project.thumbnail) {
+      const thumb = document.createElement('img');
+      thumb.className = 'bento-card-thumb';
+      thumb.alt = ''; // decorative — the link's aria-label already names the project
+      // Respect prefers-reduced-motion: a still frame instead of an animated gif.
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      thumb.src = reduceMotion && project.thumbnailPoster ? project.thumbnailPoster : project.thumbnail;
+      link.append(thumb);
+    }
 
     const category = document.createElement('span');
     category.className = 'bento-card-category';

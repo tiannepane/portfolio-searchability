@@ -204,6 +204,452 @@ body {
   text-decoration: underline;
 }
 
+/* --- Richer case-study content patterns (used where a real writeup exists,
+   e.g. projects/intelkin.html — the generic lorem template above still
+   covers pages without one). --- */
+.case-study-eyebrow {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  margin-top: var(--space-2);
+}
+
+/* Hero image/gif — shows the animated version by default, swaps to a
+   static poster frame under prefers-reduced-motion (Quality Floor, §11). */
+.case-study-hero {
+  margin-bottom: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.case-study-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Ties .case-study-hero img's specificity (class+element) so this actually
+   wins instead of losing the cascade to the rule above. */
+img.case-study-hero-static {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  img.case-study-hero-motion {
+    display: none;
+  }
+
+  img.case-study-hero-static {
+    display: block;
+  }
+}
+
+.case-study-section h3 {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+  font-size: 1.0625rem;
+  color: var(--color-text);
+}
+
+.case-study-section h4 {
+  margin-bottom: var(--space-1);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.case-study-section a {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+p.case-study-lede {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
+}
+
+.case-study-meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.case-study-meta div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.case-study-meta dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.case-study-meta dd {
+  color: var(--color-text);
+}
+
+/* Generous variant for the hero role/timeline/team/skills/tech-stack
+   block specifically — bigger padding, bigger radius, roomier gaps. The
+   "How It Works" tech mini-table further down the page reuses the base
+   .case-study-meta above unchanged. */
+.case-study-meta.case-study-meta--hero {
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+}
+
+.friction-point {
+  margin-bottom: var(--space-4);
+}
+
+.friction-point h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-1);
+}
+
+.friction-meta {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.case-study-quote {
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  border-left: 3px solid var(--color-border);
+}
+
+.case-study-quote p {
+  color: var(--color-text);
+}
+
+.case-study-quote cite {
+  display: block;
+  margin-top: var(--space-2);
+  font-style: normal;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+p.case-study-callout {
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+}
+
+.case-study-artifacts {
+  font-style: italic;
+}
+
+.reflection-item {
+  margin-bottom: var(--space-4);
+}
+
+/* Real image + caption — once a real asset replaces a media-placeholder
+   (e.g. the Intelkin research moodboard). */
+.case-study-figure {
+  margin: 0 0 var(--space-5);
+}
+
+.case-study-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
+.case-study-figure figcaption {
+  margin-top: var(--space-2);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+/* A wide diagram that doesn't fit the column at a legible size (e.g. a
+   long linear flowchart) scrolls horizontally instead of shrinking past
+   readability — CLAUDE.md §9's "wide content scrolls in its own
+   container" rule, applied to an image instead of a table/code block. */
+.case-study-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.case-study-scroll img {
+  display: block;
+  width: auto;
+  height: 130px;
+  max-width: none;
+  border: none;
+  border-radius: 0;
+}
+
+/* Positioning-line diagram (Market Research). Fixed pixel size (not
+   width:100%) so its text never shrinks past legible on narrow screens —
+   .case-study-scroll handles the rest the same way it does for the wide
+   process-flow diagram above. Line/dots/text stay on tokens.css (black
+   line, gray dots, black sans-serif labels); the Intelkin point's fill
+   is the one deliberate accent color, reusing the same green already
+   introduced for the terminal card rather than adding a third one-off
+   hue — see that component's comment for the grayscale-exception note. */
+.positioning-line {
+  display: block;
+  width: 640px;
+  height: 140px;
+  /* reset.css caps every svg at max-width:100%, which would silently
+     shrink this back down to the column width (and its text past
+     legible) despite the fixed attributes above — same override
+     .case-study-scroll img already needs for the same reason. */
+  max-width: none;
+}
+
+.positioning-line-label {
+  font-family: var(--font-base);
+  font-size: 14px;
+  fill: var(--color-text);
+  text-anchor: middle;
+}
+
+/* Sub-beat: a smaller headline + one line + its own visual, nested under a
+   section's main lede (e.g. the three "How It Works" steps). */
+.case-study-subbeat {
+  margin-bottom: var(--space-5);
+}
+
+.case-study-subbeat h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-2);
+}
+
+/* Light laptop-frame mockup for step gifs whose UI content is dark —
+   a dark bezel would let the gif's own edges disappear into it, so the
+   frame is deliberately light regardless of the gif inside it. Front-on
+   view: bezel (with a centered camera dot) around the screen, a flat
+   base bar with a trackpad notch underneath. Reused as-is everywhere a
+   dark-UI step gif needs one, so a set of them reads as one consistent
+   device rather than three different mockups. */
+.laptop-frame {
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-3) 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.laptop-frame-camera {
+  display: block;
+  width: 6px;
+  height: 6px;
+  margin: 0 auto var(--space-2);
+  border-radius: 50%;
+  background: var(--color-text-muted);
+}
+
+.laptop-frame-screen {
+  overflow: hidden;
+  border: 1px solid var(--color-text);
+  border-radius: calc(var(--radius) / 2);
+}
+
+.laptop-frame-screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.laptop-frame-base {
+  position: relative;
+  height: 14px;
+  margin-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.laptop-frame-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 56px;
+  height: 4px;
+  transform: translateX(-50%);
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: var(--color-border);
+}
+
+@media (min-width: 480px) {
+  .case-study-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --- Terminal-style repo card ("Where It Is Now", projects/intelkin.html)
+   Deliberate, scoped exception to CLAUDE.md §10's grayscale-only status:
+   this recreates a real terminal window (macOS traffic-light dots, ANSI
+   syntax-highlight colors), so it needs real colors to read as an
+   authentic terminal rather than site chrome — the same reasoning that
+   already let the Intelkin product screenshots/gifs stay full-color.
+   Nothing here feeds into or changes the site's still-pending palette;
+   every other component still routes through tokens.css exclusively.
+   Values match a prototyped reference build exactly. Click/Enter-to-open
+   behavior lives in js/intelkin-terminal.js (page-specific, not shared). */
+.terminal-card {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 0 var(--space-3);
+  border-radius: 10px;
+  background: #0d0d0f;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  animation: terminal-pulse-glow 3.2s ease-in-out infinite;
+}
+
+.terminal-card:hover,
+.terminal-card:focus-visible {
+  outline: none;
+  transform: translateY(-2px);
+  /* !important: the resting-state pulse (terminal-pulse-glow) keeps
+     animating box-shadow at CSS Animation priority, which otherwise
+     outranks this plain rule and fights it every cycle — matches the
+     reference build's own fix for the same conflict. */
+  box-shadow:
+    0 0 0 1px #4a4a4e,
+    0 0 32px rgba(95, 217, 122, 0.24),
+    0 6px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+@keyframes terminal-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 1px #2a2a2e, 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px #3a3a3e,
+      0 0 26px rgba(95, 217, 122, 0.16),
+      0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.terminal-card-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #1c1c1e;
+  border-bottom: 1px solid #2a2a2c;
+}
+
+.terminal-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.terminal-dot--red {
+  background: #ff5f56;
+}
+
+.terminal-dot--yellow {
+  background: #ffbd2e;
+}
+
+.terminal-dot--green {
+  background: #27c93f;
+}
+
+.terminal-card-titletext {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #6f6f74;
+}
+
+.terminal-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 18px;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.terminal-line--cursor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.terminal-prompt {
+  color: #5fd97a;
+}
+
+.terminal-dir {
+  color: #8ab4ff;
+}
+
+.terminal-git {
+  color: #6f6f74;
+}
+
+.terminal-branch {
+  color: #ffbd2e;
+}
+
+.terminal-cmd {
+  color: #e8e8e8;
+}
+
+.terminal-output {
+  color: #7d7d82;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #e8e8e8;
+  animation: terminal-blink 1s steps(1) infinite;
+}
+
+@keyframes terminal-blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.terminal-hint {
+  margin: var(--space-2) 0 var(--space-4);
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  animation: terminal-blink 2.4s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-card,
+  .terminal-cursor,
+  .terminal-hint {
+    animation: none;
+  }
+}
+
 /* --- Media placeholder (used on case-study + fun pages until real
    images exist, CLAUDE.md §8) --- */
 .media-placeholder {

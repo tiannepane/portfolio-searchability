@@ -28,6 +28,10 @@
 
   /* Shape */
   --radius: 8px;
+  /* Larger radius for a more generous card treatment (e.g. the Intelkin
+     hero metadata block) — kept separate from --radius so it doesn't
+     cascade into every other bordered box site-wide. */
+  --radius-lg: 12px;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
 
   /* Neutral/grayscale placeholder palette — not final, see status note above */
@@ -36,6 +40,9 @@
   --color-border: #d4d4d8;
   --color-text: #18181b;
   --color-text-muted: #71717a;
+  /* Dark overlay for text legibility over a background image/gif (e.g. a
+     bento card thumbnail) — grayscale (black + alpha), not a new hue. */
+  --scrim: rgba(0, 0, 0, 0.65);
 
   /* System font stack placeholder — not a chosen typeface, see status note above */
   --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
