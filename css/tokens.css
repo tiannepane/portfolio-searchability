@@ -1,11 +1,12 @@
 /*
   css/tokens.css — design tokens.
 
-  STATUS: typeface is confirmed (Space Grotesk / DM Sans / Geist Pixel, see
-  the font tokens below and docs/superpowers/specs/2026-09-10-typography-system-design.md).
-  Palette is still pending — colors below remain neutral/grayscale
-  placeholder styling only. Nothing outside this file should hardcode a
-  color or font (§12).
+  STATUS: typeface + accent confirmed (Space Grotesk / DM Sans / Geist
+  Pixel; Oxblood accent — see the font/color tokens below and
+  docs/superpowers/specs/2026-09-10-typography-system-design.md).
+  Background is still pending — colors below remain neutral/grayscale
+  placeholder styling only there. Nothing outside this file should
+  hardcode a color or font (§12).
 
   Named breakpoints mirror CLAUDE.md §9. CSS custom properties can't be read
   inside @media conditions, so layout.css/components.css repeat these as
@@ -41,13 +42,11 @@
   --color-border: #d4d4d8;
   --color-text: #18181b;
   --color-text-muted: #71717a;
-  /* Dark overlay for text legibility over a background image/gif (e.g. a
-     bento card thumbnail) — grayscale (black + alpha), not a new hue. */
-  --scrim: rgba(0, 0, 0, 0.65);
-
   /* Accent (confirmed 2026-09-10, CLAUDE.md §12) — the first real accent
-     color in this codebase. Oxblood. Used sparingly: the homepage grid's
-     "View case study" pill only, not a card background or large surface. */
+     color in this codebase. Oxblood. Not currently rendered anywhere (its
+     one usage, the homepage grid's case-study pill, was removed the same
+     day per a design change) — reserved for tiny moments only, never a
+     card background or large surface. */
   --color-accent: #92140C;
   --color-accent-text: #ffffff;
 
@@ -58,7 +57,8 @@
      UI chrome. Label: Geist Pixel, weight 400 (its only weight) —
      short all-caps eyebrows/metadata labels only, never a value or a
      sentence. Loaded via Google Fonts in every page's <head> — see any
-     page for the exact <link> tags. Palette (color) is still pending. */
+     page for the exact <link> tags. Background color is still pending,
+     see the STATUS comment at the top of this file. */
   --font-headline: "Space Grotesk", Georgia, serif;
   --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-label: "Geist Pixel", var(--font-body);

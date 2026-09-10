@@ -88,7 +88,7 @@ portfolio/
 - **Carbon 6** — Contact Support Redesigned with AI
 - **Contract** (paid contract work, not a full-time employer) — River AI, an external product with its own site — the card links straight out (`links.external`) instead of to an in-site case study, and its thumbnail is a video (`thumbnailType: "video"`, source under `assets/video/`) rather than an image/gif.
 
-Each `projects.json` entry: `id`, title, category, one-line summary, a "how I think about it" narrative, links, images, and structured tags:
+Each `projects.json` entry: `id`, title, category, one-line summary, a `tagline` (short, for the homepage card), `status`/`year` (both `[NEEDS CONTENT]` until confirmed — not one project has a real one yet), a "how I think about it" narrative, links, images, and structured tags. `size` still exists on every entry but nothing reads it since the homepage grid moved to independent-height masonry (2026-09-10) — kept in the data in case it's meaningful again later.
 ```json
 "tags": {
   "domain": ["LLM", "agentic systems"],

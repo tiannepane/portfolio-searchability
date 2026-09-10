@@ -28,6 +28,8 @@
 
   function createCard(project) {
     const article = document.createElement('article');
+    // size-* is kept for data completeness but nothing in CSS reads it —
+    // the grid moved to independent-height masonry (2026-09-10).
     article.className = `bento-card size-${project.size || 'sm'}`;
     article.dataset.category = project.category;
     article.dataset.projectId = project.id;
@@ -63,6 +65,11 @@
         thumb.playsInline = true;
         thumb.setAttribute('aria-hidden', 'true'); // decorative — the link's aria-label already names the project
         thumb.src = project.thumbnail;
+        // Gives the element a real intrinsic size immediately (avoiding
+        // the browser's 300x150 video default, and the layout shift that
+        // causes in a masonry column) and shows a correct still frame if
+        // the video is slow to load or fails.
+        if (project.thumbnailPoster) thumb.poster = project.thumbnailPoster;
         thumbWrap.append(thumb);
       } else {
         const thumb = document.createElement('img');
@@ -85,7 +92,7 @@
     const caption = document.createElement('div');
     caption.className = 'bento-card-caption';
 
-    const tagline = document.createElement('p');
+    const tagline = document.createElement('h3');
     tagline.className = 'bento-card-tagline';
     tagline.textContent = project.tagline;
 

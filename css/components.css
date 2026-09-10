@@ -265,6 +265,7 @@
 }
 
 .bento-card {
+  -webkit-column-break-inside: avoid;
   break-inside: avoid;
   margin-bottom: var(--space-4);
 }
@@ -307,6 +308,7 @@
    caption spacing below. */
 .bento-card-thumb-placeholder {
   margin-bottom: 0;
+  border-radius: var(--radius-lg);
 }
 
 .bento-card-caption {
@@ -331,7 +333,6 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
-  white-space: nowrap;
 }
 
 .bento-card-hint {
