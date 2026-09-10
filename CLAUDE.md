@@ -52,7 +52,7 @@ portfolio/
 ├── evals/
 │   ├── test-cases.json
 │   └── run-evals.js
-├── assets/ (images)
+├── assets/ (images, video)
 └── CLAUDE.md
 ```
 
@@ -88,6 +88,7 @@ portfolio/
 - **Recollab** — Langchain Aggregator, Prototyping
 - **Projects** (personal, not tied to a company) — Intelkin, Looped, AirBnB
 - **Carbon 6** — Contact Support Redesigned with AI
+- **Contract** (paid contract work, not a full-time employer) — River AI, an external product with its own site — the card links straight out (`links.external`) instead of to an in-site case study, and its thumbnail is a video (`thumbnailType: "video"`, source under `assets/video/`) rather than an image/gif.
 
 Each `projects.json` entry: `id`, title, category, one-line summary, a "how I think about it" narrative, links, images, and structured tags:
 ```json
@@ -97,6 +98,7 @@ Each `projects.json` entry: `id`, title, category, one-line summary, a "how I th
   "employment": "contract"
 }
 ```
+`links` is normally `{ "caseStudy": "/projects/<id>.html" }`; a project with no in-site case study (an external product) uses `{ "external": "<url>" }` instead — `js/home.js` opens that in a new tab rather than navigating away from the grid. `thumbnail` is usually a gif/image; `thumbnailType: "video"` switches the card to a looping, muted, autoplaying `<video>`, and `thumbnailPoster` is required in that case (shown instead, unplayed, under `prefers-reduced-motion`).
 
 ## 10. Dedicated Page Content Needed
 - [ ] **Résumé** — plain-text, structured as year/company/role, for `profile.md` (feeds the homepage timeline and Tianne's persona answers). The PDF itself lives externally on Google Drive, linked directly from the nav — no on-site copy to keep in sync.

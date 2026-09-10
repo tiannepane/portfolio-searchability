@@ -36,17 +36,39 @@
 
     const link = document.createElement('a');
     link.className = 'bento-card-link';
-    link.href = (project.links && project.links.caseStudy) || '#';
+    // Most cards open their in-site case study; a project with no case
+    // study (e.g. an external product) links straight out instead —
+    // opened in a new tab so the visitor never loses the grid.
+    const caseStudyHref = project.links && project.links.caseStudy;
+    const externalHref = project.links && project.links.external;
+    link.href = caseStudyHref || externalHref || '#';
+    if (!caseStudyHref && externalHref) {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    }
     link.setAttribute('aria-label', `${project.title} — ${project.category}`);
 
     if (project.thumbnail) {
-      const thumb = document.createElement('img');
-      thumb.className = 'bento-card-thumb';
-      thumb.alt = ''; // decorative — the link's aria-label already names the project
-      // Respect prefers-reduced-motion: a still frame instead of an animated gif.
+      // Respect prefers-reduced-motion: a still frame instead of an
+      // animated gif or an autoplaying video.
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      thumb.src = reduceMotion && project.thumbnailPoster ? project.thumbnailPoster : project.thumbnail;
-      link.append(thumb);
+      if (project.thumbnailType === 'video' && !reduceMotion) {
+        const thumb = document.createElement('video');
+        thumb.className = 'bento-card-thumb';
+        thumb.autoplay = true;
+        thumb.loop = true;
+        thumb.muted = true;
+        thumb.playsInline = true;
+        thumb.setAttribute('aria-hidden', 'true'); // decorative — the link's aria-label already names the project
+        thumb.src = project.thumbnail;
+        link.append(thumb);
+      } else {
+        const thumb = document.createElement('img');
+        thumb.className = 'bento-card-thumb';
+        thumb.alt = ''; // decorative — the link's aria-label already names the project
+        thumb.src = reduceMotion && project.thumbnailPoster ? project.thumbnailPoster : project.thumbnail;
+        link.append(thumb);
+      }
     }
 
     const category = document.createElement('span');

@@ -86,6 +86,21 @@
     "images": []
   },
   {
+    "id": "river-ai",
+    "title": "River AI",
+    "category": "Contract",
+    "size": "sm",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "What if your social media team used AI effectively?",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "external": "https://riverai.ai/" },
+    "images": [],
+    "thumbnail": "/assets/video/RiverAI-thumbnail.mp4",
+    "thumbnailType": "video",
+    "thumbnailPoster": "/assets/images/riverai-thumbnail-poster.jpg"
+  },
+  {
     "id": "airbnb",
     "title": "AirBnB",
     "category": "Projects",
