@@ -48,7 +48,7 @@ Add the same four lines (preconnect ×2 + the combined `css2` link above) to `<h
 - `css/components.css`: `.bento-card-title` (the project-card `<h3>`, homepage) — same "H2-equivalent, sized down" logic
 
 **Label** (`css/layout.css` unless noted) — add `font-family: var(--font-label);` (uppercase/letter-spacing already exists on the ones that had it):
-- `.case-study-category`, `.case-study-eyebrow`, `.case-study-meta dt`, `.friction-meta`, `.positioning-line-label`
+- `.case-study-category`, `.case-study-eyebrow`, `.case-study-meta dt`, `.friction-meta`
 - `.testimonial cite` (short attribution line — same job as an eyebrow)
 - `css/components.css`: `.bento-card-category` (already uppercase/letter-spaced)
 
