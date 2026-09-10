@@ -45,6 +45,12 @@
      bento card thumbnail) — grayscale (black + alpha), not a new hue. */
   --scrim: rgba(0, 0, 0, 0.65);
 
+  /* Accent (confirmed 2026-09-10, CLAUDE.md §12) — the first real accent
+     color in this codebase. Oxblood. Used sparingly: the homepage grid's
+     "View case study" pill only, not a card background or large surface. */
+  --color-accent: #92140C;
+  --color-accent-text: #ffffff;
+
   /* Typeface system (CLAUDE.md §12 confirmed 2026-09-10 — see
      docs/superpowers/specs/2026-09-10-typography-system-design.md).
      Headline: Space Grotesk, weight 700 — H1s and every H2-equivalent
