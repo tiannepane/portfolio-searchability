@@ -29,7 +29,6 @@
   function createCard(project) {
     const article = document.createElement('article');
     article.className = `bento-card size-${project.size || 'sm'}`;
-    if (project.thumbnail) article.classList.add('has-thumbnail');
     article.dataset.category = project.category;
     article.dataset.projectId = project.id;
     article.dataset.previewed = 'false';
@@ -48,6 +47,9 @@
     }
     link.setAttribute('aria-label', `${project.title} — ${project.category}`);
 
+    const thumbWrap = document.createElement('div');
+    thumbWrap.className = 'bento-card-thumb-wrap';
+
     if (project.thumbnail) {
       // Respect prefers-reduced-motion: a still frame instead of an
       // animated gif or an autoplaying video.
@@ -61,29 +63,54 @@
         thumb.playsInline = true;
         thumb.setAttribute('aria-hidden', 'true'); // decorative — the link's aria-label already names the project
         thumb.src = project.thumbnail;
-        link.append(thumb);
+        thumbWrap.append(thumb);
       } else {
         const thumb = document.createElement('img');
         thumb.className = 'bento-card-thumb';
         thumb.alt = ''; // decorative — the link's aria-label already names the project
         thumb.src = reduceMotion && project.thumbnailPoster ? project.thumbnailPoster : project.thumbnail;
-        link.append(thumb);
+        thumbWrap.append(thumb);
       }
+    } else {
+      // No real thumbnail yet — the site's existing case-study
+      // media-placeholder convention, sized for a card thumb slot.
+      const placeholder = document.createElement('div');
+      placeholder.className = 'bento-card-thumb-placeholder media-placeholder';
+      placeholder.setAttribute('role', 'img');
+      placeholder.setAttribute('aria-label', `${project.title} — thumbnail pending`);
+      placeholder.textContent = 'Image pending';
+      thumbWrap.append(placeholder);
     }
 
-    const category = document.createElement('span');
-    category.className = 'bento-card-category';
-    category.textContent = project.category;
+    const pill = document.createElement('span');
+    pill.className = 'bento-card-pill';
+    // Static icon markup only, never interpolated data — safe as innerHTML.
+    pill.innerHTML = '<svg class="bento-card-pill-icon" aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5Z"/><circle cx="8" cy="8" r="2"/></svg>';
+    const pillLabel = document.createElement('span');
+    // A project with no in-site case study links out instead — its pill
+    // says what actually happens on click.
+    pillLabel.textContent = caseStudyHref ? 'View case study' : 'Visit site';
+    pill.append(pillLabel);
+    thumbWrap.append(pill);
 
-    const title = document.createElement('h3');
-    title.className = 'bento-card-title';
-    title.textContent = project.title;
+    const caption = document.createElement('div');
+    caption.className = 'bento-card-caption';
+
+    const tagline = document.createElement('p');
+    tagline.className = 'bento-card-tagline';
+    tagline.textContent = project.tagline;
+
+    const meta = document.createElement('p');
+    meta.className = 'bento-card-meta';
+    meta.textContent = `${project.title.toUpperCase()} • ${project.status} • ${project.year}`;
+
+    caption.append(tagline, meta);
 
     const hint = document.createElement('span');
     hint.className = 'bento-card-hint';
     hint.textContent = 'Tap again to open';
 
-    link.append(category, title, hint);
+    link.append(thumbWrap, caption, hint);
     article.append(link);
     return article;
   }
