@@ -140,91 +140,6 @@
   }
 }
 
-/* --- Rail — browse-mode scrollspy by default, match-indicator mode while
-   a Tianne query is active (js/rail.js, CLAUDE.md §5/§6).
-   Mobile: horizontal, scrollable tab bar pinned to the top (§9).
-   md+: vertical sidebar column — grid placement comes from .home-layout
-   in layout.css, this just controls the rail's own display/position. --- */
-.rail {
-  position: sticky;
-  top: 0;
-  z-index: 15;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.rail-list {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
-}
-
-.rail-item {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  min-height: 44px;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
-  font-size: 0.9375rem;
-  color: var(--color-text-muted);
-}
-
-.rail-item:hover {
-  background: var(--color-surface);
-}
-
-.rail-item.is-active {
-  color: var(--color-text);
-  background: var(--color-surface);
-  font-weight: 600;
-}
-
-/* Match-indicator mode: quiet by default, a dot marks categories with a
-   result. Browse-mode's .is-active never applies at the same time as
-   .is-filtered — js/rail.js clears one before setting the other. */
-.rail.is-filtered .rail-item {
-  opacity: 0.5;
-}
-
-.rail.is-filtered .rail-item.has-match {
-  opacity: 1;
-}
-
-.rail.is-filtered .rail-item.has-match::after {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-left: var(--space-2);
-  border-radius: 50%;
-  background: currentColor;
-  vertical-align: middle;
-}
-
-@media (min-width: 768px) {
-  .rail {
-    top: var(--space-5);
-    background: transparent;
-    border-bottom: none;
-  }
-
-  .rail-list {
-    flex-direction: column;
-    overflow-x: visible;
-    padding: 0;
-  }
-
-  .rail-item {
-    display: block;
-    width: 100%;
-    text-align: left;
-    white-space: normal;
-  }
-}
-
 /* --- Prompt box — visible on load, sticky once scrolled (js/home.js).
    Submit calls the real Tianne LLM backend; see CLAUDE.md §5/§6. --- */
 .prompt-box-wrap {
@@ -394,28 +309,6 @@
   margin-bottom: 0;
 }
 
-.bento-card-pill {
-  position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 32px;
-  padding: var(--space-1) var(--space-3);
-  border-radius: 999px;
-  background: var(--color-accent);
-  color: var(--color-accent-text);
-  font-family: var(--font-label);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.bento-card-pill-icon {
-  flex-shrink: 0;
-}
-
 .bento-card-caption {
   display: flex;
   flex-wrap: wrap;
@@ -466,7 +359,6 @@
 .prompt-box-submit:focus-visible,
 .prompt-box-input:focus-visible,
 .prompt-box-clear:focus-visible,
-.rail-item:focus-visible,
 .bento-card-link:focus-visible,
 .chat-toggle:focus-visible,
 .tianne-panel-close:focus-visible,

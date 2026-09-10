@@ -48,9 +48,8 @@ h1 {
   flex-wrap: wrap;
 }
 
-/* --- Home layout: mobile-first. Rail's own display/position (horizontal
-   tab bar on mobile, sidebar column on md+) lives in components.css —
-   this just sets the grid frame that places it. --- */
+/* --- Home layout: mobile-first, single column (no category rail — the
+   main content fills the full width at every size). --- */
 .home-layout {
   display: block;
   padding: var(--space-4);
@@ -730,17 +729,12 @@ p.case-study-callout {
 
 @media (min-width: 768px) {
   .home-layout {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: var(--space-5);
-    align-items: start;
     padding: var(--space-5);
   }
 }
 
 @media (min-width: 1280px) {
   .home-layout {
-    grid-template-columns: 240px 1fr;
     max-width: 1440px;
     margin-inline: auto;
   }

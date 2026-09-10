@@ -82,17 +82,6 @@
       thumbWrap.append(placeholder);
     }
 
-    const pill = document.createElement('span');
-    pill.className = 'bento-card-pill';
-    // Static icon markup only, never interpolated data — safe as innerHTML.
-    pill.innerHTML = '<svg class="bento-card-pill-icon" aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5Z"/><circle cx="8" cy="8" r="2"/></svg>';
-    const pillLabel = document.createElement('span');
-    // A project with no in-site case study links out instead — its pill
-    // says what actually happens on click.
-    pillLabel.textContent = caseStudyHref ? 'View case study' : 'Visit site';
-    pill.append(pillLabel);
-    thumbWrap.append(pill);
-
     const caption = document.createElement('div');
     caption.className = 'bento-card-caption';
 
