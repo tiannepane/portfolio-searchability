@@ -15,7 +15,9 @@
 (function () {
   const NAV_LINKS = [
     { href: '/index.html', label: 'Home' },
-    { href: '/resume.html', label: 'Resume' },
+    // Resume has no on-site page — the tab opens the résumé PDF hosted on
+    // Google Drive directly, in a new tab.
+    { href: 'https://drive.google.com/file/d/100X0SLLIwU1_BEsDvY_c_N0aKA748psS/view?usp=sharing', label: 'Resume', external: true },
     { href: '/feedback.html', label: 'Feedback' },
     { href: '/fun.html', label: 'Fun' },
   ];
@@ -40,12 +42,15 @@
 
     const list = document.createElement('ul');
     list.className = 'site-nav-list';
-    NAV_LINKS.forEach(({ href, label }) => {
+    NAV_LINKS.forEach(({ href, label, external }) => {
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.href = href;
       a.textContent = label;
-      if (isCurrentPage(href)) {
+      if (external) {
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+      } else if (isCurrentPage(href)) {
         a.setAttribute('aria-current', 'page');
       }
       li.append(a);

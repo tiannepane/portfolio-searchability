@@ -21,7 +21,6 @@
     const projectMatch = path.match(/^\/projects\/([a-z0-9-]+)\.html$/i);
     if (projectMatch) return { page: 'project', projectId: projectMatch[1] };
     if (path === '/' || path === '/index.html') return { page: 'home', projectId: null };
-    if (path === '/resume.html') return { page: 'resume', projectId: null };
     if (path === '/feedback.html') return { page: 'feedback', projectId: null };
     if (path === '/fun.html') return { page: 'fun', projectId: null };
     return { page: 'other', projectId: null };

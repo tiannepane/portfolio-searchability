@@ -19,7 +19,7 @@ placeholders with real content; nothing here is invented.
 
 ## Résumé (plain text)
 
-[NEEDS REAL CONTENT — plain-text version of the résumé, for Tianne to draw on directly. See resume.html for the structured version and assets/resume.pdf for the download.]
+[NEEDS REAL CONTENT — plain-text version of the résumé, for Tianne to draw on directly. The downloadable PDF lives externally on Google Drive, linked from the nav's Resume tab — this section is the only on-site copy of the content.]
 
 ## Fun facts
 

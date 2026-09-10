@@ -27,14 +27,15 @@ Chat-searchable personal portfolio: a short intro establishes who you are, a ben
 
 ## 3. Site Map
 - `Home` — intro + prompt box + rail + bento grid (see §5)
-- `Resume`, `Feedback`, `Fun`, `Projects/*` — as before
+- `Feedback`, `Fun`, `Projects/*` — as before
+- `Resume` — not a page; the nav tab links directly to the résumé PDF hosted on Google Drive, opened in a new tab
 - `Tianne LLM` — not a page; the nav pill on every page, doubling as the homepage's main prompt box
 
 ## 4. File Structure
 ```
 portfolio/
 ├── index.html
-├── resume.html / feedback.html / fun.html
+├── feedback.html / fun.html                # no resume.html — the nav tab links out to Drive
 ├── projects/*.html                     # one per §9
 ├── css/  (reset, tokens, layout, components)
 ├── js/
@@ -51,7 +52,7 @@ portfolio/
 ├── evals/
 │   ├── test-cases.json
 │   └── run-evals.js
-├── assets/ (images, resume.pdf)
+├── assets/ (images)
 └── CLAUDE.md
 ```
 
@@ -98,7 +99,7 @@ Each `projects.json` entry: `id`, title, category, one-line summary, a "how I th
 ```
 
 ## 10. Dedicated Page Content Needed
-- [ ] **Resume** — PDF + plain-text, structured as year/company/role (feeds both Resume page and homepage timeline)
+- [ ] **Résumé** — plain-text, structured as year/company/role, for `profile.md` (feeds the homepage timeline and Tianne's persona answers). The PDF itself lives externally on Google Drive, linked directly from the nav — no on-site copy to keep in sync.
 - [ ] **Feedback**, **Fun**, **Intro headline** — as before
 - [ ] **Persona answers**, first person — tell me about yourself, how I work, what I'm looking for, availability. Becomes the seed content for `tianne-persona.md`.
 - [ ] Contact method
