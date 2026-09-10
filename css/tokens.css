@@ -56,4 +56,10 @@
   --font-headline: "Space Grotesk", Georgia, serif;
   --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-label: "Geist Pixel", var(--font-body);
+  /* Real system monospace, not a design choice — used only by the
+     Intelkin terminal card, which is deliberately exempt from the
+     Headline/Body/Label system (it's simulating a real terminal
+     window). Tokenized so CLAUDE.md §14's "no font values outside
+     tokens.css" holds even for this exception. */
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }

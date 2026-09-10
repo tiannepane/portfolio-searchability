@@ -27,6 +27,8 @@ body {
 h1 {
   font-family: var(--font-headline);
   font-weight: 700;
+  font-size: clamp(2.25rem, 1.5rem + 4vw, 3.25rem);
+  line-height: 1.05;
 }
 
 /* --- Shared nav shell (markup injected by js/shared-ui.js) --- */
@@ -79,7 +81,8 @@ h1 {
 
 .page-section h2 {
   margin-bottom: var(--space-3);
-  font-size: 1.25rem;
+  font-size: clamp(2.25rem, 1.5rem + 4vw, 3.25rem);
+  line-height: 1.05;
   font-family: var(--font-headline);
   font-weight: 700;
 }
@@ -106,6 +109,8 @@ h1 {
   color: var(--color-text-muted);
   font-size: 0.875rem;
   font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 /* --- Fun page --- */
@@ -153,7 +158,8 @@ h1 {
 
 .case-study-section h2 {
   margin-bottom: var(--space-3);
-  font-size: 1.25rem;
+  font-size: clamp(2.25rem, 1.5rem + 4vw, 3.25rem);
+  line-height: 1.05;
   font-family: var(--font-headline);
   font-weight: 700;
 }
@@ -179,6 +185,8 @@ h1 {
   font-size: 0.8125rem;
   margin-top: var(--space-2);
   font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 /* Hero image/gif — shows the animated version by default, swaps to a
@@ -215,7 +223,8 @@ img.case-study-hero-static {
 .case-study-section h3 {
   margin-top: var(--space-5);
   margin-bottom: var(--space-2);
-  font-size: 1.0625rem;
+  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  line-height: 1.2;
   color: var(--color-text);
   font-family: var(--font-headline);
   font-weight: 700;
@@ -223,7 +232,8 @@ img.case-study-hero-static {
 
 .case-study-section h4 {
   margin-bottom: var(--space-1);
-  font-size: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.3;
   color: var(--color-text);
   font-family: var(--font-headline);
   font-weight: 700;
@@ -286,6 +296,8 @@ p.case-study-lede {
 .friction-point h3 {
   margin-top: 0;
   margin-bottom: var(--space-1);
+  font-size: 1.125rem;
+  line-height: 1.3;
   font-family: var(--font-headline);
   font-weight: 700;
 }
@@ -297,6 +309,8 @@ p.case-study-lede {
   color: var(--color-text-muted);
   margin-top: var(--space-1);
   font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .case-study-quote {
@@ -362,6 +376,16 @@ p.case-study-callout {
 .case-study-columns > .friction-point,
 .case-study-columns > .reflection-item {
   margin-bottom: 0;
+}
+
+.case-study-column {
+  /* Market Research's three parallel-approach columns — no dedicated
+     component of their own, just this top-margin reset so they align
+     with .friction-point/.reflection-item's own zeroing above. */
+}
+
+.case-study-columns > .case-study-column h3 {
+  margin-top: 0;
 }
 
 /* A single stat: a big Headline-tier number/claim (h3) over a short
@@ -464,6 +488,8 @@ p.case-study-callout {
 .case-study-subbeat h3 {
   margin-top: 0;
   margin-bottom: var(--space-2);
+  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  line-height: 1.2;
   font-family: var(--font-headline);
   font-weight: 700;
 }
@@ -547,7 +573,7 @@ p.case-study-callout {
   margin: 0 0 var(--space-3);
   border-radius: 10px;
   background: #0d0d0f;
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
