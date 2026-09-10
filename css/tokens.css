@@ -1,0 +1,42 @@
+/*
+  css/tokens.css — design tokens.
+
+  STATUS: visual direction (palette, typeface) is still pending — CLAUDE.md §10.
+  Everything below is neutral/grayscale placeholder styling only, not a chosen
+  palette or typeface. Replace with real tokens once direction is confirmed;
+  nothing outside this file should hardcode a color or font (§12).
+
+  Named breakpoints mirror CLAUDE.md §9. CSS custom properties can't be read
+  inside @media conditions, so layout.css/components.css repeat these as
+  literal px values — keep them in sync with the numbers here.
+  --bp-sm: 480px   (large phones)
+  --bp-md: 768px   (tablets)
+  --bp-lg: 1024px  (small laptops)
+  --bp-xl: 1280px  (desktop)
+*/
+
+:root {
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Shape */
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  /* Neutral/grayscale placeholder palette — not final, see status note above */
+  --color-bg: #ffffff;
+  --color-surface: #f4f4f5;
+  --color-border: #d4d4d8;
+  --color-text: #18181b;
+  --color-text-muted: #71717a;
+
+  /* System font stack placeholder — not a chosen typeface, see status note above */
+  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}

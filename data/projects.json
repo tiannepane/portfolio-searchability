@@ -1,0 +1,98 @@
+[
+  {
+    "id": "windturbine",
+    "title": "Windturbine",
+    "category": "CDW",
+    "size": "lg",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about the CDW wind turbine project.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/windturbine.html" },
+    "images": []
+  },
+  {
+    "id": "prototyping",
+    "title": "Prototyping",
+    "category": "Recollab",
+    "size": "sm",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about the Recollab prototyping work.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/prototyping.html" },
+    "images": []
+  },
+  {
+    "id": "intelkin",
+    "title": "Intelkin",
+    "category": "Projects",
+    "size": "md",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about Intelkin.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/intelkin.html" },
+    "images": []
+  },
+  {
+    "id": "contact-support-ai",
+    "title": "Contact Support Redesigned with AI",
+    "category": "Carbon 6",
+    "size": "sm",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about the Carbon 6 contact support redesign.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/contact-support-ai.html" },
+    "images": []
+  },
+  {
+    "id": "research-aggregator",
+    "title": "Research Aggregator",
+    "category": "CDW",
+    "size": "md",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about the CDW research aggregator project.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/research-aggregator.html" },
+    "images": []
+  },
+  {
+    "id": "looped",
+    "title": "Looped",
+    "category": "Projects",
+    "size": "sm",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about Looped.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/looped.html" },
+    "images": []
+  },
+  {
+    "id": "langchain-aggregator",
+    "title": "Langchain Aggregator",
+    "category": "Recollab",
+    "size": "wide",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about the Recollab Langchain aggregator project.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/langchain-aggregator.html" },
+    "images": []
+  },
+  {
+    "id": "airbnb",
+    "title": "AirBnB",
+    "category": "Projects",
+    "size": "sm",
+    "summary": "[NEEDS REAL CONTENT]",
+    "previewPrompt": "Tell me about the AirBnB project.",
+    "tags": ["[NEEDS REAL CONTENT]"],
+    "narrative": "[NEEDS REAL CONTENT]",
+    "links": { "caseStudy": "/projects/airbnb.html" },
+    "images": []
+  }
+]

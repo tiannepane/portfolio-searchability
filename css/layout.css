@@ -1,0 +1,239 @@
+/*
+  css/layout.css — page-level structural layout (nav shell, home rail+grid frame).
+  No color/font values here — see tokens.css (§12).
+
+  Breakpoints below are literal px values mirroring the --bp-* tokens in
+  tokens.css (480 / 768 / 1024 / 1280) — keep in sync, don't invent new ones (§9).
+*/
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body {
+  font-family: var(--font-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+/* --- Shared nav shell (markup injected by js/shared-ui.js) --- */
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* --- Home layout: mobile-first. Rail's own display/position (horizontal
+   tab bar on mobile, sidebar column on md+) lives in components.css —
+   this just sets the grid frame that places it. --- */
+.home-layout {
+  display: block;
+  padding: var(--space-4);
+}
+
+.home-main {
+  display: block;
+}
+
+/* --- Generic content-page shell (resume/feedback/fun) --- */
+.page-content {
+  padding: var(--space-6) var(--space-4);
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.page-header {
+  margin-bottom: var(--space-5);
+}
+
+.page-intro {
+  color: var(--color-text-muted);
+}
+
+.page-section {
+  margin-bottom: var(--space-6);
+}
+
+.page-section h2 {
+  margin-bottom: var(--space-3);
+  font-size: 1.25rem;
+}
+
+/* --- Resume page --- */
+.resume-download {
+  display: inline-block;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  line-height: 28px;
+  margin-bottom: var(--space-5);
+}
+
+.resume-entry {
+  margin-bottom: var(--space-4);
+}
+
+.resume-entry h3 {
+  font-size: 1rem;
+}
+
+.resume-entry li {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.resume-meta {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-2);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tag-list li {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+/* --- Feedback page --- */
+.testimonial-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.testimonial {
+  border-left: 3px solid var(--color-border);
+  padding-left: var(--space-4);
+  margin: 0;
+}
+
+.testimonial p {
+  margin-bottom: var(--space-2);
+}
+
+.testimonial cite {
+  font-style: normal;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* --- Fun page --- */
+.fun-gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 480px) {
+  .fun-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .fun-gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* --- Case-study page shell (projects/*) --- */
+.case-study {
+  padding: var(--space-6) var(--space-4);
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.case-study-header {
+  margin-bottom: var(--space-5);
+}
+
+.case-study-category {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.case-study-section {
+  margin-bottom: var(--space-6);
+}
+
+.case-study-section h2 {
+  margin-bottom: var(--space-3);
+  font-size: 1.25rem;
+}
+
+.case-study-section p,
+.case-study-section li {
+  color: var(--color-text-muted);
+}
+
+.case-study-back {
+  margin-top: var(--space-6);
+}
+
+.case-study-back a {
+  text-decoration: underline;
+}
+
+/* --- Media placeholder (used on case-study + fun pages until real
+   images exist, CLAUDE.md §8) --- */
+.media-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 220px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .home-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--space-5);
+    align-items: start;
+    padding: var(--space-5);
+  }
+}
+
+@media (min-width: 1280px) {
+  .home-layout {
+    grid-template-columns: 240px 1fr;
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+}

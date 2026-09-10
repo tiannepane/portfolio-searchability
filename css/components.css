@@ -1,0 +1,453 @@
+/*
+  css/components.css — bento cards, rail, prompt box, nav.
+  No color/font values here — see tokens.css (§12).
+
+  Breakpoints below are literal px values mirroring the --bp-* tokens in
+  tokens.css (480 / 768 / 1024 / 1280) — keep in sync, don't invent new ones (§9).
+*/
+
+/* --- Nav / chat toggle --- */
+.site-nav-brand {
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.site-nav-list a {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  padding: var(--space-1) 0;
+}
+
+.site-nav-list a[aria-current="page"] {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.chat-toggle {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.chat-toggle[aria-expanded="true"] {
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+/* --- Tianne LLM panel (nav toggle target, non-home pages + homepage
+   alongside the inline box) — same chat backend as the prompt box, see
+   js/shared-ui.js and CLAUDE.md §1/§6. --- */
+.tianne-panel {
+  position: fixed;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.tianne-panel[hidden] {
+  display: none;
+}
+
+.tianne-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tianne-panel-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tianne-panel-close {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+}
+
+.tianne-panel-form {
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tianne-panel-body {
+  padding: var(--space-4);
+  color: var(--color-text-muted);
+  overflow-y: auto;
+}
+
+.tianne-panel-placeholder,
+.tianne-panel-error {
+  color: var(--color-text-muted);
+}
+
+.tianne-panel-reply {
+  color: var(--color-text);
+}
+
+.tianne-panel-links {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tianne-panel-links a {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: 0.9375rem;
+}
+
+.tianne-panel-links a:hover {
+  border-color: var(--color-text-muted);
+}
+
+@media (max-width: 767px) {
+  .tianne-panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 70vh;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .tianne-panel {
+    top: var(--space-7);
+    right: var(--space-4);
+    width: 320px;
+    max-height: 70vh;
+  }
+}
+
+/* --- Rail — browse-mode scrollspy by default, match-indicator mode while
+   a Tianne query is active (js/rail.js, CLAUDE.md §5/§6).
+   Mobile: horizontal, scrollable tab bar pinned to the top (§9).
+   md+: vertical sidebar column — grid placement comes from .home-layout
+   in layout.css, this just controls the rail's own display/position. --- */
+.rail {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rail-list {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+}
+
+.rail-item {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+.rail-item:hover {
+  background: var(--color-surface);
+}
+
+.rail-item.is-active {
+  color: var(--color-text);
+  background: var(--color-surface);
+  font-weight: 600;
+}
+
+/* Match-indicator mode: quiet by default, a dot marks categories with a
+   result. Browse-mode's .is-active never applies at the same time as
+   .is-filtered — js/rail.js clears one before setting the other. */
+.rail.is-filtered .rail-item {
+  opacity: 0.5;
+}
+
+.rail.is-filtered .rail-item.has-match {
+  opacity: 1;
+}
+
+.rail.is-filtered .rail-item.has-match::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: var(--space-2);
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: middle;
+}
+
+@media (min-width: 768px) {
+  .rail {
+    top: var(--space-5);
+    background: transparent;
+    border-bottom: none;
+  }
+
+  .rail-list {
+    flex-direction: column;
+    overflow-x: visible;
+    padding: 0;
+  }
+
+  .rail-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    white-space: normal;
+  }
+}
+
+/* --- Prompt box — visible on load, sticky once scrolled (js/home.js).
+   Submit calls the real Tianne LLM backend; see CLAUDE.md §5/§6. --- */
+.prompt-box-wrap {
+  margin-bottom: var(--space-5);
+}
+
+.prompt-box {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.prompt-box-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  padding: var(--space-2);
+  font-size: 1rem;
+}
+
+.prompt-box-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.prompt-box-input:disabled,
+.prompt-box-submit:disabled,
+.prompt-box-clear:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.prompt-box-submit {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  min-width: 44px;
+  font-weight: 600;
+}
+
+.prompt-box-clear {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  color: var(--color-text-muted);
+}
+
+/* Reply text + result status live under the input row, inside the same
+   component — never a second panel (CLAUDE.md §1/§12). */
+.prompt-box-reply {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.9375rem;
+}
+
+/* Sticky/floating state once scrolled past the threshold in js/home.js */
+.prompt-box-wrap.is-floating .prompt-box {
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 768px) {
+  .prompt-box-wrap.is-floating {
+    position: fixed;
+    bottom: var(--space-5);
+    right: var(--space-5);
+    width: clamp(280px, 30vw, 420px);
+    margin-bottom: 0;
+    z-index: 20;
+  }
+}
+
+@media (max-width: 767px) {
+  .prompt-box-wrap.is-floating {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 0;
+    padding: var(--space-3);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+    z-index: 20;
+  }
+
+  .prompt-box-wrap.is-floating .prompt-box {
+    border: none;
+    padding: 0;
+    background: transparent;
+  }
+}
+
+/* --- Bento grid — full list by default, or just the current query's
+   matches (js/home.js, CLAUDE.md §5/§6). One grid, two states — never a
+   separate results panel. --- */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(120px, auto);
+  gap: var(--space-4);
+}
+
+.bento-empty {
+  grid-column: 1 / -1;
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.bento-card-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  height: 100%;
+  min-height: 44px;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  transition: border-color 0.15s ease;
+}
+
+.bento-card-link:hover {
+  border-color: var(--color-text-muted);
+}
+
+.bento-card-category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.bento-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Two-step tap preview state (touch devices only, see js/home.js §5).
+   Hover-capable devices never set data-previewed — they preview on
+   hover/focus instead and navigate on the first click. */
+.bento-card[data-previewed="true"] .bento-card-link {
+  border-color: var(--color-text);
+}
+
+.bento-card-hint {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.bento-card[data-previewed="true"] .bento-card-hint {
+  display: block;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bento-card-hint {
+    display: none !important;
+  }
+}
+
+.prompt-box-input.is-preview {
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 480px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .bento-card.size-lg {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .bento-card.size-wide {
+    grid-column: span 2;
+  }
+
+  .bento-card.size-md {
+    grid-row: span 2;
+  }
+}
+
+@media (min-width: 1280px) {
+  .bento-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* --- Focus visibility (Quality Floor, §11) --- */
+.prompt-box-submit:focus-visible,
+.prompt-box-input:focus-visible,
+.prompt-box-clear:focus-visible,
+.rail-item:focus-visible,
+.bento-card-link:focus-visible,
+.chat-toggle:focus-visible,
+.tianne-panel-close:focus-visible,
+.tianne-panel-links a:focus-visible,
+.resume-download:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bento-card-link {
+    transition: none;
+  }
+}
