@@ -1,19 +1,19 @@
 # Portfolio Website — Project Brief
 
-Chat-searchable personal portfolio: a short intro establishes who you are, a bento grid shows every project at once, a left category rail helps orient without ever hiding anything, and a persistent "Ask Tianne" input — hover-previewed Krea-style — lets a recruiter ask anything, not just the preset examples. Read this file before making changes — it's the source of truth for structure, data flow, and rules.
+Chat-searchable personal portfolio: a short intro establishes who you are, a two-column masonry grid shows every project at once, and a persistent "Ask Tianne" input — hover-previewed Krea-style — lets a recruiter ask anything, not just the preset examples. Read this file before making changes — it's the source of truth for structure, data flow, and rules.
 
 ## 1. Concept
-- **Homepage layout, top to bottom:** nav (with the persistent Ask Tianne pill) → intro (headline + timeline) → prompt box → category rail + bento grid.
+- **Homepage layout, top to bottom:** nav (with the persistent Ask Tianne pill) → intro (headline + timeline) → prompt box → project grid.
 - **Identity intro:** a real headline plus a compact, reverse-chronological timeline — year, company, role — sourced from `profile.md`. Side-by-side on desktop, stacked on mobile. Static.
 - **Ask Tianne, nav pill:** lives permanently in the nav, top-right, on every page — no scroll-linked positioning. Backup access on Home once past the main prompt box; primary access everywhere else.
 - **Main prompt box (Home only):** sits in normal document flow between the intro and the grid — no sticky/floating behavior needed.
-- **Bento grid:** two columns, cards sized like a real moment per project, not a compact directory. Freely interleaved across categories; the rail tracks category via scroll position.
+- **Project grid:** two-column, independent-height masonry (image-first cards, no category rail — removed 2026-09-10; full width). Freely interleaved across categories.
 - **Voice:** Tianne answers in first person — "I build..." — as if it's genuinely you. Paired with a small, persistent disclosure near the pill/prompt box (not a banner, just enough that nobody mistakes it for texting you live) since it's an AI, not a live conversation.
 - **Two hard rules regardless of voice:** never invent a fact that isn't in the data files — say so honestly and point to contact info instead. Never claim real-time availability or scheduling ("yes I'm free Tuesday") — that always redirects to actual contact info, since Tianne has no live calendar access.
 - **Hover a card (desktop):** fills the prompt box with the prompt that would surface it — e.g. hovering "Windturbine" shows "Tell me about the CDW wind turbine project."
 - **Click a card, any time:** opens its case study directly.
 - **Submit a prompt:** Tianne returns matching project ids, grid re-renders to just those — same component, no separate results panel.
-- **While a query is active:** rail switches from scrollspy to a match indicator. Clear the box → grid and rail both revert.
+- **While a query is active:** grid re-renders to just the matches. Clear the box → grid reverts to the full list.
 - **Default to submit-triggered filtering, not live-as-you-type.**
 - **Owner/role/tagline:** resolved by the intro headline — a real personal statement, not a plain name/title line. `[FILL IN copy]`
 
@@ -26,7 +26,7 @@ Chat-searchable personal portfolio: a short intro establishes who you are, a ben
 - **Shared UI across pages:** nav + Ask Tianne pill live once in `js/shared-ui.js`.
 
 ## 3. Site Map
-- `Home` — intro + prompt box + rail + bento grid (see §5)
+- `Home` — intro + prompt box + project grid (see §5)
 - `Feedback`, `Fun`, `Projects/*` — as before
 - `Resume` — not a page; the nav tab links directly to the résumé PDF hosted on Google Drive, opened in a new tab
 - `Tianne LLM` — not a page; the nav pill on every page, doubling as the homepage's main prompt box
@@ -41,7 +41,6 @@ portfolio/
 ├── js/
 │   ├── shared-ui.js                      # nav + Ask Tianne pill
 │   ├── home.js                            # intro, grid, hover-preview, filter re-render
-│   ├── rail.js                             # scrollspy / match-indicator, desktop + mobile tab bar
 │   └── chat.js                              # calls /api/chat, shared by box and pill panel
 ├── api/
 │   └── chat.js                                # serverless function: LLM call + Supabase log
@@ -58,11 +57,10 @@ portfolio/
 
 ## 5. Interaction Detail
 - **Intro:** headline + timeline, static, from `profile.md`. Side-by-side desktop, stacked mobile.
-- **Grid:** two columns, every project renders at a larger size, freely interleaved. One grid component — a query changes what's rendered, never adds a second panel.
-- **Rail — browse mode:** tracks scroll position, debounced ~200ms. **Filtered mode:** shows which categories the current matches belong to.
+- **Grid:** two-column independent-height masonry (CSS multi-column), every project renders at the size its own content needs, freely interleaved. One grid component — a query changes what's rendered, never adds a second panel.
 - **Prompt box:** in-flow, not sticky. Neutral placeholder; hover previews; submit queries; clear resets.
 - **Nav pill:** identical position on every page, every scroll depth.
-- **Query round-trip:** submit → `/api/chat` → `{ reply, relevantProjectIds }` → grid + rail update. Clear → both revert.
+- **Query round-trip:** submit → `/api/chat` → `{ reply, relevantProjectIds }` → grid updates. Clear → reverts.
 - **Mobile (no hover), as built:** tap once previews the prompt, tap again opens the case study.
 
 ## 6. How Tianne LLM Works
@@ -70,7 +68,7 @@ portfolio/
 2. Frontend sends `{ message, history, pageContext }` to `/api/chat`.
 3. Function assembles the system prompt from `projects.json` + `profile.md` + `tianne-persona.md` (voice + the two hard rules in §1), calls the Claude API for structured output: `{ reply: string, relevantProjectIds: string[] }`.
 4. Function fires a non-blocking insert into Supabase (§8) — doesn't delay the response.
-5. Homepage: grid re-renders to `relevantProjectIds`, rail switches to filtered mode. Other pages: panel renders `reply`.
+5. Homepage: grid re-renders to `relevantProjectIds`. Other pages: panel renders `reply`.
 6. From a case-study page, the panel scopes answers to that project.
 
 ## 7. Evals
@@ -111,17 +109,17 @@ Mobile-first, named breakpoints only:
 ```css
 --bp-sm: 480px; --bp-md: 768px; --bp-lg: 1024px; --bp-xl: 1280px;
 ```
-- Bento grid: two columns desktop, one mobile. Intro: side-by-side desktop, stacked mobile. Rail → horizontal tab bar on mobile. Prompt box and nav pill: in-flow / fixed-nav at every size, nothing to reposition.
+- Project grid: two-column masonry desktop, one column mobile (`--bp-sm`). Intro: side-by-side desktop, stacked mobile. Prompt box and nav pill: in-flow / fixed-nav at every size, nothing to reposition.
 - Fluid type via `clamp()`. Images `max-width:100%; height:auto`. No fixed-px containers. Touch targets ≥44px.
 - Test at 375px, 768px, 1440px, and one ultra-wide check.
 
 ## 12. Design Tokens — STATUS: typeface + accent confirmed, background pending
 Typeface (confirmed 2026-09-10): Space Grotesk (headlines) / DM Sans (body/values) / Geist Pixel (micro-labels) — see `css/tokens.css`'s `--font-headline`/`--font-body`/`--font-label` and `docs/superpowers/specs/2026-09-10-typography-system-design.md`.
-Accent (confirmed 2026-09-10): Oxblood `#92140C` — see `css/tokens.css`'s `--color-accent`. First real usage: the homepage grid's "View case study" pill. Reserved for tiny moments only — never a card background or large surface.
+Accent (confirmed 2026-09-10): Oxblood `#92140C` — see `css/tokens.css`'s `--color-accent`. Not currently rendered anywhere (its one usage, the homepage grid's case-study pill, was removed the same day per a design change) — the color choice stands, awaiting its next real use. Reserved for tiny moments only — never a card background or large surface.
 Background (still pending): working direction is a dark, desaturated navy or graphite background. Keep neutral/grayscale until fully confirmed.
 
 ## 13. Quality Floor
-- Responsive down to mobile everywhere, including the intro, grid, rail/tab bar, prompt box.
+- Responsive down to mobile everywhere, including the intro, grid, prompt box.
 - Full keyboard operability throughout, including Tianne.
 - Grid re-render after a query: announce result count via ARIA live region.
 - A small, persistent AI-disclosure near the pill/prompt box (§1) — legible, not an afterthought.
@@ -132,7 +130,7 @@ Background (still pending): working direction is a dark, desaturated navy or gra
 - Tianne speaks first person per `tianne-persona.md`, but never fabricates a fact absent from the data, and never claims real-time availability.
 - Log every `/api/chat` exchange to Supabase, non-blocking — don't delay the response on it.
 - Run `evals/run-evals.js` after any change to project data, profile data, or the system prompt.
-- One grid component, two states — no separate results panel. Rail never changes card visibility, only its own state. Debounce rail detection ~200ms.
+- One grid component, two states — no separate results panel.
 - No scroll-linked positioning for the prompt box — the nav pill is what stays reachable.
 - Don't duplicate nav/pill markup across pages — lives once in `shared-ui.js`.
 - No vector DB/embeddings, no framework rebuild, no new dependency beyond §2, without asking first.
