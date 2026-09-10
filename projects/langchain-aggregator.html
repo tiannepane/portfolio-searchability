@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Langchain Aggregator — Tianne</title>
+  <title>Recollab — Tianne</title>
   <link rel="stylesheet" href="/css/reset.css" />
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/layout.css" />
@@ -20,35 +20,124 @@
   <main class="case-study" data-project-id="langchain-aggregator">
     <header class="case-study-header">
       <p class="case-study-category">Recollab</p>
-      <h1>Langchain Aggregator</h1>
+      <h1>Redesigning Vendor Sourcing with Agentic Systems</h1>
+      <p class="case-study-eyebrow">Recollab • [STATUS + YEAR — needs real content]</p>
     </header>
 
-    <div class="media-placeholder" role="img" aria-label="Langchain Aggregator preview image placeholder">
-      Image placeholder — real visuals pending, see CLAUDE.md §8
+    <div class="case-study-hero">
+      <img class="case-study-hero-motion" src="/assets/images/recollab-thumbnail.gif" alt="Recollab x Agentic Systems" />
+      <img class="case-study-hero-static" src="/assets/images/recollab-thumbnail-poster.jpg" alt="Recollab x Agentic Systems" />
     </div>
+
+    <dl class="case-study-meta case-study-meta--hero">
+      <div><dt>Role</dt><dd>Product Manager</dd></div>
+      <div><dt>Timeline</dt><dd>V2: 1 wk · V3: 3 wk</dd></div>
+      <div><dt>Team</dt><dd>3 engineers + me</dd></div>
+      <div><dt>Skills</dt><dd>Agentic system design, LangChain, Multi-agent orchestration, Human-in-the-loop design, Vendor marketplace design</dd></div>
+    </dl>
 
     <section class="case-study-section">
       <h2>Overview</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio praesent libero sed cursus ante dapibus diam. Sed nisi nulla quis sem at nibh elementum imperdiet.</p>
+      <p class="case-study-lede">We rebuilt a single automated guess into a five-agent system with a person approving every step.</p>
+      <p>Recollab builds software for property managers running large condo buildings. One gap was blocking a signed contract: when something broke — a leak, an HVAC failure — property managers had no fast way to get multiple vendor quotes in front of them. Just phone calls to whoever they already knew.</p>
     </section>
 
     <section class="case-study-section">
-      <h2>My Role</h2>
-      <p>Duis sagittis ipsum praesent mauris fusce nec tellus sed augue semper porta mauris massa vestibulum lacinia arcu eget nulla class aptent taciti sociosqu ad litora torquent per conubia nostra.</p>
+      <h2>Outcomes</h2>
+      <div class="case-study-columns case-study-columns--3">
+        <div class="case-study-stat">
+          <h3>8x faster</h3>
+          <p>Quote turnaround</p>
+        </div>
+        <div class="case-study-stat">
+          <h3>2x</h3>
+          <p>Quotes per request</p>
+        </div>
+        <div class="case-study-stat">
+          <h3>60% faster</h3>
+          <p>Time to service</p>
+        </div>
+      </div>
+      <p class="case-study-callout"><em>Due to an NDA, I can't share vendor names, screenshots, building-specific details, or the internals of the vendor-matching algorithm itself.</em></p>
     </section>
 
     <section class="case-study-section">
-      <h2>Approach</h2>
-      <p>Per inceptos himenaeos curabitur sodales ligula in libero sed dignissim lacinia nunc curabitur tortor pellentesque nibh aenean quam in scelerisque sem at dolor.</p>
+      <h2>The Journey</h2>
+
+      <blockquote class="case-study-quote">
+        <p>"How do we get multiple vendor quotes in front of a property manager before the next phone call?"</p>
+      </blockquote>
+
+      <p>That gap was the one thing standing between us and a signed contract, so we needed a working solution, integrated into their existing systems, fast. It went through three versions.</p>
+
+      <div class="case-study-subbeat">
+        <h3>V1: Doing It Manually</h3>
+        <p>Before any software touched this, property managers called whoever they already knew, one at a time, and waited to see who called back first.</p>
+        <figure class="case-study-figure">
+          <img src="/assets/images/recollab-diag1.jpg" alt="Diagram: V1 manual process — issue reported, PM recalls vendor contacts from memory with no list, calls the next vendor, waits to see if they answer, gets a verbal quote with no format, repeats until enough quotes or giving up, then compares quotes from memory with no written record. Breaks down because nothing gets written down, so the vendor picked is usually whoever answered first, not who's the best fit." />
+          <figcaption>No list, no written record — the vendor picked was usually whoever answered first, not who fit best.</figcaption>
+        </figure>
+      </div>
+
+      <div class="case-study-subbeat">
+        <h3>V2: n8n</h3>
+        <p>I built the first working version in n8n, the fastest way to get something live and wired into their systems that week. Given a broken-down building and a trade, it found nearby vendors and fired off outreach. It worked well enough to close the deal.</p>
+        <p>But "nearby" was doing too much work: no cap on distance, no check on licensing or trade match. It ran for two days, with small errors piling up the whole time, before it queued outreach to vendors two hours outside a building's service area, in the wrong trade entirely. Trust eroded fast, on both sides.</p>
+      </div>
+
+      <div class="case-study-subbeat">
+        <h3>V3: LangChain</h3>
+        <p>Once real customers were depending on it, I rebuilt it as a proper multi-agent system:</p>
+        <ul>
+          <li><strong>An orchestrator</strong> that routes the issue</li>
+          <li><strong>A vendor-matching agent</strong> that checks known, trusted vendors near that building first, pulled from a list tagged by trade, urgency, price, and availability</li>
+          <li><strong>A vendor-sourcing agent</strong> that only searches for new vendors when there isn't a known match</li>
+          <li><strong>An outreach agent</strong> that reaches each one through whatever channel gets the fastest response (there are services now for automating phone calls; we looked at it and chose not to)</li>
+          <li><strong>A quote-aggregation agent</strong> that normalizes what comes back</li>
+          <li><strong>A follow-up agent</strong> chasing anyone who goes quiet</li>
+        </ul>
+        <p>No quote reaches the property manager, and no vendor gets hired, without a person approving it.</p>
+
+        <figure class="case-study-visual-group">
+          <p class="case-study-visual-group-label">Agent Flow: Before / After</p>
+          <div class="case-study-visual-group-items">
+            <img src="/assets/images/recollab-diag2.jpg" alt="Diagram: V2 n8n automated flow — issue and trade logged, search nearby vendors by radius only (breaks down: no distance cap, no license or trade check), blast outreach to all found, PM manually checks responses across channels, PM compiles the list by hand over about 3 business days (breaks down: no aggregation, quotes compiled by hand over days), shared with property manager." />
+            <img src="/assets/images/recollab-langchain.png" alt="Hand-drawn sketch of the V3 agent flow: orchestrator agent routes client info to known vendors or a find-new-vendors search, both feed outreach and follow-up agents, which feed an aggregate step, then a review step, then share to client." />
+          </div>
+        </figure>
+      </div>
     </section>
 
     <section class="case-study-section">
-      <h2>Outcome</h2>
-      <ul>
-        <li>Lorem ipsum result placeholder one — real metrics pending, see CLAUDE.md §8.</li>
-        <li>Lorem ipsum result placeholder two.</li>
-        <li>Lorem ipsum result placeholder three.</li>
-      </ul>
+      <h2>Wins</h2>
+      <div class="case-study-columns case-study-columns--3">
+        <div class="friction-point">
+          <h3>Closed the deal</h3>
+          <p>The gap that blocked the sale became part of the pitch instead.</p>
+        </div>
+        <div class="friction-point">
+          <h3>Ran live across 5 buildings</h3>
+          <p>The trial scope for V3.</p>
+        </div>
+        <div class="friction-point">
+          <h3>Zero unapproved outreach or hires</h3>
+          <p>The human-in-the-loop gate held through the trial.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-study-section">
+      <h2>Reflection</h2>
+      <div class="case-study-columns case-study-columns--2">
+        <div class="reflection-item">
+          <h4>Don't ship a matching rule without a checkable boundary</h4>
+          <p>"Nearby" almost cost us a vendor relationship two hours outside where we actually needed one. Every rule since gets a specific, testable limit before it ships.</p>
+        </div>
+        <div class="reflection-item">
+          <h4>[SECOND REFLECTION POINT — needs real content]</h4>
+          <p>[NEEDS REAL CONTENT]</p>
+        </div>
+      </div>
     </section>
 
     <p class="case-study-back"><a href="/index.html">← Back to all projects</a></p>

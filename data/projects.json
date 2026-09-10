@@ -78,12 +78,14 @@
     "title": "Langchain Aggregator",
     "category": "Recollab",
     "size": "wide",
-    "summary": "[NEEDS REAL CONTENT]",
+    "summary": "Rebuilt a single automated guess at vendor matching into a five-agent system with a person approving every step — 8x faster quote turnaround, zero unapproved outreach across a 5-building trial.",
     "previewPrompt": "Tell me about the Recollab Langchain aggregator project.",
-    "tags": ["[NEEDS REAL CONTENT]"],
-    "narrative": "[NEEDS REAL CONTENT]",
+    "tags": ["Agentic system design", "LangChain", "Multi-agent orchestration", "Human-in-the-loop design", "Vendor marketplace design"],
+    "narrative": "Recollab builds software for property managers running large condo buildings, and one gap was blocking a signed contract: when something broke — a leak, an HVAC failure — property managers had no fast way to get multiple vendor quotes in front of them, just phone calls to whoever they already knew. I shipped a first working version in n8n in a week to close the deal, but \"nearby\" was doing too much work — no distance cap, no license or trade check — and it ran for two days queuing outreach to vendors outside a building's service area before we caught it. Once real customers depended on it, I rebuilt it as a proper multi-agent system: an orchestrator, a vendor-matching agent that checks known trusted vendors first, a vendor-sourcing agent for when there isn't a match, an outreach agent, a quote-aggregation agent, and a follow-up agent — with a person approving every quote and every hire, no exceptions. It ran live across 5 buildings with zero unapproved outreach or hires. The lesson I carry forward: don't ship a matching rule without a specific, testable boundary.",
     "links": { "caseStudy": "/projects/langchain-aggregator.html" },
-    "images": []
+    "images": [],
+    "thumbnail": "/assets/images/recollab-thumbnail.gif",
+    "thumbnailPoster": "/assets/images/recollab-thumbnail-poster.jpg"
   },
   {
     "id": "river-ai",
