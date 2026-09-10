@@ -24,6 +24,11 @@ body {
   background: var(--color-bg);
 }
 
+h1 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+}
+
 /* --- Shared nav shell (markup injected by js/shared-ui.js) --- */
 .site-nav {
   display: flex;
@@ -75,6 +80,8 @@ body {
 .page-section h2 {
   margin-bottom: var(--space-3);
   font-size: 1.25rem;
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
 /* --- Resume page --- */
@@ -142,6 +149,7 @@ body {
   font-style: normal;
   color: var(--color-text-muted);
   font-size: 0.875rem;
+  font-family: var(--font-label);
 }
 
 /* --- Fun page --- */
@@ -180,6 +188,7 @@ body {
   font-size: 0.75rem;
   color: var(--color-text-muted);
   margin-bottom: var(--space-2);
+  font-family: var(--font-label);
 }
 
 .case-study-section {
@@ -189,6 +198,8 @@ body {
 .case-study-section h2 {
   margin-bottom: var(--space-3);
   font-size: 1.25rem;
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
 .case-study-section p,
@@ -211,6 +222,7 @@ body {
   color: var(--color-text-muted);
   font-size: 0.8125rem;
   margin-top: var(--space-2);
+  font-family: var(--font-label);
 }
 
 /* Hero image/gif — shows the animated version by default, swaps to a
@@ -249,12 +261,16 @@ img.case-study-hero-static {
   margin-bottom: var(--space-2);
   font-size: 1.0625rem;
   color: var(--color-text);
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
 .case-study-section h4 {
   margin-bottom: var(--space-1);
   font-size: 1rem;
   color: var(--color-text);
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
 .case-study-section a {
@@ -264,7 +280,7 @@ img.case-study-hero-static {
 
 p.case-study-lede {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text);
   margin-bottom: var(--space-3);
 }
@@ -290,6 +306,7 @@ p.case-study-lede {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
+  font-family: var(--font-label);
 }
 
 .case-study-meta dd {
@@ -313,6 +330,8 @@ p.case-study-lede {
 .friction-point h3 {
   margin-top: 0;
   margin-bottom: var(--space-1);
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
 .friction-meta {
@@ -321,6 +340,7 @@ p.case-study-lede {
   font-weight: 400;
   color: var(--color-text-muted);
   margin-top: var(--space-1);
+  font-family: var(--font-label);
 }
 
 .case-study-quote {
@@ -404,6 +424,8 @@ p.case-study-callout {
 .case-study-subbeat h3 {
   margin-top: 0;
   margin-bottom: var(--space-2);
+  font-family: var(--font-headline);
+  font-weight: 700;
 }
 
 /* Light laptop-frame mockup for step gifs whose UI content is dark —
