@@ -478,8 +478,7 @@
 .chat-toggle:focus-visible,
 .tianne-panel-close:focus-visible,
 .tianne-panel-links a:focus-visible,
-.case-study-section a:focus-visible,
-.resume-download:focus-visible {
+.case-study-section a:focus-visible {
   outline: 2px solid var(--color-text);
   outline-offset: 2px;
 }

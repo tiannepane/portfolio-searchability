@@ -84,50 +84,6 @@ h1 {
   font-weight: 700;
 }
 
-/* --- Resume page --- */
-.resume-download {
-  display: inline-block;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: var(--space-2) var(--space-4);
-  min-height: 44px;
-  line-height: 28px;
-  margin-bottom: var(--space-5);
-}
-
-.resume-entry {
-  margin-bottom: var(--space-4);
-}
-
-.resume-entry h3 {
-  font-size: 1rem;
-}
-
-.resume-entry li {
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-1);
-}
-
-.resume-meta {
-  color: var(--color-text-muted);
-  font-size: 0.875rem;
-  margin-bottom: var(--space-2);
-}
-
-.tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.tag-list li {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: var(--space-1) var(--space-3);
-  font-size: 0.875rem;
-  color: var(--color-text-muted);
-}
-
 /* --- Feedback page --- */
 .testimonial-list {
   display: flex;
