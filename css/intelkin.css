@@ -1,125 +1,13 @@
 /*
-  css/intelkin.css — typography system for the Intelkin case study ONLY.
+  css/intelkin.css — Intelkin-only page-scoped exceptions that aren't
+  typography (that's now the site-wide system in tokens.css, same as
+  every other page — see docs/superpowers/specs/2026-09-10-typography-system-design.md).
 
-  Loaded only by projects/intelkin.html (see that file's <head>) — no
-  other page references this file. Every rule below is also scoped under
-  [data-project-id="intelkin"] as a second, belt-and-suspenders guarantee:
-  even if this stylesheet were ever linked from another page by mistake,
-  nothing on that page would match, since each project page carries its
-  own distinct data-project-id.
-
-  This is a deliberate, disclosed exception to CLAUDE.md §10 — visual
-  direction (typeface) is still "pending" site-wide, and every other page
-  keeps the plain system font stack (--font-body)
-  untouched. Intelkin alone is allowed a real, chosen type system for
-  this round, per explicit instruction. Nothing here touches tokens.css,
-  layout.css, or components.css, so no other page is affected and the
-  site-wide "pending" status is unchanged everywhere else.
-
-  Hierarchy (mapped onto the existing markup):
-    H1            — the real page <h1> AND each section's <h2> title
-                    (e.g. "The Problem", "Market Research")
-    Subtitle      — .case-study-lede (the sentence under each H1)
-    H2            — sub-headlines inside a section: .case-study-section
-                    h3, .case-study-subbeat h3, plus the friction-point
-                    h3 / reflection-item h4 card titles (H2-equivalent,
-                    sized down for their grid/card context)
-    Body          — everything else (inherited, see base rule below)
-    Eyebrow/label — .case-study-category, .case-study-eyebrow,
-                    .case-study-meta dt
-
-  Fonts: Instrument Serif (headlines), Public Sans (body/subtitle),
-  IBM Plex Mono (eyebrows/labels — the same family the terminal repo
-  card already uses, so that element ties into the system instead of
-  being a one-off). Instrument Serif ships one real weight (400) on
-  Google Fonts; "bold" below is a browser-synthesized bold, not a true
-  bold cut — flagging in case a regular-weight-only treatment is
-  preferred instead.
+  Currently: the parallel-content column layout below (Market Research's
+  three approaches, Key Friction Points, Reflection's two takeaways).
+  Scoped under [data-project-id="intelkin"], and only ever loaded by
+  projects/intelkin.html.
 */
-
-:root {
-  --intelkin-font-serif: "Instrument Serif", Georgia, serif;
-  --intelkin-font-sans: "Public Sans", var(--font-body);
-  --intelkin-font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-}
-
-/* Base: everything inherits Public Sans unless overridden below. */
-.case-study[data-project-id="intelkin"] {
-  font-family: var(--intelkin-font-sans);
-}
-
-/* --- H1: page title + each section's headline --- */
-.case-study[data-project-id="intelkin"] h1,
-.case-study[data-project-id="intelkin"] .case-study-section h2 {
-  font-family: var(--intelkin-font-serif);
-  font-weight: 700;
-  line-height: 1.05;
-  color: var(--color-text);
-  font-size: clamp(2.25rem, 1.5rem + 4vw, 3.25rem);
-}
-
-.case-study[data-project-id="intelkin"] .case-study-section h2 {
-  margin-bottom: var(--space-3);
-}
-
-/* --- Subtitle: the lede line under each H1 --- */
-.case-study[data-project-id="intelkin"] .case-study-lede {
-  font-family: var(--intelkin-font-sans);
-  font-weight: 500;
-  font-size: clamp(1.125rem, 1rem + 0.75vw, 1.375rem);
-  line-height: 1.45;
-  color: var(--color-text-muted);
-}
-
-/* --- H2: sub-headlines inside a section --- */
-.case-study[data-project-id="intelkin"] .case-study-section h3,
-.case-study[data-project-id="intelkin"] .case-study-subbeat h3,
-.case-study[data-project-id="intelkin"] .friction-point h3,
-.case-study[data-project-id="intelkin"] .reflection-item h4 {
-  font-family: var(--intelkin-font-serif);
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--color-text);
-}
-
-.case-study[data-project-id="intelkin"] .case-study-section h3,
-.case-study[data-project-id="intelkin"] .case-study-subbeat h3 {
-  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
-}
-
-/* Card/grid titles: same H2 treatment, deliberately smaller to read
-   correctly inside their card/column layout (still clearly bigger and
-   heavier than body). */
-.case-study[data-project-id="intelkin"] .friction-point h3,
-.case-study[data-project-id="intelkin"] .reflection-item h4 {
-  font-size: 1.125rem;
-  line-height: 1.3;
-}
-
-/* friction-point h3 also carries the risk-shift label as a child span —
-   that stays on the Eyebrow/label treatment below, not this H2 rule. */
-.case-study[data-project-id="intelkin"] .friction-point h3 .friction-meta {
-  font-family: var(--intelkin-font-mono);
-  font-weight: 400;
-}
-
-/* --- Eyebrow / label --- */
-.case-study[data-project-id="intelkin"] .case-study-category,
-.case-study[data-project-id="intelkin"] .case-study-eyebrow,
-.case-study[data-project-id="intelkin"] .case-study-meta dt {
-  font-family: var(--intelkin-font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text-muted);
-}
-
-/* --- Terminal repo card: same monospace family as the eyebrows above,
-   so it reads as part of this type system instead of a one-off. Colors,
-   layout, and animation (a separate, earlier deliberate exception) are
-   untouched — this only swaps the font. --- */
-.case-study[data-project-id="intelkin"] .terminal-card {
-  font-family: var(--intelkin-font-mono);
-}
 
 /* Parallel-content columns (Market Research, Key Friction Points,
    Reflection) now use the shared .case-study-columns component in
