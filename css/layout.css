@@ -376,6 +376,90 @@ p.case-study-callout {
   margin-bottom: var(--space-4);
 }
 
+/* --- Parallel-content columns — a shared case-study component for
+   genuinely parallel items (a stat row, a set of findings, a set of
+   takeaways) that would otherwise render as stacked full-width blocks,
+   obscuring that they're parallel. Originated as a page-scoped Intelkin
+   exception; promoted here once a second case study (Recollab) needed
+   the same pattern, per "reuse, don't build parallel new components."
+   Stacks to one column below 768px, matching the site's named-breakpoint
+   convention (§9/§11). --- */
+.case-study-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5) var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .case-study-columns--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .case-study-columns--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* .friction-point / .reflection-item carry their own margin-bottom for
+   the single-column case elsewhere on the site; inside this grid it's
+   redundant since `gap` already spaces the columns. */
+.case-study-columns > .friction-point,
+.case-study-columns > .reflection-item {
+  margin-bottom: 0;
+}
+
+/* A single stat: a big Headline-tier number/claim (h3) over a short
+   Body-tier label (p) — e.g. "8x faster" / "Quote turnaround". Meant to
+   sit inside .case-study-columns, same as .friction-point. Font-family
+   already comes from .case-study-section h3 (Headline tier); this only
+   adds the extra size/spacing a stat callout needs over an ordinary
+   sub-headline. */
+.case-study-stat h3 {
+  font-size: 1.75rem;
+  margin-top: 0;
+}
+
+.case-study-stat p {
+  margin-top: var(--space-1);
+}
+
+/* --- Grouped visual — two related images (e.g. a before/after pair)
+   under one shared micro-label, side by side on desktop, stacked on
+   mobile. A shared case-study component, same reasoning as the columns
+   above. --- */
+.case-study-visual-group {
+  margin: 0 0 var(--space-5);
+}
+
+.case-study-visual-group-label {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-label);
+}
+
+.case-study-visual-group-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .case-study-visual-group-items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.case-study-visual-group-items img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
 /* Real image + caption — once a real asset replaces a media-placeholder
    (e.g. the Intelkin research moodboard). */
 .case-study-figure {

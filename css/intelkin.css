@@ -10,7 +10,7 @@
 
   This is a deliberate, disclosed exception to CLAUDE.md §10 — visual
   direction (typeface) is still "pending" site-wide, and every other page
-  keeps the plain system font stack (--font-base in tokens.css)
+  keeps the plain system font stack (--font-body)
   untouched. Intelkin alone is allowed a real, chosen type system for
   this round, per explicit instruction. Nothing here touches tokens.css,
   layout.css, or components.css, so no other page is affected and the
@@ -39,7 +39,7 @@
 
 :root {
   --intelkin-font-serif: "Instrument Serif", Georgia, serif;
-  --intelkin-font-sans: "Public Sans", var(--font-base);
+  --intelkin-font-sans: "Public Sans", var(--font-body);
   --intelkin-font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
@@ -121,43 +121,7 @@
   font-family: var(--intelkin-font-mono);
 }
 
-/* ---------------------------------------------------------------------
-   Layout: parallel-content columns — a second disclosed, page-scoped
-   exception, Intelkin only. Three spots on this page list genuinely
-   parallel items (Market Research's three approaches, the three Key
-   Friction Points, Reflection's two takeaways) that were rendering as
-   stacked full-width blocks; this lays them out side by side instead so
-   the "these are parallel" relationship is visible, not implied. Every
-   other section on the page (Overview, The Problem, etc.) stays
-   single-column and untouched. Scoped the same way as the typography
-   rules above: under [data-project-id="intelkin"], and this file is
-   only ever loaded by projects/intelkin.html. Nothing here touches
-   layout.css, so the shared case-study template and every other project
-   page are unaffected.
-
-   Stacks to one column below 768px (mirrors --bp-md in tokens.css — see
-   the layout.css/components.css header comments for why breakpoints are
-   literal px values here rather than var() in media queries). */
-.case-study[data-project-id="intelkin"] .intelkin-columns {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-5) var(--space-4);
-}
-
-@media (min-width: 768px) {
-  .case-study[data-project-id="intelkin"] .intelkin-columns--2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .case-study[data-project-id="intelkin"] .intelkin-columns--3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* .friction-point / .reflection-item carry their own margin-bottom
-   (layout.css) for the single-column case elsewhere on the site; inside
-   this grid it's redundant since `gap` already spaces the columns. */
-.case-study[data-project-id="intelkin"] .intelkin-columns > .friction-point,
-.case-study[data-project-id="intelkin"] .intelkin-columns > .reflection-item {
-  margin-bottom: 0;
-}
+/* Parallel-content columns (Market Research, Key Friction Points,
+   Reflection) now use the shared .case-study-columns component in
+   layout.css — promoted there once Recollab needed the same pattern.
+   Nothing left to do here. */
