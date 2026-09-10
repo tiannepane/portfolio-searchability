@@ -370,11 +370,13 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
+  font-family: var(--font-label);
 }
 
 .bento-card-title {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: var(--font-headline);
 }
 
 /* Card thumbnail (real project preview, once one exists — e.g. Intelkin).
