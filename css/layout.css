@@ -749,6 +749,81 @@ p.case-study-callout {
   color: var(--color-text-muted);
 }
 
+/* Theme Clustering visual (research-aggregator.html) — two real screenshots
+   (raw sticky notes going in, AI-grouped themes coming out) inside a small
+   bordered/surface container with a top micro-label, connected by a plain
+   gray arrow. No accent color here deliberately: CLAUDE.md §12 reserves
+   the accent for tiny moments, and this container is a new pattern, not a
+   reuse of an existing "labeled gray container" component (no such
+   component existed site-wide when this was built — closest neighbors are
+   .laptop-frame and .insight-map-card, whose surface/border/label styling
+   this borrows). Mobile-first: stacked with the arrow pointing down; side
+   by side with the arrow pointing right from --bp-md up. */
+.case-study-visual {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.case-study-visual-label {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.case-study-visual-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.case-study-visual-item {
+  margin: 0;
+  width: 100%;
+}
+
+.case-study-visual-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
+.case-study-visual-item figcaption {
+  margin-top: var(--space-2);
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.case-study-visual-arrow {
+  display: block;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  transform: rotate(90deg);
+}
+
+@media (min-width: 768px) {
+  .case-study-visual-pair {
+    flex-direction: row;
+  }
+
+  .case-study-visual-arrow {
+    transform: none;
+  }
+}
+
 /* A wide diagram that doesn't fit the column at a legible size (e.g. a
    long linear flowchart) scrolls horizontally instead of shrinking past
    readability — CLAUDE.md §9's "wide content scrolls in its own

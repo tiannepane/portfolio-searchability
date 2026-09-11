@@ -67,6 +67,21 @@
       <p class="case-study-lede">Three prerequisites had to be in place before any of this could work.</p>
       <p>Every interviewer needed to use the same note format, with notes capturing verbatim quotes or close paraphrases, not summaries like "user was frustrated," which gives a clustering model nothing to work with. And the process only holds up with at least 5 interviews; fewer than that is just pattern-matching on noise.</p>
       <p>Once those were in place, the redesign ran in three steps. Every interview note follows a Participant/Pain/Behavior format captured during the session, so Copilot can parse it reliably later. All notes from a round get pasted into Copilot with a single clustering prompt. Copilot then drafts a prioritized insight report: top themes by frequency, a supporting quote per theme, and a suggested implication for each. I review it, edit it, and add context Copilot doesn't have.</p>
+
+      <div class="case-study-visual">
+        <p class="case-study-visual-label">Theme Clustering</p>
+        <div class="case-study-visual-pair">
+          <figure class="case-study-visual-item">
+            <img src="/assets/images/cdw/cdw-rawnotes.jpg" alt="Eight sticky notes labeled P1 through P8, each holding one unfiltered participant quote about support ticket issues, scattered with no grouping" />
+            <figcaption>Raw Notes</figcaption>
+          </figure>
+          <span class="case-study-visual-arrow" aria-hidden="true">&#8594;</span>
+          <figure class="case-study-visual-item">
+            <img src="/assets/images/cdw/cdw-clusternotes.jpg" alt="The same eight notes after AI clustering, grouped into three labeled themes, with one high-impact outlier flagged for human review and one contradiction set aside" />
+            <figcaption>AI-Clustered</figcaption>
+          </figure>
+        </div>
+      </div>
     </section>
 
     <section class="case-study-section">
@@ -148,6 +163,9 @@
 
     <section class="case-study-section">
       <h2>Product Thinking</h2>
+      <figure class="case-study-figure">
+        <img src="/assets/images/cdw/cdw-tradeoff.jpg" alt="A seesaw graphic showing Human Judgment outweighing Speed with AI" />
+      </figure>
       <ul>
         <li>Risk: Copilot might cluster on surface language rather than what's actually meant. Every cluster gets reviewed before anyone acts on it.</li>
         <li>Risk: inconsistent note formats across interviewers tank output quality fast. Standardizing the template came before any of the AI work, not after.</li>
