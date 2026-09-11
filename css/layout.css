@@ -824,6 +824,189 @@ p.case-study-callout {
   }
 }
 
+/* "The Redesign" 3-step diagram (research-aggregator.html, Approach) —
+   sits inside .case-study-visual, reuses .case-study-visual-arrow as the
+   connector between steps. The middle step is the only AI-assisted one,
+   so it's the only one that gets --color-accent — everything else here
+   stays plain white/border, per the prompt's own "don't add any other
+   color" instruction. Note: the source prompt called for "accent
+   orange," but this site's confirmed accent (CLAUDE.md §12) is Oxblood
+   red, not orange — no orange exists anywhere in tokens.css, so this
+   uses the real --color-accent rather than inventing an undisclosed new
+   color. Mobile-first column stack; row at --bp-md, same breakpoint as
+   the Theme Clustering pair above. */
+.case-study-steps {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.case-study-step {
+  flex: 1;
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.case-study-step p {
+  margin: 0;
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+}
+
+.case-study-step--accent {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.case-study-step--accent p {
+  color: var(--color-accent-text);
+}
+
+@media (min-width: 768px) {
+  .case-study-steps {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Frequency vs Impact quadrant (research-aggregator.html, Human Fallback
+   Triggers) — a qualitative scatter illustrating the "single mention,
+   high impact" trigger, not a precise data chart. Two thin gray axes
+   with CSS-triangle arrowheads; four small point-cards positioned by eye
+   via per-point --x/--y custom properties (percentages within the plot,
+   set inline since each point's position is one-off layout data, not a
+   reusable style). Sits inside .case-study-visual, same as the two
+   components above. Only the single flagged outlier (P7) gets the real
+   site accent, matching the "one AI/exception moment" restraint used in
+   the step diagram above — same "not actually orange" note applies. */
+.quadrant-plot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 220px;
+}
+
+.quadrant-axis {
+  position: absolute;
+  background: var(--color-text-muted);
+}
+
+.quadrant-axis--x {
+  left: 6%;
+  right: 10%;
+  bottom: 10%;
+  height: 1px;
+}
+
+.quadrant-axis--y {
+  left: 6%;
+  top: 8%;
+  bottom: 10%;
+  width: 1px;
+}
+
+.quadrant-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+
+.quadrant-arrow--x {
+  right: calc(10% - 9px);
+  bottom: calc(10% - 5px);
+  border-left-color: var(--color-text-muted);
+  border-right-width: 0;
+}
+
+.quadrant-arrow--y {
+  left: calc(6% - 5px);
+  top: calc(8% - 9px);
+  border-bottom-color: var(--color-text-muted);
+  border-top-width: 0;
+}
+
+.quadrant-label {
+  position: absolute;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.quadrant-label--x {
+  right: 0;
+  bottom: calc(10% - 6px);
+}
+
+.quadrant-label--y {
+  left: 0;
+  top: 2%;
+}
+
+.quadrant-point {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  max-width: 120px;
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  transform: translate(-50%, -50%);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-label);
+  font-size: 0.625rem;
+  line-height: 1.3;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+}
+
+.quadrant-point--flagged {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+/* Sample terminal output (research-aggregator.html, Approach's Theme
+   Clustering step) — a static sibling to Intelkin's .terminal-card
+   (projects/intelkin.html), not the same component. Shares its real
+   colors and the site's one disclosed non-tokens.css font exception
+   (--font-mono, see tokens.css) and reuses .terminal-card-titlebar /
+   .terminal-dot* / .terminal-prompt / .terminal-cmd / .terminal-output
+   as-is, since those are purely visual with no attached behavior. Does
+   NOT reuse .terminal-card itself: that class carries a click-to-open
+   affordance (cursor:pointer, hover lift, pulsing glow, blinking
+   cursor) built for a link to a real repo — wiring that onto a block of
+   static sample output that links nowhere would visually promise a
+   click that does nothing. */
+.terminal-static-card {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 0 var(--space-5);
+  background: #0d0d0f;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.terminal-static-body {
+  margin: 0;
+  padding: 20px 18px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 /* A wide diagram that doesn't fit the column at a legible size (e.g. a
    long linear flowchart) scrolls horizontally instead of shrinking past
    readability — CLAUDE.md §9's "wide content scrolls in its own

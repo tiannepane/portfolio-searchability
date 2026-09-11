@@ -69,6 +69,23 @@
       <p>Once those were in place, the redesign ran in three steps. Every interview note follows a Participant/Pain/Behavior format captured during the session, so Copilot can parse it reliably later. All notes from a round get pasted into Copilot with a single clustering prompt. Copilot then drafts a prioritized insight report: top themes by frequency, a supporting quote per theme, and a suggested implication for each. I review it, edit it, and add context Copilot doesn't have.</p>
 
       <div class="case-study-visual">
+        <p class="case-study-visual-label">The Redesign</p>
+        <div class="case-study-steps">
+          <div class="case-study-step">
+            <p>Structured Note Capture</p>
+          </div>
+          <span class="case-study-visual-arrow" aria-hidden="true">&#8594;</span>
+          <div class="case-study-step case-study-step--accent">
+            <p>Theme Clustering</p>
+          </div>
+          <span class="case-study-visual-arrow" aria-hidden="true">&#8594;</span>
+          <div class="case-study-step">
+            <p>Prioritized Insight Report</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-study-visual">
         <p class="case-study-visual-label">Theme Clustering</p>
         <div class="case-study-visual-pair">
           <figure class="case-study-visual-item">
@@ -81,6 +98,36 @@
             <figcaption>AI-Clustered</figcaption>
           </figure>
         </div>
+      </div>
+
+      <div class="terminal-static-card">
+        <div class="terminal-card-titlebar">
+          <span class="terminal-dot terminal-dot--red" aria-hidden="true"></span>
+          <span class="terminal-dot terminal-dot--yellow" aria-hidden="true"></span>
+          <span class="terminal-dot terminal-dot--green" aria-hidden="true"></span>
+        </div>
+        <pre class="terminal-static-body"><span class="terminal-prompt">$</span> <span class="terminal-cmd">copilot-cluster run round-4-interviews.md</span>
+
+<span class="terminal-output">Parsing 8 interview notes...
+Clustering themes...
+
+THEME 1: No Reliable Visibility Into Ticket Status (3/8)
+  "The portal said 'In Progress' for three weeks straight..."
+
+THEME 2: Customers Build Their Own Manual Tracking Systems (3/8)
+  "I enter the same serial number and issue description..."
+
+THEME 3: Re-Explaining the Same Issue to Multiple People (2/8)
+  "Every rep asks the same questions..."
+
+FLAGGED: P7, single mention, high impact
+  "We almost switched vendors at renewal..."
+  Recommend human review.
+
+Contradiction preserved: P6
+  "Honestly, our escalations get handled fast..."
+
+Done. 3 themes, 1 flag, 1 contradiction.</span></pre>
       </div>
     </section>
 
@@ -158,6 +205,38 @@
     <section class="case-study-section">
       <h2>Human Fallback Triggers</h2>
       <p>Not every insight collapses cleanly into a theme. When the clustering surfaces something rare but high-stakes, or something that flatly contradicts the pattern it's building, it flags that for a person to look at instead of forcing a fit.</p>
+
+      <div class="case-study-columns case-study-columns--3">
+        <div class="friction-point">
+          <h3>Too Few Themes</h3>
+          <p>When Copilot returns fewer than 3 themes from 8+ interviews, the notes need reformatting, not proof there's only 1 or 2 patterns.</p>
+        </div>
+        <div class="friction-point">
+          <h3>Impact Over Frequency</h3>
+          <p>Copilot ranks by frequency only, so a single strategically important mention can still override that ranking.</p>
+        </div>
+        <div class="friction-point">
+          <h3>Always Reviewed</h3>
+          <p>Anything touching pricing, churn, or competitive switching goes through human review before it reaches leadership.</p>
+        </div>
+      </div>
+
+      <div class="case-study-visual">
+        <p class="case-study-visual-label">Frequency vs Impact</p>
+        <div class="quadrant-plot">
+          <span class="quadrant-axis quadrant-axis--x" aria-hidden="true"></span>
+          <span class="quadrant-axis quadrant-axis--y" aria-hidden="true"></span>
+          <span class="quadrant-arrow quadrant-arrow--x" aria-hidden="true"></span>
+          <span class="quadrant-arrow quadrant-arrow--y" aria-hidden="true"></span>
+          <span class="quadrant-label quadrant-label--x">Frequency</span>
+          <span class="quadrant-label quadrant-label--y">Impact</span>
+          <p class="quadrant-point" style="--x: 58%; --y: 60%;">Ticket Visibility</p>
+          <p class="quadrant-point" style="--x: 76%; --y: 68%;">Manual Tracking</p>
+          <p class="quadrant-point" style="--x: 68%; --y: 52%;">Re-Explaining Issues</p>
+          <p class="quadrant-point quadrant-point--flagged" style="--x: 20%; --y: 16%;">P7: Near Vendor Switch</p>
+        </div>
+      </div>
+
       <p>P7's "Nearly switched vendors over a 6-week ticket" got flagged this way: too significant to fold into an existing theme on the strength of one mention, and worth a human read before it's dismissed as noise.</p>
     </section>
 
