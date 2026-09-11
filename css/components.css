@@ -360,27 +360,36 @@
   aspect-ratio: 16 / 9;
 }
 
+/* Stacked (title, then meta), not side-by-side — a side-by-side row
+   with justify-content:space-between let a long title fight the meta
+   line for width and wrap to 2 lines. Each line now gets the card's
+   full width to itself, and both are forced to a single line via
+   nowrap/ellipsis below regardless of title length or card width. */
 .bento-card-caption {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: var(--space-2);
+  flex-direction: column;
+  gap: var(--space-1);
   padding-top: var(--space-3);
 }
 
 .bento-card-tagline {
+  overflow: hidden;
   font-family: var(--font-headline);
   font-weight: 700;
   font-size: 1rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--color-text);
 }
 
 .bento-card-meta {
+  overflow: hidden;
   font-family: var(--font-label);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--color-text-muted);
 }
 

@@ -111,6 +111,11 @@
     const tagline = document.createElement('h3');
     tagline.className = 'bento-card-tagline';
     tagline.textContent = project.tagline;
+    // .bento-card-tagline forces a single line (nowrap + ellipsis,
+    // components.css) so a long tagline can get visually truncated on a
+    // narrow card — the native title tooltip keeps the full text
+    // reachable on hover even when that happens.
+    tagline.title = project.tagline;
 
     const meta = document.createElement('p');
     meta.className = 'bento-card-meta';
