@@ -43,10 +43,10 @@
   --color-text: #18181b;
   --color-text-muted: #71717a;
   /* Accent (confirmed 2026-09-10, CLAUDE.md §12) — the first real accent
-     color in this codebase. Oxblood. Not currently rendered anywhere (its
-     one usage, the homepage grid's case-study pill, was removed the same
-     day per a design change) — reserved for tiny moments only, never a
-     card background or large surface. */
+     color in this codebase. Oxblood. In use as of the CDW case study
+     (research-aggregator.html): the workflow-compare before/after arrow
+     and the "New Workflow" caption — reserved for tiny moments only,
+     never a card background or large surface. */
   --color-accent: #92140C;
   --color-accent-text: #ffffff;
 
