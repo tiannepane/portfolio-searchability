@@ -98,7 +98,11 @@
 
     const meta = document.createElement('p');
     meta.className = 'bento-card-meta';
-    meta.textContent = `${project.title.toUpperCase()} • ${project.status} • ${project.year}`;
+    // A featured project can carry a single pre-composed attribution
+    // string (e.g. "Recollab AI / Contract 2026") instead of the default
+    // name/status/year template — .bento-card-meta's own uppercase
+    // styling applies to either shape, so this is typed in mixed case.
+    meta.textContent = project.attribution || `${project.title.toUpperCase()} • ${project.status} • ${project.year}`;
 
     caption.append(tagline, meta);
 
