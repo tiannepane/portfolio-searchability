@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/layout.css" />
   <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/feedback.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -17,30 +18,29 @@
 </head>
 <body>
   <div id="shared-nav"></div>
-  <main class="page-content">
+  <main class="page-content testimonial-page">
     <header class="page-header">
       <h1>Feedback</h1>
-      <p class="page-intro">A few words from people I've worked with — real quotes pending, see CLAUDE.md §8.</p>
+      <p class="page-intro">A few words from people I've worked with.</p>
     </header>
 
-    <section class="page-section testimonial-list">
-      <blockquote class="testimonial">
-        <p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.”</p>
-        <cite>[Name], [Title] at [Company]</cite>
-      </blockquote>
+    <section class="page-section">
+      <div class="testimonial-header">
+        <a
+          class="testimonial-linkedin-link"
+          href="https://www.linkedin.com/in/tianne-pane/details/recommendations/?detailScreenTabIndex=0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Read all on LinkedIn ↗
+        </a>
+      </div>
 
-      <blockquote class="testimonial">
-        <p>“Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.”</p>
-        <cite>[Name], [Title] at [Company]</cite>
-      </blockquote>
-
-      <blockquote class="testimonial">
-        <p>“Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.”</p>
-        <cite>[Name], [Title] at [Company]</cite>
-      </blockquote>
+      <div class="testimonial-grid" data-testimonial-grid aria-label="Testimonials"></div>
     </section>
   </main>
   <script src="/js/shared-ui.js" defer></script>
   <script src="/js/chat.js" defer></script>
+  <script src="/js/feedback.js" defer></script>
 </body>
 </html>

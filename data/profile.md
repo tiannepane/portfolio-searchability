@@ -27,7 +27,8 @@ placeholders with real content; nothing here is invented.
 
 ## Testimonials
 
-[NEEDS REAL CONTENT — pull from feedback.html once real quotes/attribution exist.]
+Real testimonials now live in `data/testimonials.json` (8 entries, rendered on
+`feedback.html`) — pull from there rather than duplicating quotes here.
 
 ## Contact
 
