@@ -252,10 +252,21 @@ h1 {
   .case-study-page {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-6);
-    max-width: 1440px;
-    margin-inline: auto;
-    padding-inline: var(--space-6);
+    /* More room between the sidenav and the body text than the
+       container's own side inset (below) — the two were previously
+       tied to the same value. */
+    gap: var(--space-7);
+    /* No max-width/margin-inline:auto here on purpose (removed) — that
+       combination re-centers the whole row on any screen wider than
+       the cap (very common at 1920px+), which silently undid the
+       smaller left inset below the moment a viewer's monitor exceeded
+       1440px. .case-study (the content column) already caps its own
+       width at 880px independently, so nothing needs this container
+       to do it too — dropping it means the sidenav sits at a fixed
+       distance from the real left edge on any screen size, not just
+       up to 1440px. */
+    padding-left: var(--space-4);
+    padding-right: var(--space-6);
   }
 
   .case-study-sidenav {
