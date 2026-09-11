@@ -85,6 +85,10 @@
         <h3>V2: n8n</h3>
         <p>I built the first working version in n8n, the fastest way to get something live and wired into their systems that week. Given a broken-down building and a trade, it found nearby vendors and fired off outreach. It worked well enough to close the deal.</p>
         <p>But "nearby" was doing too much work: no cap on distance, no check on licensing or trade match. It ran for two days, with small errors piling up the whole time, before it queued outreach to vendors two hours outside a building's service area, in the wrong trade entirely. Trust eroded fast, on both sides.</p>
+
+        <figure class="case-study-figure">
+          <img src="/assets/images/recollab-diag2.jpg" alt="Diagram: V2 n8n automated flow — issue and trade logged, search nearby vendors by radius only (breaks down: no distance cap, no license or trade check), blast outreach to all found, PM manually checks responses across channels, PM compiles the list by hand over about 3 business days (breaks down: no aggregation, quotes compiled by hand over days), shared with property manager." />
+        </figure>
       </div>
 
       <div class="case-study-subbeat">
@@ -100,12 +104,8 @@
         </ul>
         <p>No quote reaches the property manager, and no vendor gets hired, without a person approving it.</p>
 
-        <figure class="case-study-visual-group">
-          <p class="case-study-visual-group-label">Agent Flow: Before / After</p>
-          <div class="case-study-visual-group-items">
-            <img src="/assets/images/recollab-diag2.jpg" alt="Diagram: V2 n8n automated flow — issue and trade logged, search nearby vendors by radius only (breaks down: no distance cap, no license or trade check), blast outreach to all found, PM manually checks responses across channels, PM compiles the list by hand over about 3 business days (breaks down: no aggregation, quotes compiled by hand over days), shared with property manager." />
-            <img src="/assets/images/recollab-langchain.png" alt="Hand-drawn sketch of the V3 agent flow: orchestrator agent routes client info to known vendors or a find-new-vendors search, both feed outreach and follow-up agents, which feed an aggregate step, then a review step, then share to client." />
-          </div>
+        <figure class="case-study-figure">
+          <img src="/assets/images/recollab-langchain.png" alt="Hand-drawn sketch of the V3 agent flow: orchestrator agent routes client info to known vendors or a find-new-vendors search, both feed outreach and follow-up agents, which feed an aggregate step, then a review step, then share to client." />
         </figure>
       </div>
     </section>

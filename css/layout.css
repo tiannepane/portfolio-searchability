@@ -791,43 +791,6 @@ p.case-study-callout {
   letter-spacing: 0.04em;
 }
 
-/* --- Grouped visual — two related images (e.g. a before/after pair)
-   under one shared micro-label, side by side on desktop, stacked on
-   mobile. A shared case-study component, same reasoning as the columns
-   above. --- */
-.case-study-visual-group {
-  margin: 0 0 var(--space-5);
-}
-
-.case-study-visual-group-label {
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: var(--space-3);
-  font-family: var(--font-label);
-}
-
-.case-study-visual-group-items {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
-}
-
-@media (min-width: 768px) {
-  .case-study-visual-group-items {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.case-study-visual-group-items img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: var(--radius);
-  border: 1px solid var(--color-border);
-}
-
 /* Real image + caption — once a real asset replaces a media-placeholder
    (e.g. the Intelkin research moodboard). */
 .case-study-figure {
