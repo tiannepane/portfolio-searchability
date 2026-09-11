@@ -138,6 +138,87 @@ h1 {
   margin-inline: auto;
 }
 
+/* --- Case-study sidebar nav — sticky, scroll-spy list of section
+   links, built at runtime by js/case-study-nav.js from that page's own
+   headings (docs/superpowers/specs/2026-09-11-case-study-sidenav-spacing-design.md).
+   Below --bp-md (768px, same breakpoint the Intelkin column layout
+   already uses) the script builds a <details> accordion instead of a
+   bare list — this styles both shapes. --- */
+.case-study-page {
+  display: block;
+  margin-bottom: var(--space-6);
+}
+
+.case-study-sidenav {
+  margin-bottom: var(--space-5);
+}
+
+.case-study-sidenav details {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-3) var(--space-4);
+}
+
+.case-study-sidenav summary {
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.case-study-sidenav details ul {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Link styling applies identically whether the ancestor is <details>
+   (mobile) or the bare hook div (desktop, below) — only the container
+   layout differs by breakpoint, not the active/muted color treatment. */
+.case-study-sidenav a {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  padding: var(--space-1) 0;
+}
+
+.case-study-sidenav a.is-active {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .case-study-page {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-6);
+    max-width: 960px;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  .case-study-sidenav {
+    margin-bottom: 0;
+    position: sticky;
+    top: var(--space-6);
+    flex: 0 0 180px;
+  }
+
+  .case-study-sidenav > ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .case-study {
+    flex: 1;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+
 .case-study-header {
   margin-bottom: var(--space-5);
 }
