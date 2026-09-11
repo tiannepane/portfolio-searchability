@@ -144,6 +144,7 @@
       },
       { passive: true }
     );
+    checkBottom();
   }
 
   document.addEventListener('DOMContentLoaded', initSidenav);
