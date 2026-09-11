@@ -625,15 +625,23 @@ p.case-study-callout {
   margin-top: var(--space-1);
 }
 
-/* --- Before/after workflow comparison — a labeled bordered container
-   holding two metric panels on either side of a direction arrow (e.g.
-   CDW's old vs. new research-synthesis workflow). Panels reuse the base
-   .case-study-meta dt/dd pairing unchanged. Stacks vertically below
-   768px with the arrow rotated to point down instead of across. Shared
-   case-study component, built for CDW, reusable anywhere a two-state
-   comparison needs to read as evidence rather than its own section. --- */
+/* --- Before/after workflow comparison (CDW's old vs. new research-
+   synthesis workflow). A single flat panel — thin border, no shadow,
+   no nested card — was previously an outer bordered .workflow-compare
+   wrapping two more-bordered .case-study-meta panels inside it (two
+   cards inside a card), and repeated the numbers already shown in the
+   stat row above (Synthesis Time, Time to Share) with nothing added.
+   Kept only the one metric that carries real extra detail beyond the
+   stat row (Tools: the actual tool list, not just a count) — a metric
+   with nothing to add beyond its headline number doesn't get a row
+   here at all. .workflow-compare-grid is one 3-column grid (row label,
+   old value, new value) shared by the header row and every data row,
+   so "Old Workflow"/"New Workflow" print once as column headers and a
+   row label like "Tools" prints once, not once per column. The accent
+   color marks only the "New Workflow" header text — no background
+   tint behind the column. --- */
 .workflow-compare {
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-7);
   padding: var(--space-5) var(--space-4) var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -648,23 +656,31 @@ p.case-study-callout {
   font-family: var(--font-label);
 }
 
-.workflow-compare-panels {
+.workflow-compare-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-4);
-  align-items: center;
+  grid-template-columns: auto 1fr 1fr;
+  column-gap: var(--space-4);
+  row-gap: var(--space-2);
+  align-items: baseline;
 }
 
-.workflow-compare-arrow {
-  justify-self: center;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--color-accent);
-  transform: rotate(90deg);
+.workflow-compare-row-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  font-family: var(--font-label);
 }
 
-.workflow-compare-panel .case-study-meta {
-  margin-bottom: var(--space-3);
+.workflow-compare-value {
+  color: var(--color-text);
+}
+
+/* The "New Workflow" column (3rd grid column, every row) — a plain
+   vertical rule between old and new, not a second bordered box. */
+.workflow-compare-grid > :nth-child(3n) {
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--color-border);
 }
 
 .workflow-compare-caption {
