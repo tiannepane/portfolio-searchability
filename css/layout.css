@@ -22,6 +22,9 @@ body {
   font-family: var(--font-body);
   color: var(--color-text);
   background: var(--color-bg);
+  /* Reserves room for the fixed-position .site-nav below, which is
+     removed from normal document flow. */
+  padding-top: var(--site-nav-height);
 }
 
 h1 {
@@ -31,7 +34,22 @@ h1 {
   line-height: 1.05;
 }
 
-/* --- Shared nav shell (markup injected by js/shared-ui.js) --- */
+/* --- Shared nav shell (markup injected by js/shared-ui.js, so this
+   applies on every page that mounts #shared-nav — home + every case
+   study — with one rule). Pinned to the top of the viewport so it stays
+   reachable while scrolling, on every page; an opaque background keeps
+   content from showing through underneath it; z-index sits above
+   ordinary content and the sidenav (both default stacking) but below
+   .tianne-panel (z-index: 30, components.css) so the Ask Tianne panel
+   still opens on top of the nav, not under it.
+
+   position: fixed rather than sticky — the nav's containing block is
+   the full-height page, so the two are visually identical here (fixed
+   just always pins; sticky would pin from the same spot with nothing
+   to ever release it), and fixed measured as reliable in testing where
+   sticky did not consistently composite correctly. Since fixed removes
+   the nav from normal flow, `body`'s padding-top below reserves its
+   height so page content doesn't render underneath it. */
 .site-nav {
   display: flex;
   align-items: center;
@@ -39,6 +57,19 @@ h1 {
   gap: var(--space-4);
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--color-border);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 25;
+  background: var(--color-bg);
+}
+
+/* Keep in sync with the nav's real rendered height — used both to
+   reserve room for the now-fixed nav (body's padding-top, below) and
+   so the case-study sidenav's sticky offset clears it. */
+:root {
+  --site-nav-height: 69px;
 }
 
 .site-nav-list {
@@ -194,21 +225,32 @@ h1 {
 }
 
 @media (min-width: 768px) {
+  /* Widened from 960px, and switched from a large auto-centered gutter
+     to a modest fixed side padding: at typical desktop widths (up to
+     1440px) the container now fills the viewport minus that fixed
+     padding, so the sidenav sits close to the real left edge instead
+     of a big empty margin pushing it toward the middle. Beyond 1440px
+     (very wide monitors), margin-inline: auto still centers the capped
+     box, but the two gutters stay a normal, comparable size on both
+     sides rather than ballooning around a narrow 960px column. */
   .case-study-page {
     display: flex;
     align-items: flex-start;
     gap: var(--space-6);
-    max-width: 960px;
+    max-width: 1440px;
     margin-inline: auto;
-    padding-inline: var(--space-4);
+    padding-inline: var(--space-6);
   }
 
   .case-study-sidenav {
     margin-bottom: 0;
     position: sticky;
-    top: var(--space-6);
+    /* Clears the fixed site-nav's real height (--site-nav-height,
+       above) plus a gap, so the sidenav starts right below the nav
+       instead of sitting underneath it. */
+    top: calc(var(--site-nav-height) + var(--space-5));
     flex: 0 0 180px;
-    max-height: calc(100vh - var(--space-6) * 2);
+    max-height: calc(100vh - var(--site-nav-height) - var(--space-5) - var(--space-6));
     overflow-y: auto;
   }
 
@@ -219,6 +261,10 @@ h1 {
   }
 
   .case-study {
+    /* Widened from the mobile-first 720px (still set as the base rule
+       above) so the body text actually uses the extra room this
+       breakpoint frees up, instead of leaving it as unused gutter. */
+    max-width: 880px;
     flex: 1;
     margin-inline: 0;
     padding-inline: 0;
@@ -253,6 +299,24 @@ h1 {
 .case-study-section p,
 .case-study-section li {
   color: var(--color-text-muted);
+}
+
+/* Was inheriting body's line-height: 1.5 and reset.css's `* { margin: 0 }`
+   with no override — paragraphs had no breathing room and consecutive
+   <p> siblings within one section sat flush against each other.
+   Direct-child combinator (>) is deliberate: .case-study-section also
+   contains <p> tags several levels deep inside other components
+   (case-study-stat, workflow-compare-caption, insight-map-quote, …) —
+   those already have their own sizing and must not inherit prose
+   spacing/line-height too. Only the hand-written body paragraphs are
+   direct children of the section. */
+.case-study-section > p {
+  line-height: 1.7;
+  margin-bottom: var(--space-4);
+}
+
+.case-study-section > p:last-child {
+  margin-bottom: 0;
 }
 
 .case-study-back {
