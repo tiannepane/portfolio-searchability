@@ -150,6 +150,15 @@ h1 {
   gap: var(--space-4);
 }
 
+/* Real photos, varying source dimensions — cropped to a consistent
+   card shape rather than leaving a ragged grid of mismatched sizes. */
+.fun-gallery img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
 @media (min-width: 480px) {
   .fun-gallery {
     grid-template-columns: repeat(2, 1fr);
