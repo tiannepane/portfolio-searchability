@@ -478,14 +478,37 @@ p.case-study-lede {
   color: var(--color-text);
 }
 
-/* Generous variant for the hero role/timeline/team/skills/tech-stack
-   block specifically — bigger padding, bigger radius, roomier gaps. The
-   "How It Works" tech mini-table further down the page reuses the base
-   .case-study-meta above unchanged. */
+/* Hero role/timeline/team/skills/[tech-stack] row, directly under the
+   hero thumbnail — no card, no border, no background: the fields sit
+   straight on the page. A plain 4-column grid on desktop (a 5th field
+   wraps to a second row of the same grid automatically — 5 items in a
+   4-column grid just do that, no extra rule needed), one column
+   stacked on mobile. Explicitly un-sets every card property the base
+   .case-study-meta above sets, since --hero is layered on top of it
+   in markup (class="case-study-meta case-study-meta--hero") — the
+   base class stays a bordered card unchanged for its other reuses
+   (workflow-compare panels, the "How It Works" tech mini-table). */
 .case-study-meta.case-study-meta--hero {
-  gap: var(--space-4);
-  padding: var(--space-6);
-  border-radius: var(--radius-lg);
+  gap: var(--space-5) var(--space-4);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .case-study-meta.case-study-meta--hero {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Multi-value fields (Skills, a multi-part Team) stack as separate
+   lines in their own column rather than running together with commas —
+   values are unchanged, only the separator (comma -> line break). */
+.case-study-meta--hero dd.case-study-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 .friction-point {
