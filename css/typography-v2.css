@@ -72,8 +72,19 @@
   font-size: 1.25rem;
 }
 
-/* Homepage project-card titles: 1rem -> 1.1rem (+10%). */
+/* Homepage project-card titles: base 1rem, +10% to 1.1rem for the
+   Instrument Serif swap above, then a separate, later 1.5x request on
+   top of that (1.1rem -> 1.65rem) — unrelated to the serif-legibility
+   reasoning, just a size preference for the homepage cards. */
 .home-layout .bento-card-tagline {
   font-weight: 400;
-  font-size: 1.1rem;
+  font-size: 1.65rem;
+}
+
+/* Card meta line ("CDW / SHIPPED 2026") — same 1.5x request:
+   0.75rem -> 1.125rem. Not part of the Instrument Serif pass (this
+   line was already on --font-label/IBM Plex Mono via the token
+   redefinition above; only the size changes here). */
+.home-layout .bento-card-meta {
+  font-size: 1.125rem;
 }
