@@ -310,12 +310,16 @@
 }
 
 /* Reuses .media-placeholder (layout.css) for projects with no real
-   thumbnail yet — this modifier only removes its standalone margin,
-   which doesn't apply inside a thumb slot that already has its own
-   caption spacing below. */
+   thumbnail yet — this modifier removes its standalone margin (doesn't
+   apply inside a thumb slot with its own caption spacing below) and
+   swaps its fixed 220px min-height for a 16:9 aspect-ratio, so a
+   placeholder card matches the ~16:9 real image/video thumbnails next
+   to it in the grid instead of rendering visibly shorter. */
 .bento-card-thumb-placeholder {
   margin-bottom: 0;
   border-radius: var(--radius-lg);
+  min-height: 0;
+  aspect-ratio: 16 / 9;
 }
 
 .bento-card-caption {
