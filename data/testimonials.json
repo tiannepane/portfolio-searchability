@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Iris Guo",
+    "role": "AI PM and Mentor, Scale AI / Zynga",
+    "quote": "I met Tianne through women in tech community events in Toronto and have been mentoring her through her transition into product management. What stood out immediately was how she thinks about problems. She comes in with a clear point of view, asks the right questions, and knows how to move from insight to action quickly. I pushed back on some of her early design work because I wanted her to bring more intentionality to it. She responded by teaching herself how leading brands approach their UI and UX, and used that to channel her artistic eye into her product decisions. That is who she is as a person. She is genuinely curious, resourceful, and has a natural ability to learn fast, often using AI tools to close gaps and push her work further than most people would think to go. She is early in her career, but she operates with the kind of clarity and ownership that most PMs take years to develop. Any team that hires her is getting a product person who will keep improving with a growth mindset.",
+    "image": "/assets/images/feedback/iris.png",
+    "size": "large"
+  },
+  {
+    "name": "Sanjay Jaimy",
+    "role": "Account Manager, CDW",
+    "quote": "I have worked with Tianne on a number of customer accounts at CDW and she consistently elevates the quality of the conversation. What she does better than most is ask the right questions. She has a way of getting customers to open up and share what is actually going on, which gives the whole team better information to work with. She also comes incredibly prepared, using AI tools to research accounts and stay on top of industry trends, which she weaves naturally into customer conversations. On one of our accounts, she reframed the conversation around leasing rather than purchasing outright, which gave the customer the cost predictability they needed during a period of rising prices. That kind of thinking comes from really listening. She is warm, responsive, and someone customers genuinely trust.",
+    "image": "/assets/images/feedback/sanjay.png",
+    "size": "large"
+  },
+  {
+    "name": "Cindy Phan-Tran",
+    "role": "Account Manager, CDW",
+    "quote": "Tianne is one of those people who makes everyone around her better. We had a customer come into our office for an onsite visit and she led the technical conversation naturally and confidently. What stood out was how she structured the discovery. She asked questions that got to the root of what the customer actually needed, not just what they asked for. When they were stuck deciding between options, she proposed they take a unit home to test before committing. That kind of thinking, validating the solution with the user before locking them in, is rare. They went with exactly what she recommended. She is strategic, generous with her teammates, and always puts the right outcome for the customer first.",
+    "image": "/assets/images/feedback/cindy.png",
+    "size": "medium"
+  },
+  {
+    "name": "Stefan Riola",
+    "role": "Account Manager, CDW",
+    "quote": "Tianne has been one of the most helpful people I have leaned on during my transition into an Account Rep at CDW. She does not just share what works, she explains the thinking behind it. She gave me frameworks for running stronger discovery conversations, translating what customers say into what they actually need, and navigating challenging situations like price sensitivity and stock uncertainty. She also strengthened my foundation of how I engage Perplexity for account research and industry insights, which has changed how prepared I show up to customer conversations. She approaches every interaction like a problem to solve for the customer, and that perspective has had a real impact on how I work.",
+    "image": "/assets/images/feedback/stefan.png",
+    "size": "medium"
+  },
+  {
+    "name": "Ipek Yilmaz",
+    "role": "CEO, Recollab AI",
+    "quote": "Tianne is one of those people who just gets it. She joined as our first part-time PM and needed almost zero hand-holding from day one. She has a real talent for understanding customer pain points quickly and brings that feedback directly to me. She also supported me in some critical business meetings and held her own completely. She worked across a team of ML post-docs, domain experts, and devs and communicated well with all of them. She is fully AI-native, always testing new tools and sharing what works with the team. Her UI/UX is very strong and she has a deep understanding of the product and use case. Four months in and she genuinely feels like a founding team member.",
+    "image": "/assets/images/feedback/ipek.png",
+    "size": "medium"
+  },
+  {
+    "name": "Nastaran Dabiran",
+    "role": "Machine Learning Engineer, Recollab AI",
+    "quote": "Tianne has been a fantastic addition to the team. She is energetic, focused, and very clear in task delivery and coordination. One of her biggest contributions was leading our transition to Jira and taking the time to work one-on-one with team members so everyone became comfortable using it. She also quickly picked up our AI stack, using Claude Code and Lovable to prototype efficiently, and works directly in GitHub alongside the team. She has only been here four months and it genuinely does not feel like it. Having her on the team makes the work feel more collaborative and structured.",
+    "image": "/assets/images/feedback/nastaran.png",
+    "size": "medium"
+  },
+  {
+    "name": "Ceren Yalcin",
+    "role": "CTO, Recollab AI",
+    "quote": "I have worked closely with Tianne over the past few months and what stands out is how quickly she grows. Her design thinking has sharpened noticeably. She asks better questions, challenges assumptions earlier, and brings a more structured point of view to every review. She taught herself Lovable and Claude Code to lead our product demo overhaul, and used that process to surface real gaps in the product experience we had been too close to see. Four months in, she is already operating well above where most people start.",
+    "image": "/assets/images/feedback/ceren.png",
+    "size": "small"
+  },
+  {
+    "name": "Kartikay Sharma",
+    "role": "Software Engineer, Recollab AI",
+    "quote": "Tianne came into Recollab and made the team's work easier. She restructured how we tracked and prioritized everything in Jira, which gave engineering real clarity on what to build and when. She asks the right questions and does not make decisions without understanding the technical side first. Solid PM to work with.",
+    "image": "/assets/images/feedback/kartikay.png",
+    "size": "small"
+  }
+]
