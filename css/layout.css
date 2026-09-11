@@ -275,8 +275,10 @@ h1 {
   letter-spacing: 0.04em;
 }
 
-/* Hero image/gif — shows the animated version by default, swaps to a
-   static poster frame under prefers-reduced-motion (Quality Floor, §11). */
+/* Hero image/gif/video — shows the animated version by default, swaps to a
+   static poster frame under prefers-reduced-motion (Quality Floor, §11).
+   The motion element is an <img> (gif) or a <video> (autoplay/loop/muted)
+   depending on the asset; the poster is always a plain <img>. */
 .case-study-hero {
   margin-bottom: var(--space-6);
   border: 1px solid var(--color-border);
@@ -284,20 +286,22 @@ h1 {
   overflow: hidden;
 }
 
-.case-study-hero img {
+.case-study-hero img,
+.case-study-hero video {
   display: block;
   width: 100%;
   height: auto;
 }
 
-/* Ties .case-study-hero img's specificity (class+element) so this actually
-   wins instead of losing the cascade to the rule above. */
+/* Ties .case-study-hero img/video's specificity (class+element) so this
+   actually wins instead of losing the cascade to the rule above. */
 img.case-study-hero-static {
   display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  img.case-study-hero-motion {
+  img.case-study-hero-motion,
+  video.case-study-hero-motion {
     display: none;
   }
 
@@ -962,6 +966,17 @@ p.case-study-callout {
   font-size: 0.875rem;
   padding: var(--space-4);
   margin-bottom: var(--space-5);
+}
+
+/* Louder variant — a project with nothing built yet to preview, rather
+   than an image simply not sourced yet. Same slot, bigger statement. */
+.media-placeholder--coming-soon {
+  font-family: var(--font-headline);
+  font-size: clamp(1.5rem, 1.1rem + 2vw, 2.5rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text);
+  letter-spacing: 0.02em;
 }
 
 @media (min-width: 768px) {
