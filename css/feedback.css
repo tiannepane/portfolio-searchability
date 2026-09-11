@@ -46,22 +46,20 @@
   flex-shrink: 0;
 }
 
+/* Mobile-first: plain stacked column via CSS Grid. At >=768px, JS
+   (js/feedback.js's layoutMasonry) takes over with real masonry —
+   each card absolutely positioned into whichever column(s) currently
+   have the least height. A CSS grid alone can't do this: with
+   grid-auto-flow: dense, every ROW locks its height to its tallest
+   cell, so a 2-column "large" card sharing a row with a taller
+   1-column card left a large dead gap below the shorter one before
+   the next row could start. True masonry tracks each column's height
+   independently, so the next card always starts right where the
+   shortest column left off — no row-locked gaps. */
 .testimonial-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-4);
-}
-
-@media (min-width: 768px) {
-  .testimonial-grid {
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-flow: dense;
-    align-items: start;
-  }
-
-  .testimonial-card--large {
-    grid-column: span 2;
-  }
 }
 
 .testimonial-card {
@@ -74,6 +72,28 @@
   transform: translateY(16px);
   filter: blur(6px);
   transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+}
+
+/* Comes after the base .testimonial-card rule above on purpose — the
+   base rule also sets position (relative, so the LinkedIn glyph can
+   anchor to it) at equal specificity, so this media query's
+   position: absolute only wins the cascade because it's declared
+   later in the file. Ordering these the other way around silently
+   left every card in normal document flow, stacking full-height one
+   after another instead of masonry-positioned — a real bug caught by
+   checking computed position in the browser, not just the JS output. */
+@media (min-width: 768px) {
+  .testimonial-grid {
+    display: block;
+    position: relative;
+  }
+
+  .testimonial-card {
+    position: absolute;
+    /* top/left/width set inline by layoutMasonry(); this is just a
+       safe default before JS runs on the very first paint. */
+    width: 100%;
+  }
 }
 
 .testimonial-card.is-visible {

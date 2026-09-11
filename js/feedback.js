@@ -13,12 +13,26 @@
   handles the blur/translateY/opacity — see feedback.css), with a
   small stagger by index via transition-delay, same restraint as
   js/case-study-nav.js's approach elsewhere on the site.
+
+  layoutMasonry() below hand-rolls a masonry layout (independent
+  per-column heights, not CSS Grid's row-locked height) so a "large"
+  card next to a shorter card never leaves a dead gap before the next
+  row — see the comment on .testimonial-grid in feedback.css for why
+  CSS Grid alone couldn't do this. COLUMNS/GAP_PX here must stay in
+  sync with the column count and var(--space-4) in feedback.css's
+  >=768px breakpoint; there's no way to read a CSS custom property's
+  computed px value back into a layout calculation like this without
+  it, short of parsing getComputedStyle, which isn't worth it for two
+  numbers that only change if the design does.
 */
 
 (function () {
   const DATA_URL = '/data/testimonials.json';
   const STAGGER_MS = 60;
   const MAX_STAGGER_MS = 300;
+  const COLUMNS = 3;
+  const GAP_PX = 16; // var(--space-4)
+  const DESKTOP_QUERY = '(min-width: 768px)';
 
   function linkedInGlyph() {
     const ns = 'http://www.w3.org/2000/svg';
@@ -82,6 +96,66 @@
     return 'paper';
   }
 
+  // True masonry: places each card into whichever column(s) currently
+  // have the least height, rather than letting CSS Grid lock a whole
+  // row's height to its tallest cell. Mobile (<768px) is untouched —
+  // feedback.css keeps a plain single-column grid there, this
+  // function no-ops and clears any leftover inline positioning.
+  function layoutMasonry(grid, cards) {
+    if (!window.matchMedia(DESKTOP_QUERY).matches) {
+      cards.forEach((card) => {
+        card.style.position = '';
+        card.style.top = '';
+        card.style.left = '';
+        card.style.width = '';
+      });
+      grid.style.height = '';
+      return;
+    }
+
+    const containerWidth = grid.clientWidth;
+    const colWidth = (containerWidth - GAP_PX * (COLUMNS - 1)) / COLUMNS;
+    const colHeights = new Array(COLUMNS).fill(0);
+
+    cards.forEach((card) => {
+      const span = card.classList.contains('testimonial-card--large') ? 2 : 1;
+      const width = colWidth * span + GAP_PX * (span - 1);
+
+      // Whichever starting column (0..COLUMNS-span) has the lowest MAX
+      // height across the span it would occupy — a 2-column card can't
+      // start somewhere that leaves one of its two columns shorter
+      // than the other underneath it. On a tie (common right after a
+      // large card: two different pairs can share the same max), fall
+      // back to the lower SUM across the span, so a still-empty column
+      // gets used instead of stacking on top of columns that are
+      // already tied-tallest — without this, a second large card kept
+      // stacking directly under the first instead of using the empty
+      // third column next to it, leaving that whole column blank.
+      let bestCol = 0;
+      let bestTop = Infinity;
+      let bestSum = Infinity;
+      for (let c = 0; c <= COLUMNS - span; c++) {
+        const slice = colHeights.slice(c, c + span);
+        const top = Math.max(...slice);
+        const sum = slice.reduce((a, b) => a + b, 0);
+        if (top < bestTop || (top === bestTop && sum < bestSum)) {
+          bestTop = top;
+          bestSum = sum;
+          bestCol = c;
+        }
+      }
+
+      card.style.width = `${width}px`;
+      card.style.left = `${bestCol * (colWidth + GAP_PX)}px`;
+      card.style.top = `${bestTop}px`;
+
+      const newHeight = bestTop + card.offsetHeight + GAP_PX;
+      for (let c = bestCol; c < bestCol + span; c++) colHeights[c] = newHeight;
+    });
+
+    grid.style.height = `${Math.max(...colHeights) - GAP_PX}px`;
+  }
+
   function initRevealObserver(cards) {
     if (!('IntersectionObserver' in window)) {
       cards.forEach((card) => card.classList.add('is-visible'));
@@ -124,6 +198,20 @@
 
     grid.append(...cards);
     initRevealObserver(cards);
+
+    layoutMasonry(grid, cards);
+    // Heights measured before the real fonts finish loading reflect
+    // fallback-font metrics — re-run once document.fonts.ready
+    // resolves so the layout matches what's actually on screen.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => layoutMasonry(grid, cards));
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => layoutMasonry(grid, cards), 150);
+    });
   }
 
   document.addEventListener('DOMContentLoaded', initTestimonials);
