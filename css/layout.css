@@ -206,13 +206,20 @@ h1 {
 
 /* Link styling applies identically whether the ancestor is <details>
    (mobile) or the bare hook div (desktop, below) — only the container
-   layout differs by breakpoint, not the active/muted color treatment. */
+   layout differs by breakpoint, not the active/muted color treatment.
+   padding: var(--space-2) (was --space-3) — a page with a long section
+   list (Intelkin's 11 vs. e.g. Recollab's 5) was tall enough to trip
+   the sticky sidenav's max-height/overflow-y on a shorter browser
+   window, clipping a section link mid-line under a bare scrollbar.
+   Tighter padding keeps an 11-item list fitting without scrolling on
+   realistic window heights, so every case study's sidenav reads the
+   same regardless of how many sections it has. */
 .case-study-sidenav a {
   display: block;
   font-family: var(--font-body);
   font-size: 0.9375rem;
   color: var(--color-text-muted);
-  padding: var(--space-3) 0;
+  padding: var(--space-2) 0;
 }
 
 .case-study-sidenav a.is-active {
@@ -252,12 +259,30 @@ h1 {
     flex: 0 0 180px;
     max-height: calc(100vh - var(--site-nav-height) - var(--space-5) - var(--space-6));
     overflow-y: auto;
+    /* Fallback for a section list still too tall for a very short
+       window even after the tighter link padding above — a themed
+       thin scrollbar instead of the bare default one. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .case-study-sidenav::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .case-study-sidenav::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--radius);
   }
 
   .case-study-sidenav > .case-study-sidenav-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    /* Tighter than the mobile accordion's list (var(--space-2)) —
+       more headroom before a long section list needs the max-height
+       scroll fallback above. Mobile's <details> version isn't
+       height-constrained the same way, so it keeps the roomier gap. */
+    gap: var(--space-1);
   }
 
   .case-study {
