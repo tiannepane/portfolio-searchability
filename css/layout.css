@@ -233,11 +233,11 @@ h1 {
 }
 
 .case-study-section {
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-7);
 }
 
 .case-study-section h2 {
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
   font-size: clamp(2.25rem, 1.5rem + 4vw, 3.25rem);
   line-height: 1.05;
   font-family: var(--font-headline);
@@ -272,7 +272,7 @@ h1 {
 /* Hero image/gif — shows the animated version by default, swaps to a
    static poster frame under prefers-reduced-motion (Quality Floor, §11). */
 .case-study-hero {
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -335,7 +335,7 @@ p.case-study-lede {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  margin-bottom: var(--space-7);
   padding: var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
