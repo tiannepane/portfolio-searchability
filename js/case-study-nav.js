@@ -51,6 +51,7 @@
 
   function buildLinkList(sections) {
     const ul = document.createElement('ul');
+    ul.className = 'case-study-sidenav-list';
     sections.forEach(({ id, label }) => {
       const li = document.createElement('li');
       const a = document.createElement('a');

@@ -166,7 +166,7 @@ h1 {
   color: var(--color-text);
 }
 
-.case-study-sidenav details ul {
+.case-study-sidenav details .case-study-sidenav-list {
   margin-top: var(--space-3);
   display: flex;
   flex-direction: column;
@@ -181,12 +181,16 @@ h1 {
   font-family: var(--font-body);
   font-size: 0.9375rem;
   color: var(--color-text-muted);
-  padding: var(--space-1) 0;
+  padding: var(--space-2) 0;
 }
 
 .case-study-sidenav a.is-active {
   color: var(--color-text);
   font-weight: 600;
+}
+
+.case-study-sidenav:empty {
+  display: none;
 }
 
 @media (min-width: 768px) {
@@ -204,9 +208,11 @@ h1 {
     position: sticky;
     top: var(--space-6);
     flex: 0 0 180px;
+    max-height: calc(100vh - var(--space-6) * 2);
+    overflow-y: auto;
   }
 
-  .case-study-sidenav > ul {
+  .case-study-sidenav > .case-study-sidenav-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
