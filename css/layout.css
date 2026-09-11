@@ -369,7 +369,7 @@ h1 {
    <p> siblings within one section sat flush against each other.
    Direct-child combinator (>) is deliberate: .case-study-section also
    contains <p> tags several levels deep inside other components
-   (case-study-stat, workflow-compare-caption, insight-map-quote, …) —
+   (case-study-stat, insight-map-quote, …) —
    those already have their own sizing and must not inherit prose
    spacing/line-height too. Only the hand-written body paragraphs are
    direct children of the section. */
@@ -503,9 +503,11 @@ p.case-study-lede {
    4-column grid just do that, no extra rule needed), one column
    stacked on mobile. Explicitly un-sets every card property the base
    .case-study-meta above sets, since --hero is layered on top of it
-   in markup (class="case-study-meta case-study-meta--hero") — the
-   base class stays a bordered card unchanged for its other reuses
-   (workflow-compare panels, the "How It Works" tech mini-table). */
+   in markup (class="case-study-meta case-study-meta--hero"). Every
+   current usage pairs the two together, but the base class's own
+   dt/dd typography rules stay separate/unoverridden on purpose, in
+   case a future non-hero use (a bordered dt/dd mini-table somewhere)
+   needs the base card treatment without this modifier. */
 .case-study-meta.case-study-meta--hero {
   gap: var(--space-5) var(--space-4);
   padding: 0;
@@ -641,88 +643,6 @@ p.case-study-callout {
 
 .case-study-stat p {
   margin-top: var(--space-1);
-}
-
-/* --- Before/after workflow comparison (CDW's old vs. new research-
-   synthesis workflow). A single flat panel — thin border, no shadow,
-   no nested card — was previously an outer bordered .workflow-compare
-   wrapping two more-bordered .case-study-meta panels inside it (two
-   cards inside a card), and repeated the numbers already shown in the
-   stat row above (Synthesis Time, Time to Share) with nothing added.
-   Kept only the one metric that carries real extra detail beyond the
-   stat row (Tools: the actual tool list, not just a count) — a metric
-   with nothing to add beyond its headline number doesn't get a row
-   here at all. .workflow-compare-grid is one 3-column grid (row label,
-   old value, new value) shared by the header row and every data row,
-   so "Old Workflow"/"New Workflow" print once as column headers and a
-   row label like "Tools" prints once, not once per column. The accent
-   color marks only the "New Workflow" header text — no background
-   tint behind the column. --- */
-.workflow-compare {
-  margin: 0 0 var(--space-7);
-  padding: var(--space-5) var(--space-4) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-}
-
-.workflow-compare-label {
-  margin-bottom: var(--space-4);
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-family: var(--font-label);
-}
-
-.workflow-compare-grid {
-  display: grid;
-  grid-template-columns: auto 1fr 1fr;
-  column-gap: var(--space-4);
-  row-gap: var(--space-2);
-  align-items: baseline;
-}
-
-.workflow-compare-row-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-  font-family: var(--font-label);
-}
-
-.workflow-compare-value {
-  color: var(--color-text);
-}
-
-/* The "New Workflow" column (3rd grid column, every row) — a plain
-   vertical rule between old and new, not a second bordered box. */
-.workflow-compare-grid > :nth-child(3n) {
-  padding-left: var(--space-4);
-  border-left: 1px solid var(--color-border);
-}
-
-.workflow-compare-caption {
-  margin: 0;
-  text-align: center;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-  font-family: var(--font-label);
-}
-
-.workflow-compare-caption.workflow-compare-caption--accent {
-  color: var(--color-accent);
-}
-
-@media (min-width: 768px) {
-  .workflow-compare-panels {
-    grid-template-columns: 1fr auto 1fr;
-  }
-
-  .workflow-compare-arrow {
-    transform: none;
-  }
 }
 
 /* --- Insight-map mockup — a non-functional search UI (search bar,
