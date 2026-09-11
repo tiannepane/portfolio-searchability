@@ -88,16 +88,27 @@
 
     const links = hook.querySelectorAll('a[data-section-link]');
     const linksById = {};
+    const sectionOrder = [];
     links.forEach((link) => {
       linksById[link.dataset.sectionLink] = link;
+      sectionOrder.push(link.dataset.sectionLink);
     });
+
+    // Exactly one link is ever active: whichever section the observer most
+    // recently reported as intersecting. Clearing every link before setting
+    // one (rather than toggling each independently) avoids two adjacent
+    // short sections both registering active at once, since the ~10%-tall
+    // observation band can briefly overlap a short section's boundary.
+    function setActive(id) {
+      Object.values(linksById).forEach((link) => link.classList.remove('is-active'));
+      const link = linksById[id];
+      if (link) link.classList.add('is-active');
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const link = linksById[entry.target.id];
-          if (!link) return;
-          link.classList.toggle('is-active', entry.isIntersecting);
+          if (entry.isIntersecting) setActive(entry.target.id);
         });
       },
       { rootMargin: '-10% 0px -80% 0px', threshold: 0 }
@@ -107,6 +118,32 @@
       const section = document.getElementById(id);
       if (section) observer.observe(section);
     });
+
+    // The observer's band is anchored near the top of the viewport, so it
+    // can never reach a short trailing section if the page doesn't have
+    // enough scroll room left below it once that section is in view —
+    // force the last section active once the user has actually scrolled to
+    // the bottom of the page, regardless of what the observer last
+    // reported. Same scroll-throttle pattern as js/home.js's
+    // initPromptBoxSticky.
+    let ticking = false;
+    function checkBottom() {
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atBottom && sectionOrder.length) {
+        setActive(sectionOrder[sectionOrder.length - 1]);
+      }
+      ticking = false;
+    }
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(checkBottom);
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
   }
 
   document.addEventListener('DOMContentLoaded', initSidenav);
