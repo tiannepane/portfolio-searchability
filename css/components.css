@@ -256,7 +256,12 @@
   gap: var(--space-6);
 }
 
-@media (min-width: 480px) {
+/* Was --bp-sm (480px) — raised to --bp-lg (1024px) so each column
+   gets enough width for the enlarged card title/meta text (1.65rem/
+   1.125rem, typography-v2.css) to stay on one line. Below 1024px a
+   single full-width column gives that same text plenty of room; two
+   narrower columns didn't, down to as low as 480px. */
+@media (min-width: 1024px) {
   .bento-grid {
     flex-direction: row;
     align-items: flex-start;
