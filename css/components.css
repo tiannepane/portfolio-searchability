@@ -7,9 +7,42 @@
 */
 
 /* --- Nav / chat toggle --- */
+/* Owner/role/tagline (CLAUDE.md §1) — three spans fading from full
+   ink to lightest gray, a gradient effect built from existing color
+   tokens (--color-text -> --color-text-muted -> --color-text-muted at
+   reduced opacity, no new color values) rather than a literal CSS
+   gradient on text, which would fight the fixed-weight web fonts at
+   this size. Font varies by tier too: headline for the name, body at
+   two weights for the rest — not the label font (Geist Pixel), since
+   CLAUDE.md §12 reserves that for short all-caps eyebrows, never a
+   sentence-like phrase. */
 .site-nav-brand {
-  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.site-nav-brand-name {
+  font-family: var(--font-headline);
+  font-weight: 700;
   font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.site-nav-brand-role {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+.site-nav-brand-detail {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  opacity: 0.65;
 }
 
 .site-nav-list a {

@@ -38,7 +38,18 @@
     const brand = document.createElement('a');
     brand.className = 'site-nav-brand';
     brand.href = '/index.html';
-    brand.textContent = 'Tianne'; // owner/role/tagline pending, CLAUDE.md §1
+    // Owner/role/tagline (CLAUDE.md §1) — three tiers fading from full
+    // ink to lightest gray, see .site-nav-brand-* in components.css.
+    const brandName = document.createElement('span');
+    brandName.className = 'site-nav-brand-name';
+    brandName.textContent = 'Tianne';
+    const brandRole = document.createElement('span');
+    brandRole.className = 'site-nav-brand-role';
+    brandRole.textContent = 'Product Manager';
+    const brandDetail = document.createElement('span');
+    brandDetail.className = 'site-nav-brand-detail';
+    brandDetail.textContent = '(client facing + ships weekly)';
+    brand.append(brandName, brandRole, brandDetail);
 
     const list = document.createElement('ul');
     list.className = 'site-nav-list';
