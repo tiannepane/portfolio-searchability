@@ -68,4 +68,21 @@
      window). Tokenized so CLAUDE.md §14's "no font values outside
      tokens.css" holds even for this exception. */
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Page-scoped alternate type system (2026-09-11) — Instrument Serif /
+     Public Sans / IBM Plex Mono, applied only on the homepage and case
+     study pages via css/typography-v2.css (NOT the site-wide default
+     above, which stays Space Grotesk/DM Sans/Geist Pixel everywhere
+     else — resume/feedback/fun/nav are explicitly out of scope). This
+     is the same trio Intelkin used to run as its own one-off
+     exception before that was retired into the site-wide system on
+     2026-09-10 — Intelkin does NOT currently carry these fonts (that
+     exception was fully deleted, not just disabled), so it gets this
+     scoped system applied like every other case study now, not
+     skipped as "already matching." Instrument Serif ships only weight
+     400 — no bold — see the font-weight overrides in
+     typography-v2.css for where that matters. */
+  --font-headline-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-body-sans: "Public Sans", -apple-system, "Segoe UI", sans-serif;
+  --font-label-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }

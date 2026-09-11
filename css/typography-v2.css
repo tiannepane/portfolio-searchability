@@ -1,0 +1,79 @@
+/*
+  css/typography-v2.css — page-scoped alternate type system (Instrument
+  Serif / Public Sans / IBM Plex Mono), homepage + case studies only.
+
+  DISCLOSURE: this is a deliberate exception to the site-wide type
+  system confirmed 2026-09-10 (Space Grotesk / DM Sans / Geist Pixel,
+  still the default everywhere else — CLAUDE.md §12). It does not
+  change that default or its "confirmed" status; it layers a second,
+  scoped system on top of it for a specific set of pages. See
+  --font-headline-serif/--font-body-sans/--font-label-mono in
+  tokens.css for the actual font-family values.
+
+  Scoping technique: .home-layout and .case-study-page are the exact
+  "page content minus shared nav" wrapper each affected page already
+  has (the shared nav lives in a sibling #shared-nav div, so it's
+  never a descendant of either selector). Redefining
+  --font-headline/--font-body/--font-label *within* that scope means
+  every existing rule across the codebase that already reads
+  var(--font-headline) etc. automatically resolves to the new fonts
+  for anything inside these wrappers, and the original values outside
+  them — nothing to duplicate or re-target selector by selector, and
+  no dead old-font CSS left behind.
+
+  Nav decision (flagged per the request rather than guessed silently):
+  kept the shared nav on the site-wide default everywhere, rather than
+  switching it on these pages only. It's the one element a visitor
+  sees continuously while moving between an updated page and a
+  not-yet-updated one (Resume/Feedback/Fun are explicitly out of
+  scope) — having it change fonts on navigation would read as broken,
+  not as a considered per-page choice.
+
+  Font-weight: Instrument Serif ships only weight 400 (no bold) —
+  every selector below that previously paired --font-headline with
+  font-weight: 700 gets an explicit 400 override in this scope, or
+  the browser would synthesize a fake bold.
+
+  Font-size: Instrument Serif reads noticeably smaller than Space
+  Grotesk at the same declared size (lower x-height, no bold weight to
+  lean on for hierarchy), so headline sizes are bumped roughly 10-15%
+  here to keep the same visual weight — see the file's own comments
+  below for each specific before -> after value. Nothing else (layout,
+  spacing, copy) changes.
+*/
+
+.home-layout,
+.case-study-page {
+  --font-headline: var(--font-headline-serif);
+  --font-body: var(--font-body-sans);
+  --font-label: var(--font-label-mono);
+}
+
+/* h1 + case-study-section h2 (both share the same clamp today):
+   2.25rem/3.25rem -> 2.6rem/3.75rem (+~15%). */
+.home-layout h1,
+.case-study-page h1,
+.case-study-page .case-study-section h2 {
+  font-weight: 400;
+  font-size: clamp(2.6rem, 1.75rem + 4.5vw, 3.75rem);
+}
+
+/* case-study-section h3 (subbeat/column headings):
+   1.25rem/1.5rem -> 1.4rem/1.7rem (+~13%). */
+.case-study-page .case-study-section h3 {
+  font-weight: 400;
+  font-size: clamp(1.4rem, 1.2rem + 0.85vw, 1.7rem);
+}
+
+/* friction-point h3 (Key Friction Points cards): 1.125rem -> 1.25rem
+   (+~11%). */
+.case-study-page .friction-point h3 {
+  font-weight: 400;
+  font-size: 1.25rem;
+}
+
+/* Homepage project-card titles: 1rem -> 1.1rem (+10%). */
+.home-layout .bento-card-tagline {
+  font-weight: 400;
+  font-size: 1.1rem;
+}

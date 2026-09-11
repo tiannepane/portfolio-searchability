@@ -114,8 +114,8 @@ Mobile-first, named breakpoints only:
 - Test at 375px, 768px, 1440px, and one ultra-wide check.
 
 ## 12. Design Tokens — STATUS: typeface + accent confirmed, background pending
-Typeface (confirmed 2026-09-10): Space Grotesk (headlines) / DM Sans (body/values) / Geist Pixel (micro-labels) — see `css/tokens.css`'s `--font-headline`/`--font-body`/`--font-label` and `docs/superpowers/specs/2026-09-10-typography-system-design.md`.
-Accent (confirmed 2026-09-10): Oxblood `#92140C` — see `css/tokens.css`'s `--color-accent`. Not currently rendered anywhere (its one usage, the homepage grid's case-study pill, was removed the same day per a design change) — the color choice stands, awaiting its next real use. Reserved for tiny moments only — never a card background or large surface.
+Typeface (confirmed 2026-09-10): Space Grotesk (headlines) / DM Sans (body/values) / Geist Pixel (micro-labels) — see `css/tokens.css`'s `--font-headline`/`--font-body`/`--font-label` and `docs/superpowers/specs/2026-09-10-typography-system-design.md`. This stays the confirmed site-wide default. As of 2026-09-11, the homepage and every case-study page (including Intelkin, whose old Instrument Serif exception was fully retired on 2026-09-10 — it doesn't get skipped, it gets this like every other case study) additionally load `css/typography-v2.css`, a page-scoped alternate system (Instrument Serif / Public Sans / IBM Plex Mono, `--font-headline-serif`/`--font-body-sans`/`--font-label-mono` in tokens.css) — Resume/Feedback/Fun and the shared nav are explicitly not in scope and stay on the default above.
+Accent (confirmed 2026-09-10): Oxblood `#92140C` — see `css/tokens.css`'s `--color-accent`. In use as of the CDW case study (`research-aggregator.html`): the workflow-compare before/after arrow and the "New Workflow" caption. Reserved for tiny moments only — never a card background or large surface.
 Background (still pending): working direction is a dark, desaturated navy or graphite background. Keep neutral/grayscale until fully confirmed.
 
 ## 13. Quality Floor
