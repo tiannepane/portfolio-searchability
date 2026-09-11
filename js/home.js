@@ -101,7 +101,7 @@
       placeholder.className = 'bento-card-thumb-placeholder media-placeholder';
       placeholder.setAttribute('role', 'img');
       placeholder.setAttribute('aria-label', `${project.title} — thumbnail pending`);
-      placeholder.textContent = 'Image pending';
+      placeholder.textContent = 'COMING SOON';
       thumbWrap.append(placeholder);
     }
 
