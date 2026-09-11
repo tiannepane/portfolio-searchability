@@ -489,6 +489,156 @@ p.case-study-callout {
   margin-top: var(--space-1);
 }
 
+/* --- Before/after workflow comparison — a labeled bordered container
+   holding two metric panels on either side of a direction arrow (e.g.
+   CDW's old vs. new research-synthesis workflow). Panels reuse the base
+   .case-study-meta dt/dd pairing unchanged. Stacks vertically below
+   768px with the arrow rotated to point down instead of across. Shared
+   case-study component, built for CDW, reusable anywhere a two-state
+   comparison needs to read as evidence rather than its own section. --- */
+.workflow-compare {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.workflow-compare-label {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-label);
+}
+
+.workflow-compare-panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.workflow-compare-arrow {
+  justify-self: center;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-accent);
+  transform: rotate(90deg);
+}
+
+.workflow-compare-panel .case-study-meta {
+  margin-bottom: var(--space-3);
+}
+
+.workflow-compare-caption {
+  margin: 0;
+  text-align: center;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  font-family: var(--font-label);
+}
+
+.workflow-compare-caption.workflow-compare-caption--accent {
+  color: var(--color-accent);
+}
+
+@media (min-width: 768px) {
+  .workflow-compare-panels {
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .workflow-compare-arrow {
+    transform: none;
+  }
+}
+
+/* --- Insight-map mockup — a non-functional search UI (search bar,
+   filter chips, result cards) shown inside .laptop-frame below. Built
+   for CDW's "100% searchable" claim; static content only, no JS. --- */
+.insight-map {
+  padding: var(--space-4);
+  background: var(--color-bg);
+}
+
+.insight-map-search input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.insight-map-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.insight-map-chip {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.insight-map-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.insight-map-card {
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.insight-map-card .insight-map-theme {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.insight-map-card .insight-map-quote {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+}
+
+.insight-map-card .insight-map-participants {
+  margin: var(--space-1) 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.insight-map-flag {
+  display: inline-block;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 /* --- Grouped visual — two related images (e.g. a before/after pair)
    under one shared micro-label, side by side on desktop, stacked on
    mobile. A shared case-study component, same reasoning as the columns
