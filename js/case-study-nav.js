@@ -64,6 +64,19 @@
     return ul;
   }
 
+  // Static, not part of the scroll-spy section list — sits above it so
+  // it's the first thing in the sidenav regardless of how long that
+  // list is. The page also keeps its own "back to all projects" link
+  // at the bottom (case-study-back), for after a long scroll — this
+  // is a second, faster exit at the top.
+  function buildBackLink() {
+    const a = document.createElement('a');
+    a.href = '/index.html';
+    a.className = 'case-study-sidenav-back';
+    a.textContent = '← Back to all projects';
+    return a;
+  }
+
   function initSidenav() {
     const hook = document.getElementById('case-study-sidenav');
     if (!hook) return;
@@ -73,6 +86,8 @@
 
     hook.setAttribute('role', 'navigation');
     hook.setAttribute('aria-label', 'Section navigation');
+
+    hook.append(buildBackLink());
 
     const isDesktop = window.matchMedia('(min-width: 768px)').matches;
     const linkList = buildLinkList(sections);
