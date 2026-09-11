@@ -1,19 +1,35 @@
 /*
-  js/home.js — bento grid render + prompt box UI (homepage only).
+  js/home.js — homepage project grid render + prompt box UI.
 
-  Renders the full project list as placeholder cards (title + category
-  only), makes the prompt box sticky on scroll, previews each card's prompt
+  The homepage shows a curated six cards, not the full project list —
+  HOME_COLUMNS below is the single source of truth for which projects
+  are visible and which of the two explicit columns each sits in
+  (2026-09-11). Every other project's data stays intact in
+  data/projects.json and its case-study page stays reachable directly;
+  it's just off this grid, including from Tianne search (the visible
+  set is what search filters against too — see initQueryFlow).
+
+  Makes the prompt box sticky on scroll, previews each card's prompt
   into the box (hover/focus on hover-capable devices, a two-step tap on
   touch devices — CLAUDE.md §5), and wires the real query flow: submit →
   window.TianneChat.send() (js/chat.js, which calls /api/chat) → grid
-  re-renders to just the matches → rail switches to match-indicator mode
-  (js/rail.js, via the 'tianne:filtered' event) → Clear reverts both
-  (CLAUDE.md §5/§6).
+  re-renders to just the matches within the visible six → Clear reverts
+  to the full six (CLAUDE.md §5/§6).
 */
 
 (function () {
   const DATA_URL = '/data/projects.json';
   const STICKY_THRESHOLD = 96; // px scrolled before the prompt box floats
+
+  // Homepage curation (2026-09-11): exactly these six, in these two
+  // columns, top to bottom. Not derived from the data — this is a
+  // deliberate homepage-only arrangement, independent of each project's
+  // own category/size fields.
+  const HOME_COLUMNS = {
+    left: ['intelkin', 'research-aggregator', 'looped'],
+    right: ['langchain-aggregator', 'river-ai', 'airbnb'],
+  };
+  const HOME_VISIBLE_IDS = [...HOME_COLUMNS.left, ...HOME_COLUMNS.right];
 
   async function loadProjects() {
     try {
@@ -115,18 +131,37 @@
     return article;
   }
 
+  // projects: whatever subset should render right now (the curated six by
+  // default, or a query's matches within that same six). Column
+  // membership always comes from HOME_COLUMNS, never from render order —
+  // that's what guarantees a card lands in its designated column
+  // regardless of card height or which subset is currently showing.
   function renderGrid(projects, emptyMessage) {
-    const grid = document.querySelector('[data-grid]');
-    if (!grid) return;
-    grid.innerHTML = '';
-    if (!projects.length && emptyMessage) {
-      const empty = document.createElement('p');
-      empty.className = 'bento-empty';
-      empty.textContent = emptyMessage;
-      grid.append(empty);
-    } else {
-      projects.forEach((project) => grid.append(createCard(project)));
+    const leftColumn = document.querySelector('[data-grid-column="left"]');
+    const rightColumn = document.querySelector('[data-grid-column="right"]');
+    const emptyEl = document.querySelector('[data-grid-empty]');
+    if (!leftColumn || !rightColumn) return;
+
+    leftColumn.innerHTML = '';
+    rightColumn.innerHTML = '';
+
+    const byId = {};
+    projects.forEach((project) => {
+      byId[project.id] = project;
+    });
+
+    const leftIds = HOME_COLUMNS.left.filter((id) => byId[id]);
+    const rightIds = HOME_COLUMNS.right.filter((id) => byId[id]);
+
+    leftIds.forEach((id) => leftColumn.append(createCard(byId[id])));
+    rightIds.forEach((id) => rightColumn.append(createCard(byId[id])));
+
+    const isEmpty = leftIds.length === 0 && rightIds.length === 0;
+    if (emptyEl) {
+      emptyEl.hidden = !(isEmpty && emptyMessage);
+      emptyEl.textContent = isEmpty && emptyMessage ? emptyMessage : '';
     }
+
     document.dispatchEvent(new CustomEvent('bento:grid-rendered'));
   }
 
@@ -351,11 +386,15 @@
   }
 
   async function init() {
-    const projects = await loadProjects();
-    renderGrid(projects);
-    initCardPreview(projects);
+    const allProjects = await loadProjects();
+    // Homepage-visible set only — search filters against this same list
+    // (see initQueryFlow), so a project left off HOME_COLUMNS is fully
+    // hidden, not just absent from the default view.
+    const visibleProjects = allProjects.filter((project) => HOME_VISIBLE_IDS.includes(project.id));
+    renderGrid(visibleProjects);
+    initCardPreview(visibleProjects);
     initPromptBoxSticky();
-    initQueryFlow(projects);
+    initQueryFlow(visibleProjects);
   }
 
   document.addEventListener('DOMContentLoaded', init);

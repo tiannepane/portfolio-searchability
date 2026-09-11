@@ -39,7 +39,11 @@
       </div>
 
       <section class="bento-grid" data-grid aria-label="Projects">
-        <!-- Cards rendered by js/home.js from data/projects.json -->
+        <p class="bento-empty" data-grid-empty hidden></p>
+        <!-- Cards rendered by js/home.js into the two columns below, from
+             data/projects.json filtered to js/home.js's HOME_COLUMNS. -->
+        <div class="bento-grid-column" data-grid-column="left"></div>
+        <div class="bento-grid-column" data-grid-column="right"></div>
       </section>
     </div>
   </main>
