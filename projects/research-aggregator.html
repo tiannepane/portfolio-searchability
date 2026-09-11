@@ -33,17 +33,21 @@
 
     <section class="case-study-section">
       <h2>Overview</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio praesent libero sed cursus ante dapibus diam. Sed nisi nulla quis sem at nibh elementum imperdiet.</p>
+      <p class="case-study-lede">5-8 hours of synthesis work per research round, and most of what surfaced never made it past one slide deck.</p>
+      <p>After 8-10 user interviews, my process was scattered across four places: notes in OneNote, follow-up questions tracked over email and Teams, insights grouped by hand in a spreadsheet, then a research summary document that took 5-8 hours to write. Anything that didn't make the summary slide disappeared, there was no searchable archive, and by the time the deck was ready to share, the team had often already moved on.</p>
     </section>
 
     <section class="case-study-section">
       <h2>My Role</h2>
-      <p>Duis sagittis ipsum praesent mauris fusce nec tellus sed augue semper porta mauris massa vestibulum lacinia arcu eget nulla class aptent taciti sociosqu ad litora torquent per conubia nostra.</p>
+      <p class="case-study-lede">Standardizing the note format came before any of the AI work, not after.</p>
+      <p>I worked on this with two other product managers and two solutions architects, and it's now a standing process on the team, not a one-time experiment. Before any of the AI work, I standardized the interview note format everyone uses. A coworker's notes followed a different structure entirely, and the gap only became a real problem when I had to cover their interviews while they were out and couldn't make sense of what they'd written. Copilot drafts the theme clusters and the insight report; I review it, edit it, and add the context it doesn't have. Deciding what actually matters for the roadmap is still mine to call.</p>
     </section>
 
     <section class="case-study-section">
       <h2>Approach</h2>
-      <p>Per inceptos himenaeos curabitur sodales ligula in libero sed dignissim lacinia nunc curabitur tortor pellentesque nibh aenean quam in scelerisque sem at dolor.</p>
+      <p class="case-study-lede">Three prerequisites had to be in place before any of this could work.</p>
+      <p>Every interviewer needed to use the same note format, with notes capturing verbatim quotes or close paraphrases, not summaries like "user was frustrated," which gives a clustering model nothing to work with. And the process only holds up with at least 5 interviews; fewer than that is just pattern-matching on noise.</p>
+      <p>Once those were in place, the redesign ran in three steps. Every interview note follows a Participant/Pain/Behavior format captured during the session, so Copilot can parse it reliably later. All notes from a round get pasted into Copilot with a single clustering prompt. Copilot then drafts a prioritized insight report: top themes by frequency, a supporting quote per theme, and a suggested implication for each. I review it, edit it, and add context Copilot doesn't have.</p>
     </section>
 
     <section class="case-study-section">
@@ -145,9 +149,9 @@
     <section class="case-study-section">
       <h2>Outcome</h2>
       <ul>
-        <li>Lorem ipsum result placeholder one — real metrics pending, see CLAUDE.md §8.</li>
-        <li>Lorem ipsum result placeholder two.</li>
-        <li>Lorem ipsum result placeholder three.</li>
+        <li>Became a standing process for the team, not a one-time experiment. Still in use for every research round.</li>
+        <li>Every interviewer standardized on the same note format before any of the AI work started. Consistent input mattered more than the model.</li>
+        <li>Raw notes stay searchable and untouched by the AI summary. The summary is a shortcut to the originals, not a replacement for them.</li>
       </ul>
     </section>
 
