@@ -17,7 +17,7 @@
     { href: '/index.html', label: 'Home' },
     // Resume has no on-site page — the tab opens the résumé PDF hosted on
     // Google Drive directly, in a new tab.
-    { href: 'https://drive.google.com/file/d/100X0SLLIwU1_BEsDvY_c_N0aKA748psS/view?usp=sharing', label: 'Resume', external: true },
+    { href: 'https://drive.google.com/file/d/1ynQ5cL5gl8soUbMdQFc6w_b3sWqDEdPl/view?usp=sharing', label: 'Resume', external: true },
     { href: '/feedback.html', label: 'Feedback' },
     { href: '/fun.html', label: 'Fun' },
   ];
