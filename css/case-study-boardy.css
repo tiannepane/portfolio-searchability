@@ -13,6 +13,14 @@
   (--color-accent) is used only for two tiny moments: the "Chosen"
   swatch and the Sustain Rate target dot.
 
+  TYPOGRAPHY EXCEPTION (disclosed, deliberate, page-scoped): this page's
+  headline serif is Newsreader, not the shared Instrument Serif. The override
+  is one re-declaration of --font-headline on <main class="case-study-boardy">
+  (below), so it reaches every headline inside this page and nothing else.
+  --font-headline-serif in tokens.css and css/typography-v2.css are untouched,
+  and every other case study still renders Instrument Serif. Body (Public
+  Sans) and labels (IBM Plex Mono) are unchanged.
+
   Static state first: everything below looks finished with no JS. The
   reveal/scrolly/chart-draw states are layered on by
   js/case-study-boardy.js via classes it adds, and they're gated on
@@ -20,6 +28,18 @@
 */
 
 .case-study-boardy {
+  /* Headline serif override, this page only. typography-v2 sets
+     --font-headline to Instrument Serif on .case-study-page; redefining it
+     here, one level down on <main>, changes every var(--font-headline) user
+     inside the page (h1, every h2/h3/h4, card mini-headlines, big numerals,
+     SVG stage titles) without editing the shared variable. */
+  --font-headline-boardy: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-headline: var(--font-headline-boardy);
+  /* Instrument Serif has no bold, so typography-v2 forces every headline to
+     400. Newsreader has real weights up to 700, and at headline size 400 reads
+     thin next to the rest of the page. */
+  --bd-headline-weight: 600;
+
   /* Hand-drawn radii: deliberately asymmetric corners. */
   --bd-radius-hand: 14px 17px 13px 16px / 16px 13px 18px 14px;
   --bd-radius-hand-alt: 17px 13px 16px 14px / 13px 18px 14px 16px;
@@ -35,6 +55,21 @@
   --bd-tone-4: var(--color-text-muted);
   --bd-bar-pos: var(--color-text-muted);
   --bd-bar-neg: var(--color-border);
+}
+
+/* Headline weight for Newsreader (typography-v2 forces 400 on these). */
+.case-study-boardy h1,
+.case-study-boardy .case-study-section h2,
+.case-study-boardy .case-study-section h3,
+.case-study-boardy .case-study-section h4,
+.case-study-boardy .friction-point h3,
+.case-study-boardy .bd-moment-label,
+.case-study-boardy .bd-tx-title,
+.case-study-boardy .bd-result-score,
+.case-study-boardy .bd-clip-headline,
+.case-study-boardy .bd-stat-num,
+.case-study-boardy .bd-svg-title {
+  font-weight: var(--bd-headline-weight);
 }
 
 @supports (color: color-mix(in srgb, red, blue)) {
@@ -96,7 +131,9 @@
 
 /* --- Hand-drawn card borders ------------------------------------------ */
 .case-study-boardy .case-study-columns > .friction-point,
-.case-study-boardy .bd-step {
+.case-study-boardy .bd-step,
+.case-study-boardy .bd-risk,
+.case-study-boardy .bd-flaw {
   margin: 0;
   padding: var(--space-4);
   background: var(--color-bg);
@@ -106,7 +143,9 @@
 }
 
 .case-study-boardy .case-study-columns > .friction-point:nth-child(even),
-.case-study-boardy .bd-step:nth-child(even) {
+.case-study-boardy .bd-step:nth-child(even),
+.case-study-boardy .bd-risk-grid > .bd-risk:nth-child(even),
+.case-study-boardy .bd-flaws > .bd-flaw:nth-child(even) {
   border-radius: var(--bd-radius-hand-alt);
 }
 
@@ -181,6 +220,44 @@
   line-height: 1.4;
 }
 
+/* Chemistry chart: the plain-language name gets a one-line example caption,
+   and "(backchannel hesitation)" stays as a small parenthetical so the term
+   Technical Feasibility uses later is still findable. */
+.case-study-boardy .bd-chart-name { min-width: 0; }
+
+.case-study-boardy .bd-chart-caption {
+  margin: 2px 0 0;
+  text-wrap: balance;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-chart-aka {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* The range's two ends, printed under the track (replaces the old table).
+   Plain HTML positioned by percentage, so the numbers stay a fixed small
+   size while the SVG track scales with the column. */
+.case-study-boardy .bd-chart-track {
+  position: relative;
+  min-width: 0;
+  padding-bottom: 1.125rem;
+}
+
+.case-study-boardy .bd-endpoint {
+  position: absolute;
+  bottom: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+}
+
+
 .case-study-boardy .bd-chart-range {
   font-family: var(--font-label);
   font-size: 0.75rem;
@@ -207,6 +284,31 @@
     grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr) 4.5rem;
     align-items: center;
     gap: var(--space-3);
+  }
+}
+
+/* Between 480 and 599px the shared three-column row would squeeze this
+   chart's track to ~110px, so it stays stacked (name, then track) until 600. */
+@media (min-width: 480px) and (max-width: 599px) {
+  .case-study-boardy .bd-chart--signals .bd-chart-row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-1);
+  }
+}
+
+/* The signals chart has no score column (the bar against its track says it),
+   so its rows are just name + track from 600px; the name column is wider
+   once there is room, since each name carries a caption. */
+@media (min-width: 600px) {
+  .case-study-boardy .bd-chart--signals .bd-chart-row {
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .case-study-boardy .bd-chart--signals .bd-chart-row {
+    grid-template-columns: minmax(10rem, 16rem) minmax(0, 1fr);
   }
 }
 
@@ -320,6 +422,20 @@
     transform: none;
   }
 
+  /* Risk cards rise in one after another as each scrolls into view. */
+  .bd-reveal .case-study-boardy .bd-risk,
+  .bd-reveal .case-study-boardy .bd-option {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .bd-reveal .case-study-boardy .bd-risk.in,
+  .bd-reveal .case-study-boardy .bd-option.in {
+    opacity: 1;
+    transform: none;
+  }
+
   /* Pattern B: the active step reads at full strength. */
   .case-study-boardy .bd-scrolly.is-live .bd-step {
     opacity: 0.35;
@@ -367,6 +483,11 @@
    worked-example chart, nurture timeline. Same visual system as above;
    Design.pdf's cream/navy is a layout reference only.
    ========================================================================= */
+
+/* Breathing room between the takeaway bullets and the lead-in line. */
+.case-study-boardy .case-study-section > ul + p {
+  margin-top: var(--space-4);
+}
 
 /* --- Interview scrubber ------------------------------------------------ */
 .case-study-boardy .bd-scrubber {
@@ -514,24 +635,18 @@
   gap: var(--space-4);
 }
 
+/* Six moments, always two columns by three rows. */
 .case-study-boardy .bd-moments {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
   align-content: start;
 }
 
-@media (min-width: 480px) {
-  .case-study-boardy .bd-moments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (min-width: 1024px) {
-  .case-study-boardy .bd-field-body {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    align-items: start;
-  }
-  .case-study-boardy .bd-moments { grid-template-columns: minmax(0, 1fr); }
-  .case-study-boardy .bd-transcript { max-height: 32rem; overflow-y: auto; }
+@media (max-width: 479px) {
+  .case-study-boardy .bd-moment { padding: var(--space-3); }
+  .case-study-boardy .bd-moment-label { font-size: 1rem; }
+  .case-study-boardy .bd-moment-quote { font-size: 0.8125rem; }
 }
 
 /* Real <button>s, so Tab / Enter / Space work with no extra script. */
@@ -586,23 +701,20 @@
   box-shadow: var(--bd-card-shadow);
 }
 
-.case-study-boardy .bd-tx + .bd-tx { margin-top: var(--space-5); }
+.case-study-boardy .bd-tx-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
 
-.case-study-boardy .bd-tx-head {
-  margin: 0 0 var(--space-3);
+.case-study-boardy .bd-tx-title {
+  margin: 0;
   font-family: var(--font-headline);
   font-size: 1.25rem;
   line-height: 1.2;
   color: var(--color-text);
-}
-
-.case-study-boardy .bd-tx-when {
-  display: block;
-  margin-top: var(--space-1);
-  font-family: var(--font-label);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
 }
 
 .case-study-boardy .bd-tx-line {
@@ -617,6 +729,15 @@
   color: var(--color-text);
 }
 
+.case-study-boardy .bd-tx-time {
+  margin-left: 0.25em;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* The chosen moment: every turn in its time range. */
 .case-study-boardy .bd-tx-line--target {
   padding: var(--space-2) var(--space-3);
   color: var(--color-text);
@@ -625,9 +746,821 @@
   border-radius: var(--bd-radius-hand-sm);
 }
 
-.case-study-boardy .bd-tx-empty {
+/* --- Transcript drawer --------------------------------------------------
+   With JS on, the full transcript is a panel pinned to the RIGHT edge of the
+   page (the site nav lives on the left), below the site nav, closed until a
+   moment is chosen. It opens scrolled to that moment and highlights it; the
+   rest of the conversation is a scroll away in either direction.
+   js/case-study-boardy.js sizes it: beside the content where the right
+   gutter is wide enough, otherwise overlaying it with a scrim. Without JS
+   the transcript stays inline under the cards (see the <noscript> rule). */
+.case-study-boardy .bd-transcript.is-drawer {
+  position: fixed;
+  top: var(--site-nav-height);
+  right: 0;
+  bottom: 0;
+  z-index: 24;
+  box-sizing: border-box;
+  width: var(--bd-drawer-w, 26rem);
+  max-width: 100vw;
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-7);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-right: 0;
+  border-radius: 17px 0 0 16px / 13px 0 0 18px;
+  box-shadow: -3px 3px 0 var(--color-border);
+  visibility: hidden;
+  transform: translateX(102%);
+}
+
+.case-study-boardy .bd-transcript.is-drawer.is-open {
+  visibility: visible;
+  transform: none;
+}
+
+.case-study-boardy .bd-transcript.is-drawer:focus-visible { outline-offset: -4px; }
+
+/* Title bar stays put while the transcript scrolls under it. */
+.case-study-boardy .bd-transcript.is-drawer .bd-tx-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: 0 calc(-1 * var(--space-4)) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border-bottom: 1.5px solid var(--color-border);
+}
+
+.case-study-boardy .bd-tx-close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand-sm);
+  cursor: pointer;
+}
+
+.case-study-boardy .bd-tx-close:hover { border-color: var(--color-text-muted); }
+.case-study-boardy .bd-tx-close:focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+
+/* Dims the page when the drawer has to overlay the content. */
+.case-study-boardy .bd-tx-scrim {
+  position: fixed;
+  top: var(--site-nav-height);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 23;
+  background: var(--color-text);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.case-study-boardy .bd-tx-scrim.is-on {
+  opacity: 0.28;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .case-study-boardy .bd-transcript.is-drawer {
+    transition: transform 0.3s ease, visibility 0s linear 0.3s;
+  }
+  .case-study-boardy .bd-transcript.is-drawer.is-open {
+    transition: transform 0.3s ease, visibility 0s;
+  }
+  .case-study-boardy .bd-tx-scrim {
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  }
+  .case-study-boardy .bd-tx-scrim.is-on {
+    transition: opacity 0.3s ease, visibility 0s;
+  }
+}
+
+/* --- Risks: one featured card, then a grid of five ---------------------- */
+.case-study-boardy .bd-risk h3 {
+  margin: 0 0 var(--space-2);
+  font-size: 1.25rem;
+}
+
+.case-study-boardy .bd-risk p:not(.bd-risk-eyebrow) {
   margin: 0;
   font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.case-study-boardy .bd-risk-eyebrow {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* The lead finding: bigger, a heavier border, a deeper pencil shadow. */
+.case-study-boardy .bd-risk--featured {
+  margin-bottom: var(--space-5);
+  padding: var(--space-5);
+  border-color: var(--color-text);
+  box-shadow: 4px 5px 0 var(--color-border);
+}
+
+.case-study-boardy .bd-risk--featured h3 {
+  margin-bottom: var(--space-3);
+  font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.case-study-boardy .bd-risk--featured p:not(.bd-risk-eyebrow) {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+/* Two columns from 480px; the odd fifth card spans the row. */
+.case-study-boardy .bd-risk-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@media (min-width: 480px) {
+  .case-study-boardy .bd-risk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .case-study-boardy .bd-risk-grid > .bd-risk:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+
+/* --- Technical Feasibility: bento grid of expandable tiles ---------------
+   Five tiles on grid-template-areas: one column on mobile, two from 768px
+   (funding on top, the other four as 2x2), three from 1024px (funding spans
+   two columns beside OpenVC, the other three across the second row). Each
+   tile is a hand-drawn card; a real <button> in its heading toggles the body
+   (aria-expanded on the button, aria-controls to the body). js/case-study-
+   boardy.js flips the state and drives the cursor spotlight. */
+.case-study-boardy .bd-bento {
+  --x: -999px;
+  --y: -999px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "funding"
+    "investor"
+    "chemistry"
+    "granola"
+    "linkedin";
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .case-study-boardy .bd-bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "funding funding"
+      "investor chemistry"
+      "granola linkedin";
+  }
+}
+
+@media (min-width: 1024px) {
+  .case-study-boardy .bd-bento {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "funding funding investor"
+      "chemistry granola linkedin";
+  }
+}
+
+/* While any tile is open, tiles keep their own height instead of stretching
+   to match the open one (which would leave big empty cards beside it). */
+.case-study-boardy .bd-bento:has(.bd-tile.is-open) { align-items: start; }
+
+.case-study-boardy .bd-tile--funding { grid-area: funding; }
+.case-study-boardy .bd-tile--investor { grid-area: investor; }
+.case-study-boardy .bd-tile--chemistry { grid-area: chemistry; }
+.case-study-boardy .bd-tile--granola { grid-area: granola; }
+.case-study-boardy .bd-tile--linkedin { grid-area: linkedin; }
+
+.case-study-boardy .bd-tile {
+  position: relative;
+  isolation: isolate;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-tile:nth-child(even) { border-radius: var(--bd-radius-hand-alt); }
+
+/* The lead tile: wider, a heavier border and a deeper pencil shadow. */
+.case-study-boardy .bd-tile--featured {
+  padding: var(--space-5);
+  border-color: var(--color-text);
+  box-shadow: 4px 5px 0 var(--color-border);
+}
+
+.case-study-boardy .bd-tile h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.case-study-boardy .bd-tile--featured h3 { font-size: clamp(1.5rem, 1.3rem + 0.9vw, 1.875rem); }
+
+/* The toggle is the heading's only child. Its ::after stretches over the
+   whole tile, so the entire card is the click/tap target while the teaser
+   stays ordinary text and the body's links stay clickable above it. */
+.case-study-boardy .bd-tile-toggle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.case-study-boardy .bd-tile-toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.case-study-boardy .bd-tile-toggle:focus-visible { outline: none; }
+
+.case-study-boardy .bd-tile-toggle:focus-visible::after {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+.case-study-boardy .bd-tile-icon {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.15em;
+}
+
+.case-study-boardy .bd-tile-icon::before,
+.case-study-boardy .bd-tile-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--color-text);
+  border-radius: 2px;
+}
+
+.case-study-boardy .bd-tile-icon::before { width: 14px; height: 1.5px; margin: -0.75px 0 0 -7px; }
+.case-study-boardy .bd-tile-icon::after { width: 1.5px; height: 14px; margin: -7px 0 0 -0.75px; }
+
+/* Open: the plus loses its vertical stroke and reads as a minus. */
+.case-study-boardy .bd-tile.is-open .bd-tile-icon::after { transform: scaleY(0); }
+
+.case-study-boardy .bd-tile-teaser {
+  margin: var(--space-2) 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Collapsed by default. visibility (not just height) keeps the hidden
+   text and links out of the tab order and away from screen readers. */
+.case-study-boardy .bd-tile-body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+}
+
+.case-study-boardy .bd-tile.is-open .bd-tile-body {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.case-study-boardy .bd-tile-body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.case-study-boardy .bd-tile-body-content { padding-top: var(--space-3); }
+
+.case-study-boardy .bd-tile-body-content p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.case-study-boardy .bd-tile-body-content p + p { margin-top: var(--space-3); }
+
+/* Cursor spotlight. JS sets --x/--y on the grid (and --tx/--ty, each tile's
+   offset in the grid); the glow paints behind the tile's text. Only ever
+   turned on for fine pointers with motion allowed. */
+@supports (color: color-mix(in srgb, red, blue)) {
+  .case-study-boardy .bd-tile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: var(--bd-glow, 0);
+    background: radial-gradient(
+      circle 200px at calc(var(--x, -999px) - var(--tx, 0px)) calc(var(--y, -999px) - var(--ty, 0px)),
+      color-mix(in srgb, var(--color-text-muted) 18%, transparent),
+      transparent 70%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .case-study-boardy .bd-tile::before { transition: opacity 0.3s ease; }
+
+  .case-study-boardy .bd-tile-icon::after { transition: transform 0.25s ease; }
+
+  .case-study-boardy .bd-tile-body {
+    transition: grid-template-rows 0.3s ease, visibility 0s linear 0.3s;
+  }
+
+  .case-study-boardy .bd-tile.is-open .bd-tile-body {
+    transition: grid-template-rows 0.3s ease, visibility 0s;
+  }
+}
+
+/* --- Brainstormed Solutions: one continuous scroll sequence ---------------
+   Four full-width beats in a vertical stack. In JS mode each of the first
+   three starts at full color, then resolves (muted, status label stamped)
+   once the reader has scrolled on to the next beat; the last one, the
+   chosen option, stays lit and, once active, a connector draws from its
+   bottom edge into the first stage card. Everything visual about the
+   resolved look flows through the --bd-o-* custom properties, so the
+   no-JS / reduced-motion fallback (final states, no animation) is the same
+   few declarations. */
+.case-study-boardy .bd-options {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Live mode gives each beat a screen of its own: a full viewport of space
+   between cards means the next option can never be on screen while the
+   current one is (card + gap always exceeds one viewport height). Reduced
+   motion / no JS keep the compact 16px stack. */
+.case-study-boardy .bd-options.is-live {
+  gap: 100vh;
+  padding-block: 8vh 0; /* no bottom padding: the bridge must meet the chosen card's edge */
+}
+
+.case-study-boardy .bd-option {
+  --bd-o-bg: var(--color-bg);
+  --bd-o-border: var(--color-border);
+  --bd-o-shadow: var(--bd-card-shadow);
+  --bd-o-title: var(--color-text);
+  --bd-o-text: var(--color-text);
+  --bd-o-scale: 1;
+  --bd-o-stamp-border: transparent;
+  --bd-o-stamp-rotate: 0deg;
+  position: relative;
+  margin: 0;
+  padding: var(--space-5);
+  scale: var(--bd-o-scale);
+  background: var(--bd-o-bg);
+  border: 1.5px solid var(--bd-o-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-o-shadow);
+}
+
+.case-study-boardy .bd-option:nth-child(even) { border-radius: var(--bd-radius-hand-alt); }
+
+/* Resolved: passed on, muted, label stamped. */
+.case-study-boardy .bd-option.is-resolved {
+  --bd-o-shadow: none;
+  --bd-o-title: var(--color-text-muted);
+  --bd-o-text: var(--color-text-muted);
+  --bd-o-scale: 0.98;
+  --bd-o-stamp-border: var(--color-text-muted);
+  --bd-o-stamp-rotate: -2deg;
+}
+
+/* No JavaScript: show the final state of every beat, in order. */
+@media (scripting: none) {
+  .case-study-boardy .bd-option:not(.bd-option--chosen) {
+    --bd-o-shadow: none;
+    --bd-o-title: var(--color-text-muted);
+    --bd-o-text: var(--color-text-muted);
+    --bd-o-scale: 0.98;
+    --bd-o-stamp-border: var(--color-text-muted);
+    --bd-o-stamp-rotate: -2deg;
+  }
+}
+
+.case-study-boardy .bd-option h3 {
+  margin: 0 0 var(--space-3);
+  font-size: 1.5rem;
+  line-height: 1.15;
+  color: var(--bd-o-title);
+}
+
+.case-study-boardy .bd-option > p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--bd-o-text);
+}
+
+/* The existing status label: plain text while its beat is being read,
+   a small resolved stamp afterwards. */
+.case-study-boardy .bd-option .friction-meta {
+  display: inline-block;
+  margin: 0 0 0 var(--space-3);
+  vertical-align: middle;
+  padding: 2px 10px;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--bd-o-stamp-border);
+  border-radius: var(--bd-radius-hand-sm);
+  rotate: var(--bd-o-stamp-rotate);
+}
+
+.case-study-boardy .bd-option .friction-meta .bd-swatch { display: none; }
+
+/* The chosen option: oxblood border, and a filled CHOSEN label that stays
+   prominent. Small moments only: a border and one label, no fills beyond it. */
+.case-study-boardy .bd-option--chosen {
+  border: 2px solid var(--color-accent);
+  box-shadow: 4px 5px 0 var(--color-border);
+}
+
+.case-study-boardy .bd-option--chosen h3 { font-size: 1.75rem; }
+
+.case-study-boardy .bd-option--chosen .friction-meta {
+  padding: 4px 14px;
+  font-size: 0.75rem;
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  rotate: -1deg;
+}
+
+/* Bridge: the stage arrows' motif, extended one link back. The line sits
+   at a fixed inset so it lands inside the first stage card at every width
+   (that card is never narrower than ~160px). */
+.case-study-boardy .bd-bridge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 4.5rem;
+  padding-left: calc(40px + var(--space-4));
+}
+
+/* Live mode: a long arrow (about a screen), so the chosen option and the
+   stage cards are essentially never on screen together. The line is as tall
+   as the bridge. */
+.case-study-boardy .bd-bridge.is-armed {
+  min-height: clamp(18rem, 90vh, 60rem);
+}
+
+.case-study-boardy .bd-connector {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 40px;
+  width: 0;
+}
+
+.case-study-boardy .bd-connector::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 12px;
+  left: -0.75px;
+  width: 1.5px;
+  background: var(--color-text-muted);
+  transform-origin: top;
+}
+
+.case-study-boardy .bd-connector::after {
+  content: "\2193";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-bridge-label {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .case-study-boardy .bd-option {
+    transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, scale 0.5s ease;
+  }
+
+  .case-study-boardy .bd-option h3,
+  .case-study-boardy .bd-option > p,
+  .case-study-boardy .bd-option .friction-meta {
+    transition: color 0.5s ease, border-color 0.5s ease, rotate 0.5s ease;
+  }
+
+  /* Armed by the script: the line draws from the chosen card's edge down
+     into the first stage card once that beat is active. */
+  .case-study-boardy .bd-bridge.is-armed .bd-connector::before {
+    transform: scaleY(0);
+    transition: transform 1.2s ease;
+  }
+
+  .case-study-boardy .bd-bridge.is-armed .bd-connector::after {
+    opacity: 0;
+    transition: opacity 0.3s ease 1s;
+  }
+
+  .case-study-boardy .bd-bridge.is-armed.is-drawn .bd-connector::before { transform: none; }
+  .case-study-boardy .bd-bridge.is-armed.is-drawn .bd-connector::after { opacity: 1; }
+}
+
+/* --- Validation Plan: the five flaws as hand-drawn cards ------------------
+   Two columns from 480px, the odd fifth spanning the row (same rhythm as
+   the risk cards). The number is generated, so the copy stays exactly as
+   written; the <ol> carries the order for assistive tech. */
+.case-study-boardy .bd-flaws {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  counter-reset: bd-flaw;
+}
+
+@media (min-width: 480px) {
+  .case-study-boardy .bd-flaws { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .case-study-boardy .bd-flaws > .bd-flaw:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+
+.case-study-boardy .bd-flaw { counter-increment: bd-flaw; }
+
+.case-study-boardy .bd-flaw::before {
+  content: counter(bd-flaw, decimal-leading-zero);
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-flaw p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* --- "Each stage, in detail": visual artifacts in the right-hand panel ----
+   The steps are no longer text cards, so they lose their card chrome; each
+   artifact carries its own hand-drawn treatment. Site tokens only (no
+   Design.pdf cream/navy). A container query lets the stage-1 pair sit side
+   by side wherever the panel is wide enough, and stack when it isn't. */
+.case-study-boardy .bd-scrolly .bd-step {
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.case-study-boardy .bd-scrolly .bd-step h3 { margin-bottom: var(--space-3); }
+
+.case-study-boardy .bd-artifact {
+  margin: 0;
+  container-type: inline-size;
+}
+
+.case-study-boardy .bd-artifact figcaption,
+.case-study-boardy .bd-part-cap {
+  margin: var(--space-2) 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+/* Stage 1: the ask (a text thread) beside the result (an internal screen). */
+.case-study-boardy .bd-signal-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@container (min-width: 360px) {
+  .case-study-boardy .bd-signal-pair {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* A text thread (stages 1, 3, 4). Boardy's texts are light bubbles on the
+   left, the reader's reply a dark one on the right. */
+.case-study-boardy .bd-thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-thread-head {
+  margin: 0 0 var(--space-1);
+  text-align: center;
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-msg {
+  max-width: 90%;
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  border: 1.5px solid var(--color-border);
+}
+
+.case-study-boardy .bd-msg--in {
+  align-self: flex-start;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border-radius: 14px 14px 14px 4px / 16px 13px 14px 4px;
+}
+
+.case-study-boardy .bd-msg--out {
+  align-self: flex-end;
+  color: var(--color-bg);
+  background: var(--color-text);
+  border-color: var(--color-text);
+  border-radius: 14px 14px 4px 14px / 16px 13px 4px 14px;
+}
+
+.case-study-boardy .bd-msg-status {
+  align-self: flex-end;
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+/* Stage 4: the same thread, gone quiet: faded, grayed, dashed, no reply. */
+.case-study-boardy .bd-thread--quiet {
+  opacity: 0.6;
+  filter: grayscale(1);
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.case-study-boardy .bd-quiet-note {
+  padding-left: var(--space-3);
+  font-style: italic;
+  border-left: 2px dashed var(--color-border);
+}
+
+/* The internal-only result screen (stage 1). */
+.case-study-boardy .bd-result {
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1.5px dashed var(--color-text-muted);
+  border-radius: var(--bd-radius-hand-alt);
+}
+
+.case-study-boardy .bd-result-banner {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-label);
+  font-size: 0.625rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-bottom: 1.5px dashed var(--color-border);
+}
+
+.case-study-boardy .bd-result-body { padding: var(--space-3); }
+
+.case-study-boardy .bd-result-label {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-result-score {
+  margin: 2px 0 var(--space-3);
+  font-family: var(--font-headline);
+  font-size: 2.25rem;
+  line-height: 1;
+  color: var(--color-text);
+}
+
+.case-study-boardy .bd-result-score span {
+  margin-left: 4px;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-result-list {
+  display: grid;
+  gap: 4px;
+  margin: 4px 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.case-study-boardy .bd-result-list li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+.case-study-boardy .bd-result-list li::before {
+  content: "";
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 8px;
+  height: 1.5px;
+  background: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-result-tag {
+  display: inline-block;
+  margin: 0;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-radius: var(--bd-radius-hand-sm);
+}
+
+/* Stage 2: a generic news clipping. The source is a plain fictional label and
+   the card says so, so it can't read as a citation of a real outlet. */
+.case-study-boardy .bd-clip {
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+  rotate: -0.6deg;
+}
+
+.case-study-boardy .bd-clip-source {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-2);
+  padding-bottom: var(--space-2);
+  font-family: var(--font-label);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  border-bottom: 3px double var(--color-border);
+}
+
+.case-study-boardy .bd-clip-headline {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-headline);
+  font-size: 1.375rem;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.case-study-boardy .bd-clip-snippet {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
   color: var(--color-text-muted);
 }
 
@@ -683,7 +1616,6 @@
 .case-study-boardy .bd-stepper h4 {
   margin-bottom: var(--space-2);
   font-size: 1.25rem;
-  font-weight: 400;
 }
 
 .case-study-boardy .bd-stepper-item > p:last-child {
@@ -720,7 +1652,6 @@
   margin: 0;
   font-family: var(--font-headline);
   font-size: clamp(2.25rem, 1.5rem + 3vw, 3rem);
-  font-weight: 400;
   line-height: 1;
   color: var(--color-text);
 }
@@ -745,21 +1676,6 @@
   fill: var(--color-bg);
   stroke: var(--color-border);
   stroke-width: 1.25;
-}
-
-.case-study-boardy .bd-chart-total {
-  margin: var(--space-3) 0 0;
-  font-family: var(--font-label);
-  font-size: 0.8125rem;
-  text-align: right;
-  color: var(--color-text-muted);
-}
-
-.case-study-boardy .bd-chart-total strong {
-  font-family: var(--font-headline);
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: var(--color-text);
 }
 
 /* --- Nurture timeline (Day 7 / 14 / 28) -------------------------------- */
@@ -821,17 +1737,4 @@
 .case-study-boardy .bd-nurture h4 {
   margin-top: var(--space-2);
   font-size: 1.25rem;
-  font-weight: 400; /* Instrument Serif ships no bold; avoids faux-bold */
-}
-
-/* Transcript panel change: a short fade/rise, only when motion is fine. */
-@media (prefers-reduced-motion: no-preference) {
-  .case-study-boardy .bd-tx.is-entering {
-    animation: bd-tx-in 0.3s ease both;
-  }
-}
-
-@keyframes bd-tx-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
 }
