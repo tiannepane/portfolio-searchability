@@ -150,5 +150,21 @@
     "narrative": "[NEEDS REAL CONTENT]",
     "links": { "caseStudy": "/projects/contact-support-ai.html" },
     "images": []
+  },
+  {
+    "id": "boardy",
+    "title": "Boardy",
+    "category": "Projects",
+    "size": "sm",
+    "summary": "An independent product teardown of Boardy: an opt-in, transcript-free signal after each meeting that turns one-time introductions into relationships that hold, measured by a new metric called Sustain Rate.",
+    "tagline": "The 70% Problem: The AfterLife of Introductions",
+    "status": "Concept",
+    "year": "2026",
+    "attribution": "Boardy / Concept 2026",
+    "previewPrompt": "Tell me about the Boardy project.",
+    "tags": ["Relational intelligence", "User Research", "Product Strategy", "Experiment Design", "Metrics"],
+    "narrative": "I started using Boardy to find a warm intro into a product role in Toronto, and partway through the call I began auditing it instead. I interviewed it the way I'd run discovery on any tool: how it picks matches, how often it follows up, where its numbers come from, who checks them. It turned out to be good at the spark and blind to what happens after an intro. It put its follow-up rate at roughly 20 to 30 percent, then told me by text that the number was said off the cuff and shouldn't be treated as data, so I used the correction as the finding instead of the number. My proposal is an opt-in signal after each meeting that shares back only a chemistry score and action items, never the transcript. It feeds nurture messaging and a metric I call Sustain Rate: the share of intros where both people re-engage within 30 days. This is independent product thinking built from a public conversation, not Boardy roadmap, and the page says so up front. Two cheap tests come before any automation: whether people opt in at all (under roughly 20 percent and the project stops), and whether hand-scored chemistry predicts which connections stay active. I dropped my LinkedIn verification idea because it violates their Terms of Service, and chose SEC Form D over Crunchbase for checking funding. The status is Concept: the spec is written, and the mockups and a second pass with Boardy are still ahead.",
+    "links": { "caseStudy": "/projects/boardy.html" },
+    "images": []
   }
 ]

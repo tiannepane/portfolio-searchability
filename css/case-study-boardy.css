@@ -1,0 +1,837 @@
+/*
+  css/case-study-boardy.css — hand-drawn / scrollytelling treatment for
+  projects/boardy.html ONLY. Loaded by that page alone and scoped under
+  .case-study-boardy, so it can't reach any other case study.
+
+  Techniques borrowed from boardy/watercolor/ (hand-drawn card borders,
+  the "watercolor swatch" gradient trick, sequential reveal, pinned
+  visual + scrolling steps, RoughJS charts) — reimplemented with this
+  site's own tokens.css values and the typography-v2 fonts. Nothing here
+  hardcodes a color or font (CLAUDE.md §12): every color is a token or a
+  color-mix() of tokens. Background direction is still the neutral
+  white/grayscale placeholder, so this stays grayscale. Oxblood
+  (--color-accent) is used only for two tiny moments: the "Chosen"
+  swatch and the Sustain Rate target dot.
+
+  Static state first: everything below looks finished with no JS. The
+  reveal/scrolly/chart-draw states are layered on by
+  js/case-study-boardy.js via classes it adds, and they're gated on
+  prefers-reduced-motion.
+*/
+
+.case-study-boardy {
+  /* Hand-drawn radii: deliberately asymmetric corners. */
+  --bd-radius-hand: 14px 17px 13px 16px / 16px 13px 18px 14px;
+  --bd-radius-hand-alt: 17px 13px 16px 14px / 13px 18px 14px 16px;
+  --bd-radius-hand-sm: 8px 11px 9px 12px / 11px 8px 12px 9px;
+  /* A solid offset in the border color reads as a pencil-drawn shadow. */
+  --bd-card-shadow: 2px 3px 0 var(--color-border);
+
+  /* Plain-token fallbacks first; the color-mix() tones below replace them
+     where supported. */
+  --bd-tone-1: var(--color-border);
+  --bd-tone-2: var(--color-border);
+  --bd-tone-3: var(--color-text-muted);
+  --bd-tone-4: var(--color-text-muted);
+  --bd-bar-pos: var(--color-text-muted);
+  --bd-bar-neg: var(--color-border);
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+  .case-study-boardy {
+    --bd-tone-1: color-mix(in srgb, var(--color-text-muted) 25%, var(--color-surface));
+    --bd-tone-2: color-mix(in srgb, var(--color-text-muted) 45%, var(--color-surface));
+    --bd-tone-3: color-mix(in srgb, var(--color-text-muted) 65%, var(--color-surface));
+    --bd-tone-4: color-mix(in srgb, var(--color-text-muted) 85%, var(--color-surface));
+    --bd-bar-pos: color-mix(in srgb, var(--color-text-muted) 60%, var(--color-bg));
+    --bd-bar-neg: color-mix(in srgb, var(--color-text-muted) 30%, var(--color-bg));
+  }
+}
+
+/* --- Data tables (chemistry rubric, pilot metrics) ---------------------
+   No table pattern exists site-wide, so it lives here. Borrows
+   .case-study-scroll's look (bordered, rounded, scrolls horizontally in
+   its own wrapper below the column width) plus a hairline between rows. */
+.case-study-boardy .case-study-table-wrap {
+  overflow-x: auto;
+  margin-bottom: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.case-study-boardy .case-study-table {
+  width: 100%;
+  min-width: 32rem;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9375rem;
+}
+
+.case-study-boardy .case-study-table th,
+.case-study-boardy .case-study-table td {
+  padding: var(--space-3);
+  vertical-align: top;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.case-study-boardy .case-study-table tbody tr:last-child th,
+.case-study-boardy .case-study-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.case-study-boardy .case-study-table thead th {
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.case-study-boardy .case-study-table tbody th {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* --- Hand-drawn card borders ------------------------------------------ */
+.case-study-boardy .case-study-columns > .friction-point,
+.case-study-boardy .bd-step {
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .case-study-columns > .friction-point:nth-child(even),
+.case-study-boardy .bd-step:nth-child(even) {
+  border-radius: var(--bd-radius-hand-alt);
+}
+
+.case-study-boardy .case-study-visual {
+  border-width: 1.5px;
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy p.case-study-callout {
+  border-width: 1.5px;
+  border-radius: var(--bd-radius-hand-alt);
+}
+
+.case-study-boardy .media-placeholder {
+  border-width: 1.5px;
+  border-radius: var(--bd-radius-hand);
+}
+
+.case-study-boardy .case-study-table-wrap {
+  border-width: 1.5px;
+  border-radius: var(--bd-radius-hand-sm);
+  box-shadow: var(--bd-card-shadow);
+}
+
+/* --- Watercolor swatch -------------------------------------------------
+   Asymmetric radius plus two soft radial highlights reads as "painted"
+   without any per-element SVG filter cost. */
+.case-study-boardy .bd-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: var(--space-2);
+  vertical-align: -2px;
+  border-radius: 3px 6px 4px 7px / 6px 3px 7px 4px;
+  background: var(--swatch, var(--color-border));
+}
+
+@supports (color: color-mix(in srgb, red, blue)) {
+  .case-study-boardy .bd-swatch {
+    background:
+      radial-gradient(circle at 28% 22%, color-mix(in srgb, var(--color-bg) 40%, transparent), transparent 60%),
+      radial-gradient(circle at 72% 78%, color-mix(in srgb, var(--color-text) 10%, transparent), transparent 55%),
+      var(--swatch, var(--color-border));
+  }
+}
+
+.case-study-boardy .bd-swatch--1 { --swatch: var(--bd-tone-1); }
+.case-study-boardy .bd-swatch--2 { --swatch: var(--bd-tone-2); }
+.case-study-boardy .bd-swatch--3 { --swatch: var(--bd-tone-3); }
+.case-study-boardy .bd-swatch--4 { --swatch: var(--bd-tone-4); }
+.case-study-boardy .bd-swatch--accent { --swatch: var(--color-accent); }
+
+/* --- Charts: shared row layout -----------------------------------------
+   Labels are real HTML text (wraps and stays legible at 375px); only the
+   bar itself is SVG. Plain shapes ship in the markup as the no-JS /
+   no-RoughJS fallback; js/case-study-boardy.js redraws them by hand. */
+.case-study-boardy .bd-chart {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.case-study-boardy .bd-chart-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+}
+
+.case-study-boardy .bd-chart-label {
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.case-study-boardy .bd-chart-range {
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.case-study-boardy .bd-chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.case-study-boardy .bd-chart-note {
+  margin: var(--space-3) 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 480px) {
+  .case-study-boardy .bd-chart-row {
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr) 4.5rem;
+    align-items: center;
+    gap: var(--space-3);
+  }
+}
+
+.case-study-boardy .bd-axis {
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-width: 1.25;
+}
+
+.case-study-boardy .bd-bar {
+  stroke: none;
+}
+
+.case-study-boardy .bd-bar--pos { fill: var(--bd-bar-pos); }
+.case-study-boardy .bd-bar--neg { fill: var(--bd-bar-neg); }
+.case-study-boardy .bd-dot { fill: var(--color-accent); stroke: none; }
+
+/* --- Pinned visual + scrolling steps (Pattern B) -----------------------
+   Stacked below --bp-lg; two columns with a sticky diagram from --bp-lg
+   up. The generous step spacing and dimming only apply once the script
+   marks the container .is-live (never under reduced motion). */
+.case-study-boardy .bd-scrolly {
+  display: grid;
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.case-study-boardy .bd-scrolly-visual {
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-scrolly-visual .case-study-visual-label {
+  margin-bottom: var(--space-3);
+}
+
+.case-study-boardy .bd-scrolly-steps {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.case-study-boardy .bd-step h3 {
+  margin-top: 0;
+}
+
+.case-study-boardy .bd-loop-svg {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  margin-inline: auto;
+}
+
+.case-study-boardy .bd-box {
+  fill: var(--color-bg);
+  stroke: var(--color-text-muted);
+  stroke-width: 1.5;
+}
+
+.case-study-boardy .bd-arrow {
+  fill: none;
+  stroke: var(--color-text-muted);
+  stroke-width: 1.5;
+}
+
+.case-study-boardy .bd-svg-eyebrow {
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  fill: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-svg-title {
+  font-family: var(--font-headline);
+  font-size: 19px;
+  fill: var(--color-text);
+}
+
+@media (min-width: 1024px) {
+  .case-study-boardy .bd-scrolly {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .case-study-boardy .bd-scrolly-visual {
+    position: sticky;
+    top: calc(var(--site-nav-height) + var(--space-5));
+  }
+
+  .case-study-boardy .bd-scrolly.is-live .bd-scrolly-steps {
+    gap: 22vh;
+    padding-block: 6vh;
+  }
+}
+
+/* --- Motion layers (added by js/case-study-boardy.js) ------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  /* Pattern A: sections rise into place the first time they're seen. */
+  .bd-reveal .case-study-boardy .case-study-section {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .bd-reveal .case-study-boardy .case-study-section.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Pattern B: the active step reads at full strength. */
+  .case-study-boardy .bd-scrolly.is-live .bd-step {
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+  }
+
+  .case-study-boardy .bd-scrolly.is-live .bd-step.is-active {
+    opacity: 1;
+  }
+
+  .case-study-boardy .bd-scrolly.is-live [data-stage] {
+    opacity: 0.4;
+    transition: opacity 0.4s ease;
+  }
+
+  .case-study-boardy .bd-scrolly.is-live [data-stage].is-active {
+    opacity: 1;
+  }
+
+  /* Charts: bars grow out from the zero line once the chart is seen. */
+  .case-study-boardy .bd-chart .bd-bar {
+    transform-box: fill-box;
+    transition: transform 0.7s cubic-bezier(0.22, 0.8, 0.3, 1);
+    transition-delay: var(--bd-delay, 0ms);
+  }
+
+  .case-study-boardy .bd-chart .bd-bar--pos { transform-origin: 0 50%; }
+  .case-study-boardy .bd-chart .bd-bar--neg { transform-origin: 100% 50%; }
+
+  .case-study-boardy .bd-chart[data-drawn="false"] .bd-bar {
+    transform: scaleX(0);
+  }
+
+  .case-study-boardy .bd-chart .bd-dot {
+    transition: opacity 0.4s ease 0.7s;
+  }
+
+  .case-study-boardy .bd-chart[data-drawn="false"] .bd-dot {
+    opacity: 0;
+  }
+}
+
+/* =========================================================================
+   Design.pdf rebuild: interview scrubber, stage stepper, before/after,
+   worked-example chart, nurture timeline. Same visual system as above;
+   Design.pdf's cream/navy is a layout reference only.
+   ========================================================================= */
+
+/* --- Interview scrubber ------------------------------------------------ */
+.case-study-boardy .bd-scrubber {
+  margin: var(--space-4) 0 var(--space-5);
+}
+
+.case-study-boardy .bd-player {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-play {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-text);
+  border-radius: 50% 46% 50% 48%;
+  cursor: pointer;
+}
+
+.case-study-boardy .bd-play svg { fill: currentColor; }
+.case-study-boardy .bd-icon-pause { display: none; }
+.case-study-boardy .bd-scrubber.is-playing .bd-icon-play { display: none; }
+.case-study-boardy .bd-scrubber.is-playing .bd-icon-pause { display: block; }
+
+.case-study-boardy .bd-play:disabled {
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+  cursor: not-allowed;
+}
+
+.case-study-boardy .bd-play:focus-visible,
+.case-study-boardy .bd-range:focus-visible,
+.case-study-boardy .bd-moment:focus-visible,
+.case-study-boardy .bd-transcript:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+.case-study-boardy .bd-track {
+  position: relative;
+  min-width: 0;
+}
+
+.case-study-boardy .bd-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.case-study-boardy .bd-range:disabled { cursor: not-allowed; }
+
+.case-study-boardy .bd-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 6px;
+  background: linear-gradient(to right, var(--color-text) var(--bd-progress, 0%), var(--color-border) var(--bd-progress, 0%));
+}
+
+.case-study-boardy .bd-range::-moz-range-track {
+  height: 6px;
+  border-radius: 6px;
+  background: linear-gradient(to right, var(--color-text) var(--bd-progress, 0%), var(--color-border) var(--bd-progress, 0%));
+}
+
+.case-study-boardy .bd-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border: 1.5px solid var(--color-text);
+  border-radius: 50% 46% 50% 48%;
+  background: var(--color-bg);
+}
+
+.case-study-boardy .bd-range::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid var(--color-text);
+  border-radius: 50% 46% 50% 48%;
+  background: var(--color-bg);
+}
+
+.case-study-boardy .bd-range:disabled::-webkit-slider-thumb { border-color: var(--color-text-muted); }
+.case-study-boardy .bd-range:disabled::-moz-range-thumb { border-color: var(--color-text-muted); }
+
+/* Moment ticks sit just above the track, inset by half a thumb so they line
+   up with where the thumb's center actually lands. */
+.case-study-boardy .bd-markers {
+  position: absolute;
+  inset: 0 9px;
+  pointer-events: none;
+}
+
+.case-study-boardy .bd-marker {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 6px;
+  margin-left: -1px;
+  background: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-marker--range {
+  margin-left: 0;
+  height: 4px;
+  background: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+.case-study-boardy .bd-time {
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-player-status {
+  margin: var(--space-2) 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-field {
+  margin: var(--space-4) 0 0;
+}
+
+.case-study-boardy .bd-field-body {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.case-study-boardy .bd-moments {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  align-content: start;
+}
+
+@media (min-width: 480px) {
+  .case-study-boardy .bd-moments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .case-study-boardy .bd-field-body {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    align-items: start;
+  }
+  .case-study-boardy .bd-moments { grid-template-columns: minmax(0, 1fr); }
+  .case-study-boardy .bd-transcript { max-height: 32rem; overflow-y: auto; }
+}
+
+/* Real <button>s, so Tab / Enter / Space work with no extra script. */
+.case-study-boardy .bd-moment {
+  display: grid;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: var(--space-3) var(--space-4);
+  font: inherit;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+  cursor: pointer;
+}
+
+.case-study-boardy .bd-moment:nth-child(even) { border-radius: var(--bd-radius-hand-alt); }
+.case-study-boardy .bd-moment:hover { border-color: var(--color-text-muted); }
+
+.case-study-boardy .bd-moment[aria-pressed="true"] {
+  border-color: var(--color-text);
+  box-shadow: 3px 4px 0 var(--color-text-muted);
+}
+
+.case-study-boardy .bd-moment-time {
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-moment-label {
+  font-family: var(--font-headline);
+  font-size: 1.125rem;
+  line-height: 1.2;
+}
+
+.case-study-boardy .bd-moment-quote {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-transcript {
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand-alt);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-tx + .bd-tx { margin-top: var(--space-5); }
+
+.case-study-boardy .bd-tx-head {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-headline);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.case-study-boardy .bd-tx-when {
+  display: block;
+  margin-top: var(--space-1);
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-tx-line {
+  margin: 0 0 var(--space-3);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-tx-who {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.case-study-boardy .bd-tx-line--target {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-left: 3px solid var(--color-text-muted);
+  border-radius: var(--bd-radius-hand-sm);
+}
+
+.case-study-boardy .bd-tx-empty {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+}
+
+/* --- Four-stage stepper (overview row) --------------------------------- */
+.case-study-boardy .bd-stepper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 480px) {
+  .case-study-boardy .bd-stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .case-study-boardy .bd-stepper {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+  .case-study-boardy .bd-stepper-item:not(:last-child)::after {
+    content: "\2192";
+    position: absolute;
+    top: 50%;
+    right: calc(var(--space-5) / -2);
+    transform: translate(50%, -50%);
+    color: var(--color-text-muted);
+  }
+}
+
+.case-study-boardy .bd-stepper-item {
+  position: relative;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-stepper-item:nth-child(even) { border-radius: var(--bd-radius-hand-alt); }
+
+.case-study-boardy .bd-stepper-eyebrow {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-label);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-stepper h4 {
+  margin-bottom: var(--space-2);
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.case-study-boardy .bd-stepper-item > p:last-child {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* --- Sustain Rate before/after + worked-example chart ------------------ */
+.case-study-boardy .bd-beforeafter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.case-study-boardy .bd-stat {
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-stat--target {
+  border-color: var(--color-text);
+  border-radius: var(--bd-radius-hand-alt);
+}
+
+.case-study-boardy .bd-stat-num {
+  margin: 0;
+  font-family: var(--font-headline);
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 3rem);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-text);
+}
+
+.case-study-boardy .bd-stat-cap {
+  margin: var(--space-2) 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.case-study-boardy .bd-beforeafter-arrow {
+  font-size: 1.5rem;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-chart-note--center {
+  text-align: center;
+  margin-bottom: var(--space-4);
+}
+
+.case-study-boardy .bd-track-rect {
+  fill: var(--color-bg);
+  stroke: var(--color-border);
+  stroke-width: 1.25;
+}
+
+.case-study-boardy .bd-chart-total {
+  margin: var(--space-3) 0 0;
+  font-family: var(--font-label);
+  font-size: 0.8125rem;
+  text-align: right;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-chart-total strong {
+  font-family: var(--font-headline);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
+/* --- Nurture timeline (Day 7 / 14 / 28) -------------------------------- */
+.case-study-boardy .bd-timeline {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.case-study-boardy .bd-day {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-day-num { color: var(--color-text); white-space: nowrap; }
+.case-study-boardy .bd-day-rule { display: none; }
+
+.case-study-boardy .bd-day-tag {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@media (min-width: 480px) {
+  .case-study-boardy .bd-day {
+    grid-template-columns: auto minmax(1rem, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .case-study-boardy .bd-day-rule {
+    display: block;
+    border-top: 1.5px dashed var(--color-border);
+  }
+  .case-study-boardy .bd-day-tag { text-align: right; }
+}
+
+.case-study-boardy .bd-bubble {
+  max-width: 36rem;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: 14px 17px 13px 4px / 16px 13px 18px 4px;
+  box-shadow: var(--bd-card-shadow);
+}
+
+.case-study-boardy .bd-nurture h4 {
+  margin-top: var(--space-2);
+  font-size: 1.25rem;
+  font-weight: 400; /* Instrument Serif ships no bold; avoids faux-bold */
+}
+
+/* Transcript panel change: a short fade/rise, only when motion is fine. */
+@media (prefers-reduced-motion: no-preference) {
+  .case-study-boardy .bd-tx.is-entering {
+    animation: bd-tx-in 0.3s ease both;
+  }
+}
+
+@keyframes bd-tx-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
