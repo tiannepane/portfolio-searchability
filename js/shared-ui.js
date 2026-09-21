@@ -108,10 +108,7 @@
 
     const header = makeEl('div', 'tianne-panel-header');
     const titles = makeEl('div', 'tianne-panel-titles');
-    titles.append(
-      makeEl('h2', 'tianne-panel-title', 'Tianne LLM'),
-      makeEl('p', 'tianne-panel-disclosure', "An AI answering as Tianne, from what's on this site.")
-    );
+    titles.append(makeEl('h2', 'tianne-panel-title', 'Tianne LLM'));
     const actions = makeEl('div', 'tianne-panel-actions');
     const newChatBtn = makeEl('button', 'tianne-panel-newchat', 'New chat');
     newChatBtn.type = 'button';
@@ -213,6 +210,27 @@
       thread.append(list);
     }
 
+    // When someone asks to see everything, point them back at the full grid.
+    // On the homepage the grid has already been reset (js/home.js), so the link
+    // just closes the panel; on other pages it goes to the homepage.
+    function addBackToGrid() {
+      const list = makeEl('ul', 'tianne-panel-links');
+      const li = document.createElement('li');
+      const a = makeEl('a', '', 'Back to all projects');
+      a.href = '/index.html#projects';
+      a.addEventListener('click', (event) => {
+        if (isCurrentPage('/index.html')) {
+          event.preventDefault();
+          closePanel({ returnFocus: false });
+          const grid = document.querySelector('[data-grid]');
+          if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+      li.append(a);
+      list.append(li);
+      thread.append(list);
+    }
+
     function scrollToEnd() {
       thread.scrollTop = thread.scrollHeight;
     }
@@ -229,6 +247,7 @@
           addUser(m.content);
         } else {
           addAssistant(m.content);
+          if (m.showAll) addBackToGrid();
           if (window.TianneChat && typeof window.TianneChat.getProjects === 'function' && m.projectIds && m.projectIds.length) {
             addLinks(await window.TianneChat.getProjects(m.projectIds));
           }
@@ -306,10 +325,16 @@
 
         live.classList.remove('tianne-msg--pending');
         live.textContent = result.reply;
-        addLinks(result.relevantProjects);
+        if (result.showAllProjects) addBackToGrid();
+        else addLinks(result.relevantProjects);
 
         messages.push({ role: 'user', content: q });
-        messages.push({ role: 'assistant', content: result.reply, projectIds: result.relevantProjectIds });
+        messages.push({
+          role: 'assistant',
+          content: result.reply,
+          projectIds: result.relevantProjectIds,
+          showAll: result.showAllProjects === true,
+        });
         save();
         status.textContent = result.reply;
         document.dispatchEvent(new CustomEvent('tianne:answer', { detail: { question: q, ...result } }));

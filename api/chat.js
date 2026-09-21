@@ -32,8 +32,9 @@ const RESPONSE_SCHEMA = {
   properties: {
     reply: { type: 'string' },
     relevantProjectIds: { type: 'array', items: { type: 'string' } },
+    showAllProjects: { type: 'boolean' },
   },
-  required: ['reply', 'relevantProjectIds'],
+  required: ['reply', 'relevantProjectIds', 'showAllProjects'],
   additionalProperties: false,
 };
 
@@ -89,7 +90,8 @@ function loadPromptData() {
     '## How to answer',
     '- Ground every answer in the persona guide, the project narratives and the profile above. The persona guide is the most authoritative source: if it covers a fact that a project entry below leaves as a placeholder, use the guide. Where a detail is a placeholder like "[NEEDS REAL CONTENT]" or "(none yet)" and the guide does not cover it either, do not invent specifics — say plainly that the detail isn\'t written up yet rather than guessing.',
     `- relevantProjectIds must only ever contain ids from this exact list: ${validIds.join(', ')}. Never invent an id, and never include an id the message doesn't genuinely relate to.`,
-    "- If nothing in the project list is relevant, return an empty relevantProjectIds array and just answer conversationally.",
+    "- relevantProjectIds is only for projects the visitor's message is actually about. A project you merely suggest as a next step or a call to action does NOT belong in it. General questions (where I work, hobbies, how to reach me, availability, salary) get an empty relevantProjectIds array, even if your reply points to a case study.",
+    "- showAllProjects: set it to true ONLY when the visitor asks to browse or see the whole set: 'show me all your projects', 'what projects do you have', the whole portfolio or grid, 'show me your work', or asks to go back, reset or clear the view. Questions about accomplishments or track record ('what have you shipped', 'what have you achieved', 'what's your experience') are NOT browse requests: answer them from the bio and persona guide, and set it to false. Never call concept or case-study work 'shipped'. When it is true, return an empty relevantProjectIds array and keep the reply to one or two short sentences saying the full grid is back on the page.",
   ].join('\n');
 
   cachedPromptData = { validIds, systemPromptBase };
@@ -353,7 +355,12 @@ async function streamReply(res, systemPrompt, messages, apiKey, validIds) {
       const relevantProjectIds = Array.isArray(parsed.relevantProjectIds)
         ? parsed.relevantProjectIds.filter((id) => validIds.includes(id))
         : [];
-      send({ done: true, reply: typeof parsed.reply === 'string' ? parsed.reply : '', relevantProjectIds });
+      send({
+        done: true,
+        reply: typeof parsed.reply === 'string' ? parsed.reply : '',
+        relevantProjectIds,
+        showAllProjects: parsed.showAllProjects === true,
+      });
     } catch (err) {
       console.error('[api/chat] stream error:', err);
       send({ error: "Tianne couldn't respond just now — try again in a moment." });
@@ -415,6 +422,7 @@ module.exports = async function handler(req, res) {
     res.status(200).json({
       reply: typeof parsed.reply === 'string' ? parsed.reply : '',
       relevantProjectIds,
+      showAllProjects: parsed.showAllProjects === true,
     });
   } catch (err) {
     console.error('[api/chat] error:', err);

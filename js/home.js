@@ -479,7 +479,22 @@
     // grid. A general question ("where do you work?") matches no project, so
     // it leaves the grid as it is instead of emptying it.
     document.addEventListener('tianne:answer', (event) => {
-      const ids = (event.detail && event.detail.relevantProjectIds) || [];
+      const detail = event.detail || {};
+
+      // "Show me everything": back to the full grid, and bring the visitor to
+      // it. On a phone the panel is a full-screen sheet, so close it.
+      if (detail.showAllProjects) {
+        input.value = '';
+        input.classList.remove('is-preview');
+        revertToAll();
+        suggestions.reshuffle();
+        if (!TWO_COLUMNS.matches && window.TiannePanel) window.TiannePanel.close({ returnFocus: false });
+        const grid = document.querySelector('[data-grid]');
+        if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      const ids = detail.relevantProjectIds || [];
       if (ids.length) applyFiltered(ids);
     });
 

@@ -43,7 +43,7 @@
   }
 
   // Sends a message, appends the turn to the shared history, and resolves
-  // with { reply, relevantProjectIds, relevantProjects }. Throws an Error
+  // with { reply, relevantProjectIds, relevantProjects, showAllProjects }. Throws an Error
   // with a user-safe message on failure — callers should catch and display it.
   //
   // onDelta (optional): called with the reply text so far each time more of
@@ -80,6 +80,7 @@
 
     let reply = '';
     let relevantProjectIds = [];
+    let showAllProjects = false;
 
     const contentType = res.headers.get('content-type') || '';
     if (contentType.includes('text/event-stream') && res.body) {
@@ -107,6 +108,7 @@
           finished = true;
           reply = typeof evt.reply === 'string' ? evt.reply : soFar;
           relevantProjectIds = Array.isArray(evt.relevantProjectIds) ? evt.relevantProjectIds : [];
+          showAllProjects = evt.showAllProjects === true;
         }
       }
 
@@ -133,6 +135,7 @@
       const data = await res.json();
       reply = typeof data.reply === 'string' ? data.reply : '';
       relevantProjectIds = Array.isArray(data.relevantProjectIds) ? data.relevantProjectIds : [];
+      showAllProjects = data.showAllProjects === true;
       if (onDelta) onDelta(reply);
     }
 
@@ -142,7 +145,7 @@
     const projectsById = await loadProjectsById();
     const relevantProjects = relevantProjectIds.map((id) => projectsById[id]).filter(Boolean);
 
-    return { reply, relevantProjectIds, relevantProjects };
+    return { reply, relevantProjectIds, relevantProjects, showAllProjects };
   }
 
   function clearHistory() {

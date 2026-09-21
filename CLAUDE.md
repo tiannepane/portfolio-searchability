@@ -8,7 +8,7 @@ Chat-searchable personal portfolio: a short intro establishes who you are, a two
 - **Ask Tianne panel (2026-09-21):** a docked, non-modal side panel on the right (a full-screen sheet below 768px). Opens when a question is submitted from the hero bar, typed or a suggested one. The page stays visible and scrollable beside it (from 1024px the page and nav narrow to make room), and it stays open until closed, across page loads too (open state and thread live in sessionStorage). It keeps a thread and has a follow-up input. On every page except Home the nav pill opens the same panel. Streaming: answers appear as they are written.
 - **Hero search bar (Home only):** the one input that starts a conversation. In normal flow above the grid, never floating. Under it, three of four suggested questions show faded and clickable, rotating gently while the bar is empty.
 - **Project grid:** two-column masonry (image-first cards, no category rail — removed 2026-09-10; full width; no card chrome, one 48px gap both directions — 2026-09-21). Shows a curated set of projects, not the full list — `js/home.js`'s `HOME_ORDER` is the source of truth for which projects show and their reading order; each card goes into whichever column is currently shorter; every other project's data and case-study page stay intact, just off this grid, including from search.
-- **Voice:** Tianne answers in first person — "I build..." — as if it's genuinely you. Paired with a small, persistent disclosure near the pill/prompt box (not a banner, just enough that nobody mistakes it for texting you live) since it's an AI, not a live conversation.
+- **Voice:** Tianne answers in first person — "I build..." — as if it's genuinely you. The small persistent "AI answering as Tianne" line in the panel was removed on 2026-09-21 at the owner's request; the assistant says it is an AI whenever asked (eval `persona-is-ai`), and the panel is titled "Tianne LLM".
 - **Two hard rules regardless of voice:** never invent a fact that isn't in the data files — say so honestly and point to contact info instead. Never claim real-time availability or scheduling ("yes I'm free Tuesday") — that always redirects to actual contact info, since Tianne has no live calendar access.
 - **Hover a card (desktop):** fills the prompt box with the prompt that would surface it — e.g. hovering "Windturbine" shows "Tell me about the CDW wind turbine project."
 - **Click a card, any time:** opens its case study directly.
@@ -76,6 +76,7 @@ portfolio/
 - `evals/run-evals.js`: calls the chat logic directly for each case (not over HTTP), checks returned ids against expected, prints a pass/fail summary.
 - Persona questions ("tell me about yourself") get lighter-touch checks — does the reply contain the must-mention facts — not exact matching; full LLM-graded evals are a later upgrade if this stops being enough.
 - Run this before considering any change to `projects.json`, `profile.md`, `tianne-persona.md`, or the system prompt done.
+- **How to run (built 2026-09-21):** `node evals/run-evals.js` (needs the key in `.env`; about 35 API calls, under a minute). `--static` runs only the free data checks, `--filter <text>` runs a subset, `--verbose` prints every reply, `--json <file>` saves results. Exit code 1 on any failure. It calls `api/chat.js` directly, checks ids returned, `showAllProjects`, facts the reply must or must not mention, and on every reply: no em dashes, no markdown, no she/her, under the length cap. One extra check confirms streamed text equals the final reply. Cases live in `evals/test-cases.json` (field guide at the top of that file). A case that fails once and passes on a rerun is flaky: fix the prompt or loosen the case.
 
 ## 8. Analytics
 - Supabase table `chat_logs`: `id`, `created_at`, `message`, `reply`, `relevant_project_ids`, `page_context`. No auth, no personal identifiers — anonymous by default.
@@ -123,7 +124,7 @@ Background (still pending): working direction is a dark, desaturated navy or gra
 - Responsive down to mobile everywhere, including the intro, grid, prompt box.
 - Full keyboard operability throughout, including Tianne.
 - Grid re-render after a query: announce result count via ARIA live region.
-- A small, persistent AI-disclosure near the pill/prompt box (§1) — legible, not an afterthought.
+- AI disclosure: the always-visible line was removed from the panel on 2026-09-21 at the owner's request (§1). The assistant must still say it is an AI when asked.
 - Timeline stays legible stacked on mobile. `prefers-reduced-motion` respected. WCAG AA once tokens are set. Meaningful `alt` text. Semantic HTML throughout.
 
 ## 14. Rules for Claude Code
