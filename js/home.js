@@ -415,7 +415,9 @@
       setLoading(true);
       setReplyText('');
       try {
-        const result = await window.TianneChat.send(value);
+        // The reply box fills in as the answer is written; the grid filters
+        // once the matching project ids arrive at the end.
+        const result = await window.TianneChat.send(value, (textSoFar) => setReplyText(textSoFar));
         if (result) applyFiltered(result.relevantProjectIds, result.reply);
       } catch (err) {
         setReplyText((err && err.message) || "Tianne couldn't respond just now — try again in a moment.");

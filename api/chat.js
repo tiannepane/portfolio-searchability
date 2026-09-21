@@ -20,7 +20,7 @@ const path = require('path');
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 const MODEL = 'claude-opus-5';
-const MAX_TOKENS = 1024;
+const MAX_TOKENS = 700; // replies are capped to ~60 words by the persona rules; this is only a safety ceiling
 const REQUEST_TIMEOUT_MS = 30000;
 const MAX_RETRIES = 2; // retries on 429/5xx only
 
@@ -46,9 +46,18 @@ function loadPromptData() {
 
   const projectsPath = path.join(process.cwd(), 'data', 'projects.json');
   const profilePath = path.join(process.cwd(), 'data', 'profile.md');
+  const personaPath = path.join(process.cwd(), 'data', 'tianne-persona.md');
 
   const projects = JSON.parse(fs.readFileSync(projectsPath, 'utf8'));
   const profile = fs.readFileSync(profilePath, 'utf8');
+  // Voice, length rules, the two hard rules and the anchor answers. Optional
+  // so a missing file degrades to the older behavior instead of a 502.
+  let persona = '';
+  try {
+    persona = fs.readFileSync(personaPath, 'utf8');
+  } catch (_err) {
+    console.warn('[api/chat] data/tianne-persona.md not found; continuing without it.');
+  }
   const validIds = projects.map((p) => p.id);
 
   const projectsBlock = projects
@@ -71,11 +80,14 @@ function loadPromptData() {
     '## About Tianne',
     profile.trim(),
     '',
+    '## Persona, voice and length rules (these override any looser guidance below)',
+    persona.trim() || '(no persona file loaded)',
+    '',
     '## Projects',
     projectsBlock,
     '',
     '## How to answer',
-    '- Ground every answer in the project narratives and profile above. Where a field above is a placeholder like "[NEEDS REAL CONTENT]" or "(none yet)", do not invent specifics — say plainly that the detail isn\'t written up yet rather than guessing.',
+    '- Ground every answer in the persona guide, the project narratives and the profile above. The persona guide is the most authoritative source: if it covers a fact that a project entry below leaves as a placeholder, use the guide. Where a detail is a placeholder like "[NEEDS REAL CONTENT]" or "(none yet)" and the guide does not cover it either, do not invent specifics — say plainly that the detail isn\'t written up yet rather than guessing.',
     `- relevantProjectIds must only ever contain ids from this exact list: ${validIds.join(', ')}. Never invent an id, and never include an id the message doesn't genuinely relate to.`,
     "- If nothing in the project list is relevant, return an empty relevantProjectIds array and just answer conversationally.",
   ].join('\n');
@@ -177,6 +189,181 @@ async function callClaudeWithRetry(systemPrompt, messages, apiKey) {
   throw lastErr;
 }
 
+// --- Streaming ----------------------------------------------------------
+// The model answers as JSON ({ reply, relevantProjectIds }) with `reply`
+// first. While the JSON is still arriving, this pulls the growing `reply`
+// string out of it (handling JSON escapes) so the visitor can watch the
+// answer being written. The ids arrive at the end, in the final event.
+
+function makeReplyExtractor() {
+  let buf = '';
+  let started = false;
+  let i = 0;
+  let done = false;
+  const ESCAPES = { n: '\n', t: '\t', r: '\r', '"': '"', '\\': '\\', '/': '/', b: '\b', f: '\f' };
+
+  return function push(chunk) {
+    buf += chunk;
+    let out = '';
+    if (!started) {
+      const m = /"reply"\s*:\s*"/.exec(buf);
+      if (!m) return '';
+      started = true;
+      i = m.index + m[0].length;
+    }
+    while (i < buf.length && !done) {
+      const ch = buf[i];
+      if (ch === '"') {
+        done = true;
+        break;
+      }
+      if (ch === '\\') {
+        if (i + 1 >= buf.length) break; // escape split across chunks: wait
+        const next = buf[i + 1];
+        if (next === 'u') {
+          if (i + 6 > buf.length) break;
+          out += String.fromCharCode(parseInt(buf.slice(i + 2, i + 6), 16));
+          i += 6;
+          continue;
+        }
+        out += ESCAPES[next] !== undefined ? ESCAPES[next] : next;
+        i += 2;
+        continue;
+      }
+      out += ch;
+      i += 1;
+    }
+    return out;
+  };
+}
+
+// Opens the streaming request, retrying only before any bytes are read
+// (429 / 5xx), same policy as the non-streaming path.
+async function openClaudeStream(systemPrompt, messages, apiKey, signal) {
+  let lastErr;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch(ANTHROPIC_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': ANTHROPIC_VERSION,
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          max_tokens: MAX_TOKENS,
+          stream: true,
+          system: systemPrompt,
+          messages,
+          output_config: {
+            effort: 'medium',
+            format: { type: 'json_schema', schema: RESPONSE_SCHEMA },
+          },
+        }),
+        signal,
+      });
+      if (res.ok) return res;
+
+      const bodyText = await res.text();
+      let message = `Claude API error (${res.status})`;
+      try {
+        const parsedError = JSON.parse(bodyText);
+        if (parsedError && parsedError.error && parsedError.error.message) message = parsedError.error.message;
+      } catch (_parseErr) {
+        // keep the generic message
+      }
+      const err = new Error(message);
+      err.status = res.status;
+      err.retryable = res.status === 429 || res.status >= 500;
+      throw err;
+    } catch (err) {
+      lastErr = err;
+      if (!err.retryable || attempt === MAX_RETRIES) throw err;
+      await sleep(300 * 2 ** attempt);
+    }
+  }
+  throw lastErr;
+}
+
+// Reads Claude's server-sent events, calling onText with each text delta.
+// Resolves with the full concatenated text.
+async function pumpClaudeStream(upstream, onText) {
+  const decoder = new TextDecoder();
+  let pending = '';
+  let full = '';
+  let stopReason = null;
+
+  function handleEvent(raw) {
+    const dataLine = raw.split('\n').find((line) => line.startsWith('data:'));
+    if (!dataLine) return;
+    let evt;
+    try {
+      evt = JSON.parse(dataLine.slice(5).trim());
+    } catch (_e) {
+      return;
+    }
+    if (evt.type === 'error') {
+      throw new Error((evt.error && evt.error.message) || 'Claude stream error');
+    }
+    if (evt.type === 'content_block_delta' && evt.delta && evt.delta.type === 'text_delta') {
+      full += evt.delta.text;
+      onText(evt.delta.text);
+    }
+    if (evt.type === 'message_delta' && evt.delta && evt.delta.stop_reason) {
+      stopReason = evt.delta.stop_reason;
+    }
+  }
+
+  for await (const chunk of upstream.body) {
+    pending += decoder.decode(chunk, { stream: true });
+    let idx;
+    while ((idx = pending.indexOf('\n\n')) !== -1) {
+      handleEvent(pending.slice(0, idx));
+      pending = pending.slice(idx + 2);
+    }
+  }
+  if (pending.trim()) handleEvent(pending);
+  if (stopReason === 'max_tokens') throw new Error('The reply was cut off.');
+  return full;
+}
+
+async function streamReply(res, systemPrompt, messages, apiKey, validIds) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    // Errors here happen before any bytes are sent, so they still get a
+    // proper HTTP status from the caller's catch.
+    const upstream = await openClaudeStream(systemPrompt, messages, apiKey, controller.signal);
+
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
+    res.setHeader('X-Accel-Buffering', 'no');
+    const send = (obj) => res.write(`data: ${JSON.stringify(obj)}\n\n`);
+
+    try {
+      const extract = makeReplyExtractor();
+      const fullText = await pumpClaudeStream(upstream, (textDelta) => {
+        const visible = extract(textDelta);
+        if (visible) send({ delta: visible });
+      });
+
+      const parsed = JSON.parse(fullText);
+      const relevantProjectIds = Array.isArray(parsed.relevantProjectIds)
+        ? parsed.relevantProjectIds.filter((id) => validIds.includes(id))
+        : [];
+      send({ done: true, reply: typeof parsed.reply === 'string' ? parsed.reply : '', relevantProjectIds });
+    } catch (err) {
+      console.error('[api/chat] stream error:', err);
+      send({ error: "Tianne couldn't respond just now — try again in a moment." });
+    }
+    res.end();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -207,6 +394,11 @@ module.exports = async function handler(req, res) {
       ...sanitizeHistory(body.history),
       { role: 'user', content: message.slice(0, MAX_MESSAGE_CHARS) },
     ];
+
+    if (body.stream === true) {
+      await streamReply(res, systemPrompt, messages, apiKey, validIds);
+      return;
+    }
 
     const completion = await callClaudeWithRetry(systemPrompt, messages, apiKey);
 

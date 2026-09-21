@@ -238,7 +238,18 @@
       renderStatus('Thinking…');
 
       try {
-        const result = await window.TianneChat.send(value);
+        // The first piece of text replaces "Thinking…"; the rest fills in the
+        // same paragraph. The project links are added once the reply is done.
+        let liveEl = null;
+        const result = await window.TianneChat.send(value, (textSoFar) => {
+          if (!liveEl) {
+            body.innerHTML = '';
+            liveEl = document.createElement('p');
+            liveEl.className = 'tianne-panel-reply';
+            body.append(liveEl);
+          }
+          liveEl.textContent = textSoFar;
+        });
         if (result) renderReply(result.reply, result.relevantProjects);
         input.value = '';
       } catch (err) {
@@ -252,6 +263,42 @@
     });
   }
 
+  // Contact links at the bottom of every page. Lives here once (like the nav)
+  // so it can't drift between pages.
+  const FOOTER_LINKS = [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/tianne-pane/', external: true },
+    { label: 'GitHub', href: 'https://github.com/tiannepane', external: true },
+    { label: 'Email', href: 'mailto:nadykupane@gmail.com', external: false },
+  ];
+
+  function buildFooter() {
+    const footer = document.createElement('footer');
+    footer.className = 'site-footer';
+
+    const nav = document.createElement('nav');
+    nav.setAttribute('aria-label', 'Contact');
+
+    const list = document.createElement('ul');
+    list.className = 'site-footer-list';
+    FOOTER_LINKS.forEach(({ label, href, external }) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = href;
+      a.textContent = label;
+      if (external) {
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.setAttribute('aria-label', `${label} (opens in a new tab)`);
+      }
+      li.append(a);
+      list.append(li);
+    });
+
+    nav.append(list);
+    footer.append(nav);
+    return footer;
+  }
+
   function injectSharedUI() {
     const mount = document.querySelector('#shared-nav');
     if (!mount) return;
@@ -261,6 +308,7 @@
 
     mount.append(nav);
     document.body.append(panelParts.panel);
+    document.body.append(buildFooter());
     wirePanelToggle(toggle, panelParts);
     wirePanelChat(panelParts);
   }

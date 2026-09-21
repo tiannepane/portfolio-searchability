@@ -45,7 +45,12 @@
   // Sends a message, appends the turn to the shared history, and resolves
   // with { reply, relevantProjectIds, relevantProjects }. Throws an Error
   // with a user-safe message on failure — callers should catch and display it.
-  async function send(message) {
+  //
+  // onDelta (optional): called with the reply text so far each time more of
+  // it arrives, so the UI can show the answer being written. The server
+  // streams; if it ever answers with plain JSON instead, this still works and
+  // onDelta is simply called once, with the whole reply.
+  async function send(message, onDelta) {
     const trimmed = (message || '').trim();
     if (!trimmed) return null;
 
@@ -56,7 +61,7 @@
       res = await fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: trimmed, history, pageContext }),
+        body: JSON.stringify({ message: trimmed, history, pageContext, stream: true }),
       });
     } catch (networkErr) {
       throw new Error("Couldn't reach Tianne — check your connection and try again.");
@@ -73,9 +78,63 @@
       throw new Error(errorMessage);
     }
 
-    const data = await res.json();
-    const reply = typeof data.reply === 'string' ? data.reply : '';
-    const relevantProjectIds = Array.isArray(data.relevantProjectIds) ? data.relevantProjectIds : [];
+    let reply = '';
+    let relevantProjectIds = [];
+
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('text/event-stream') && res.body) {
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let pending = '';
+      let finished = false;
+      let soFar = '';
+
+      function handleEvent(raw) {
+        const line = raw.split('\n').find((l) => l.startsWith('data:'));
+        if (!line) return;
+        let evt;
+        try {
+          evt = JSON.parse(line.slice(5).trim());
+        } catch (_e) {
+          return;
+        }
+        if (evt.error) throw new Error(evt.error);
+        if (typeof evt.delta === 'string') {
+          soFar += evt.delta;
+          if (onDelta) onDelta(soFar);
+        }
+        if (evt.done) {
+          finished = true;
+          reply = typeof evt.reply === 'string' ? evt.reply : soFar;
+          relevantProjectIds = Array.isArray(evt.relevantProjectIds) ? evt.relevantProjectIds : [];
+        }
+      }
+
+      try {
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          pending += decoder.decode(value, { stream: true });
+          let idx;
+          while ((idx = pending.indexOf('\n\n')) !== -1) {
+            handleEvent(pending.slice(0, idx));
+            pending = pending.slice(idx + 2);
+          }
+        }
+        if (pending.trim()) handleEvent(pending);
+      } catch (streamErr) {
+        throw new Error(
+          (streamErr && streamErr.message) || "Tianne couldn't respond just now — try again in a moment."
+        );
+      }
+      if (!finished) throw new Error("Tianne couldn't respond just now — try again in a moment.");
+      if (onDelta) onDelta(reply); // settle on the final, validated text
+    } else {
+      const data = await res.json();
+      reply = typeof data.reply === 'string' ? data.reply : '';
+      relevantProjectIds = Array.isArray(data.relevantProjectIds) ? data.relevantProjectIds : [];
+      if (onDelta) onDelta(reply);
+    }
 
     history.push({ role: 'user', content: trimmed });
     history.push({ role: 'assistant', content: reply });
