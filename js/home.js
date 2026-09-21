@@ -10,7 +10,7 @@
   it's just off this grid, including from Tianne search (the visible
   set is what search filters against too — see initQueryFlow).
 
-  Makes the prompt box sticky on scroll, previews each card's prompt
+  Previews each card's prompt
   into the box (hover/focus on hover-capable devices, a two-step tap on
   touch devices — CLAUDE.md §5), and wires the real query flow: submit →
   window.TianneChat.send() (js/chat.js, which calls /api/chat) → grid
@@ -20,7 +20,6 @@
 
 (function () {
   const DATA_URL = '/data/projects.json';
-  const STICKY_THRESHOLD = 96; // px scrolled before the prompt box floats
 
   // Homepage curation: exactly these projects, in this reading order. Not
   // derived from the data: a deliberate homepage-only arrangement,
@@ -224,7 +223,7 @@
 
   function initCardPreview(projects) {
     const grid = document.querySelector('[data-grid]');
-    const input = document.querySelector('.prompt-box-input');
+    const input = document.getElementById('prompt-input');
     if (!grid || !input) return;
 
     const projectsById = {};
@@ -316,41 +315,9 @@
     });
   }
 
-  function initPromptBoxSticky() {
-    const wrap = document.querySelector('[data-prompt-box-wrap]');
-    if (!wrap) return;
-
-    let ticking = false;
-
-    function update() {
-      wrap.classList.toggle('is-floating', window.scrollY > STICKY_THRESHOLD);
-      ticking = false;
-    }
-
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (!ticking) {
-          requestAnimationFrame(update);
-          ticking = true;
-        }
-      },
-      { passive: true }
-    );
-
-    update();
-  }
-
   function setResultStatus(text) {
     const statusEl = document.querySelector('[data-result-status]');
     if (statusEl) statusEl.textContent = text;
-  }
-
-  function setReplyText(text) {
-    const replyEl = document.querySelector('[data-prompt-box-reply]');
-    if (!replyEl) return;
-    replyEl.textContent = text || '';
-    replyEl.hidden = !text;
   }
 
   function setClearButtonVisible(visible) {
@@ -358,15 +325,105 @@
     if (clearBtn) clearBtn.hidden = !visible;
   }
 
-  // Wires submit → query → filtered grid + match-indicator rail, and
-  // Clear → back to the full grid + browse-mode rail. See CLAUDE.md §5/§6.
+  // Example questions shown, faded, under the empty hero bar. Three of the
+  // four show at a time, and the set rotates gently while the bar is empty.
+  const SUGGESTED_QUESTIONS = [
+    'Where do you currently work?',
+    'What are some of your hobbies?',
+    'How can I reach out to you?',
+    "What's your most complex project to date?",
+  ];
+  const SUGGESTIONS_SHOWN = 3;
+  const SUGGESTION_ROTATE_MS = 8000;
+
+  function shuffled(list) {
+    const copy = list.slice();
+    for (let i = copy.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  // Clicking a suggestion submits it exactly as if it had been typed.
+  function initSuggestions(form, input) {
+    const list = document.querySelector('[data-suggestions]');
+    if (!list) return { refresh() {} };
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let order = shuffled(SUGGESTED_QUESTIONS);
+    let offset = 0;
+    let paused = false;
+
+    function draw() {
+      list.textContent = '';
+      for (let i = 0; i < SUGGESTIONS_SHOWN; i += 1) {
+        const question = order[(offset + i) % order.length];
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'prompt-suggestion';
+        button.textContent = question;
+        button.addEventListener('click', () => {
+          input.value = question;
+          input.classList.remove('is-preview');
+          refresh();
+          form.requestSubmit();
+        });
+        li.append(button);
+        list.append(li);
+      }
+    }
+
+    // Shown only while the bar is empty (a hover preview doesn't count).
+    function refresh() {
+      const typed = input.value.trim() !== '' && !input.classList.contains('is-preview');
+      list.hidden = typed;
+    }
+
+    // Coming back to an empty bar (after Clear) reshuffles.
+    function reshuffle() {
+      order = shuffled(SUGGESTED_QUESTIONS);
+      offset = 0;
+      draw();
+      refresh();
+    }
+
+    function rotate() {
+      if (paused || list.hidden || document.hidden) return;
+      offset = (offset + 1) % order.length;
+      list.classList.add('is-swapping');
+      setTimeout(() => {
+        draw();
+        list.classList.remove('is-swapping');
+      }, 250);
+    }
+
+    input.addEventListener('input', refresh);
+    list.addEventListener('mouseenter', () => (paused = true));
+    list.addEventListener('mouseleave', () => (paused = false));
+    list.addEventListener('focusin', () => (paused = true));
+    list.addEventListener('focusout', () => (paused = false));
+
+    draw();
+    refresh();
+    if (!reduceMotion) setInterval(rotate, SUGGESTION_ROTATE_MS);
+
+    return { refresh, reshuffle };
+  }
+
+  // Wires the hero bar: submit (typed or a suggestion) opens the side panel
+  // and asks there; each answer, including follow-ups typed in the panel,
+  // filters the grid to the matching projects. Clear resets the grid and
+  // the bar. See CLAUDE.md §5/§6.
   function initQueryFlow(allProjects) {
     const form = document.querySelector('[data-prompt-box]');
-    const input = document.querySelector('.prompt-box-input');
-    const clearBtn = document.querySelector('[data-prompt-box-clear]');
-    const submitBtn = document.querySelector('.prompt-box-submit');
+    const input = form && form.querySelector('.prompt-box-input');
+    const clearBtn = form && form.querySelector('[data-prompt-box-clear]');
+    const submitBtn = form && form.querySelector('.prompt-box-submit');
     if (!form || !input || !submitBtn) return;
 
+    const suggestions = initSuggestions(form, input);
     let isLoading = false;
 
     function setLoading(loading) {
@@ -376,10 +433,9 @@
       submitBtn.textContent = loading ? 'Asking…' : 'Ask';
     }
 
-    function applyFiltered(matchedIds, reply) {
+    function applyFiltered(matchedIds) {
       const filtered = allProjects.filter((project) => matchedIds.includes(project.id));
       renderGrid(filtered, 'No projects matched — try rephrasing, or clear to see everything.');
-      setReplyText(reply);
       setClearButtonVisible(true);
 
       const matchedCategories = Array.from(new Set(filtered.map((project) => project.category)));
@@ -394,7 +450,6 @@
 
     function revertToAll() {
       renderGrid(allProjects);
-      setReplyText('');
       setClearButtonVisible(false);
       document.dispatchEvent(new CustomEvent('tianne:cleared'));
       setResultStatus(`Showing all ${allProjects.length} projects.`);
@@ -407,31 +462,33 @@
       const value = input.value.trim();
       if (!value) return;
 
-      if (!window.TianneChat) {
-        setReplyText("Tianne isn't available right now — try reloading the page.");
+      if (!window.TiannePanel) {
+        setResultStatus("Tianne isn't available right now. Try reloading the page.");
         return;
       }
 
       setLoading(true);
-      setReplyText('');
       try {
-        // The reply box fills in as the answer is written; the grid filters
-        // once the matching project ids arrive at the end.
-        const result = await window.TianneChat.send(value, (textSoFar) => setReplyText(textSoFar));
-        if (result) applyFiltered(result.relevantProjectIds, result.reply);
-      } catch (err) {
-        setReplyText((err && err.message) || "Tianne couldn't respond just now — try again in a moment.");
+        await window.TiannePanel.ask(value);
       } finally {
         setLoading(false);
       }
+    });
+
+    // Every answer (from this bar or a follow-up in the panel) narrows the
+    // grid. A general question ("where do you work?") matches no project, so
+    // it leaves the grid as it is instead of emptying it.
+    document.addEventListener('tianne:answer', (event) => {
+      const ids = (event.detail && event.detail.relevantProjectIds) || [];
+      if (ids.length) applyFiltered(ids);
     });
 
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
         input.value = '';
         input.classList.remove('is-preview');
-        if (window.TianneChat) window.TianneChat.clearHistory();
         revertToAll();
+        suggestions.reshuffle();
         input.focus();
       });
     }
@@ -445,7 +502,6 @@
     const visibleProjects = allProjects.filter((project) => HOME_VISIBLE_IDS.includes(project.id));
     renderGrid(visibleProjects);
     initCardPreview(visibleProjects);
-    initPromptBoxSticky();
     initQueryFlow(visibleProjects);
   }
 

@@ -3,16 +3,16 @@
 Chat-searchable personal portfolio: a short intro establishes who you are, a two-column curated project grid leads with six projects, and a persistent "Ask Tianne" input — hover-previewed Krea-style — lets a recruiter ask anything, not just the preset examples. Read this file before making changes — it's the source of truth for structure, data flow, and rules.
 
 ## 1. Concept
-- **Homepage layout, top to bottom:** nav (with the persistent Ask Tianne pill) → intro (headline + timeline) → prompt box → project grid.
+- **Homepage layout, top to bottom:** nav → hero search bar (with faded suggested questions under it while empty) → project grid. The nav has no Ask Tianne pill on the homepage.
 - **Identity intro:** a real headline plus a compact, reverse-chronological timeline — year, company, role — sourced from `profile.md`. Side-by-side on desktop, stacked on mobile. Static.
-- **Ask Tianne, nav pill:** lives permanently in the nav, top-right, on every page — no scroll-linked positioning. Backup access on Home once past the main prompt box; primary access everywhere else.
-- **Main prompt box (Home only):** sits in normal document flow between the intro and the grid — no sticky/floating behavior needed.
+- **Ask Tianne panel (2026-09-21):** a docked, non-modal side panel on the right (a full-screen sheet below 768px). Opens when a question is submitted from the hero bar, typed or a suggested one. The page stays visible and scrollable beside it (from 1024px the page and nav narrow to make room), and it stays open until closed, across page loads too (open state and thread live in sessionStorage). It keeps a thread and has a follow-up input. On every page except Home the nav pill opens the same panel. Streaming: answers appear as they are written.
+- **Hero search bar (Home only):** the one input that starts a conversation. In normal flow above the grid, never floating. Under it, three of four suggested questions show faded and clickable, rotating gently while the bar is empty.
 - **Project grid:** two-column masonry (image-first cards, no category rail — removed 2026-09-10; full width; no card chrome, one 48px gap both directions — 2026-09-21). Shows a curated set of projects, not the full list — `js/home.js`'s `HOME_ORDER` is the source of truth for which projects show and their reading order; each card goes into whichever column is currently shorter; every other project's data and case-study page stay intact, just off this grid, including from search.
 - **Voice:** Tianne answers in first person — "I build..." — as if it's genuinely you. Paired with a small, persistent disclosure near the pill/prompt box (not a banner, just enough that nobody mistakes it for texting you live) since it's an AI, not a live conversation.
 - **Two hard rules regardless of voice:** never invent a fact that isn't in the data files — say so honestly and point to contact info instead. Never claim real-time availability or scheduling ("yes I'm free Tuesday") — that always redirects to actual contact info, since Tianne has no live calendar access.
 - **Hover a card (desktop):** fills the prompt box with the prompt that would surface it — e.g. hovering "Windturbine" shows "Tell me about the CDW wind turbine project."
 - **Click a card, any time:** opens its case study directly.
-- **Submit a prompt:** Tianne returns matching project ids, grid re-renders to just those — same component, no separate results panel.
+- **Submit a prompt:** the panel opens and answers there; the grid narrows to the matching project ids when there are any (a general question with no matches leaves the grid alone).
 - **While a query is active:** grid re-renders to just the matches. Clear the box → grid reverts to the full list.
 - **Default to submit-triggered filtering, not live-as-you-type.**
 - **Owner/role/tagline:** resolved by the intro headline — a real personal statement, not a plain name/title line. `[FILL IN copy]`
@@ -59,7 +59,7 @@ portfolio/
 - **Intro:** headline + timeline, static, from `profile.md`. Side-by-side desktop, stacked mobile.
 - **Grid:** two-column masonry: `js/home.js` places each card, in `HOME_ORDER`, into the shorter column (single column below 1024px). One grid component — a query changes what's rendered, never adds a second panel; matches are still constrained to the same curated six.
 - **Prompt box:** in-flow, not sticky. Neutral placeholder; hover previews; submit queries; clear resets.
-- **Nav pill:** identical position on every page, every scroll depth.
+- **Nav pill (every page except Home):** identical position, every scroll depth; opens the Ask Tianne panel.
 - **Query round-trip:** submit → `/api/chat` → `{ reply, relevantProjectIds }` → grid updates. Clear → reverts.
 - **Mobile (no hover), as built:** tap once previews the prompt, tap again opens the case study.
 
@@ -131,8 +131,8 @@ Background (still pending): working direction is a dark, desaturated navy or gra
 - Tianne speaks first person per `tianne-persona.md`, but never fabricates a fact absent from the data, and never claims real-time availability.
 - Log every `/api/chat` exchange to Supabase, non-blocking — don't delay the response on it.
 - Run `evals/run-evals.js` after any change to project data, profile data, or the system prompt.
-- One grid component, two states — no separate results panel.
-- No scroll-linked positioning for the prompt box — the nav pill is what stays reachable.
+- One grid component, two states. The conversation lives in the side panel, never in a separate results panel on the page.
+- No scroll-linked positioning for the hero bar (it never floats). The side panel is what stays open while scrolling.
 - Don't duplicate nav/pill markup across pages — lives once in `shared-ui.js`.
 - No vector DB/embeddings, no framework rebuild, no new dependency beyond §2, without asking first.
 - No color/font values outside `tokens.css` once §12 is confirmed. Always use the named breakpoints in §11.

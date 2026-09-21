@@ -149,5 +149,23 @@
     history = [];
   }
 
-  window.TianneChat = { send, clearHistory, getPageContext };
+  // The panel saves its thread in sessionStorage so it survives page loads;
+  // on the next page it hands the plain [{role, content}] turns back here so
+  // follow-up questions keep their context.
+  function setHistory(turns) {
+    history = Array.isArray(turns)
+      ? turns
+          .filter((t) => t && (t.role === 'user' || t.role === 'assistant') && typeof t.content === 'string')
+          .map((t) => ({ role: t.role, content: t.content }))
+      : [];
+  }
+
+  // Resolves project ids to their projects.json entries (for the link list
+  // under a restored answer).
+  async function getProjects(ids) {
+    const byId = await loadProjectsById();
+    return (ids || []).map((id) => byId[id]).filter(Boolean);
+  }
+
+  window.TianneChat = { send, clearHistory, setHistory, getProjects, getPageContext };
 })();

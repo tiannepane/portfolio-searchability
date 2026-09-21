@@ -70,27 +70,49 @@
   background: var(--color-surface);
 }
 
-/* --- Tianne LLM panel (nav toggle target, non-home pages + homepage
-   alongside the inline box) — same chat backend as the prompt box, see
-   js/shared-ui.js and CLAUDE.md §1/§6. --- */
+/* --- Ask Tianne side panel (js/shared-ui.js) --------------------------------
+   A docked, non-modal panel on the right: no backdrop, the page stays visible
+   and scrollable beside it, and it stays open until closed. From 1024px the
+   page makes room for it (see the html.tianne-panel-open rules); between
+   768px and 1024px it overlays the right edge; below 768px it is a
+   full-screen sheet. Same chat backend as everywhere else (CLAUDE.md §6). */
+:root {
+  --tianne-panel-width: clamp(340px, 30vw, 440px);
+}
+
 .tianne-panel {
   position: fixed;
   z-index: 30;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--tianne-panel-width);
   display: flex;
   flex-direction: column;
   background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-left: 1px solid var(--color-border);
+  visibility: hidden;
+  transform: translateX(100%);
 }
 
-.tianne-panel[hidden] {
-  display: none;
+.tianne-panel.is-open {
+  visibility: visible;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tianne-panel {
+    transition: transform 0.25s ease, visibility 0s linear 0.25s;
+  }
+
+  .tianne-panel.is-open {
+    transition: transform 0.25s ease, visibility 0s;
+  }
 }
 
 .tianne-panel-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
@@ -102,6 +124,32 @@
   font-weight: 600;
 }
 
+/* The persistent AI disclosure (CLAUDE.md §1): small, always in view. */
+.tianne-panel-disclosure {
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.tianne-panel-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.tianne-panel-newchat {
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.tianne-panel-newchat:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
 .tianne-panel-close {
   min-width: 44px;
   min-height: 44px;
@@ -110,30 +158,53 @@
   color: var(--color-text-muted);
 }
 
-.tianne-panel-form {
-  margin: 0;
-  border-radius: 0;
-  border: none;
-  border-bottom: 1px solid var(--color-border);
-}
-
+/* The thread. */
 .tianne-panel-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
   padding: var(--space-4);
-  color: var(--color-text-muted);
   overflow-y: auto;
-}
-
-.tianne-panel-placeholder,
-.tianne-panel-error {
-  color: var(--color-text-muted);
-}
-
-.tianne-panel-reply {
   color: var(--color-text);
 }
 
+.tianne-panel-placeholder {
+  color: var(--color-text-muted);
+}
+
+.tianne-msg {
+  margin: 0;
+  max-width: 100%;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.tianne-msg--user {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.tianne-msg--pending {
+  color: var(--color-text-muted);
+}
+
+.tianne-msg--error {
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
 .tianne-panel-links {
-  margin-top: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -152,24 +223,49 @@
   border-color: var(--color-text-muted);
 }
 
-@media (max-width: 767px) {
-  .tianne-panel {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    max-height: 70vh;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
+/* Follow-up input, pinned to the bottom of the panel. */
+.tianne-panel-form {
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Room for the panel: from 1024px the page and the fixed nav both narrow to
+   sit beside it instead of running underneath. */
+@media (min-width: 1024px) {
+  html.tianne-panel-open body {
+    padding-right: var(--tianne-panel-width);
+  }
+
+  html.tianne-panel-open .site-nav {
+    right: var(--tianne-panel-width);
   }
 }
 
-@media (min-width: 768px) {
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  .site-nav {
+    transition: padding-right 0.25s ease, right 0.25s ease;
+  }
+}
+
+/* Full-screen sheet below the tablet breakpoint. Scrolling is locked on the
+   page behind it, since it is fully covered. */
+@media (max-width: 767px) {
   .tianne-panel {
-    top: var(--space-7);
-    right: var(--space-4);
-    width: 320px;
-    max-height: 70vh;
+    width: 100%;
+    border-left: none;
+    transform: translateY(100%);
+  }
+
+  .tianne-panel.is-open {
+    transform: none;
+  }
+
+  html.tianne-panel-open,
+  html.tianne-panel-open body {
+    overflow: hidden;
   }
 }
 
@@ -226,51 +322,48 @@
   color: var(--color-text-muted);
 }
 
-/* Reply text + result status live under the input row, inside the same
-   component — never a second panel (CLAUDE.md §1/§12). */
-.prompt-box-reply {
-  margin-top: var(--space-3);
-  padding: var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  background: var(--color-bg);
-  color: var(--color-text);
+/* Faded example questions under the empty hero bar (js/home.js). Muted like
+   a search engine's suggestions; each is a real button and submits when
+   clicked. */
+.prompt-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0 var(--space-3);
+  list-style: none;
+  transition: opacity 0.25s ease;
+}
+
+.prompt-suggestions[hidden] {
+  display: none;
+}
+
+.prompt-suggestions.is-swapping {
+  opacity: 0;
+}
+
+.prompt-suggestion {
+  min-height: 44px;
+  padding: 0;
+  text-align: left;
   font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
-/* Sticky/floating state once scrolled past the threshold in js/home.js */
-.prompt-box-wrap.is-floating .prompt-box {
-  box-shadow: var(--shadow);
+.prompt-suggestion:hover,
+.prompt-suggestion:focus-visible {
+  opacity: 1;
+  color: var(--color-text);
+  text-decoration: underline;
 }
 
-@media (min-width: 768px) {
-  .prompt-box-wrap.is-floating {
-    position: fixed;
-    bottom: var(--space-5);
-    right: var(--space-5);
-    width: clamp(280px, 30vw, 420px);
-    margin-bottom: 0;
-    z-index: 20;
-  }
-}
-
-@media (max-width: 767px) {
-  .prompt-box-wrap.is-floating {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin-bottom: 0;
-    padding: var(--space-3);
-    background: var(--color-bg);
-    border-top: 1px solid var(--color-border);
-    z-index: 20;
-  }
-
-  .prompt-box-wrap.is-floating .prompt-box {
-    border: none;
-    padding: 0;
-    background: transparent;
+@media (prefers-reduced-motion: reduce) {
+  .prompt-suggestions,
+  .prompt-suggestion {
+    transition: none;
   }
 }
 
@@ -437,6 +530,9 @@
 .prompt-box-clear:focus-visible,
 .bento-card-link:focus-visible,
 .chat-toggle:focus-visible,
+.tianne-panel-newchat:focus-visible,
+.tianne-panel-body:focus-visible,
+.prompt-suggestion:focus-visible,
 .tianne-panel-close:focus-visible,
 .tianne-panel-links a:focus-visible,
 .case-study-section a:focus-visible,

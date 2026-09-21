@@ -121,6 +121,11 @@ h1 {
 
 .home-main {
   display: block;
+  /* Caps the search bar and the card grid together, so the cards are about a
+     fifth smaller than when they ran the full width (2026-09-21) and the
+     hero has room for the suggested questions. */
+  max-width: 1100px;
+  margin-inline: auto;
 }
 
 /* --- Generic content-page shell (resume/feedback/fun) --- */
