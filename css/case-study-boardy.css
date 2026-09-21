@@ -912,23 +912,18 @@
 }
 
 /* --- Technical Feasibility: bento grid of expandable tiles ---------------
-   Five tiles on grid-template-areas: one column on mobile, two from 768px
-   (funding on top, the other four as 2x2), three from 1024px (funding spans
-   two columns beside OpenVC, the other three across the second row). Each
-   tile is a hand-drawn card; a real <button> in its heading toggles the body
-   (aria-expanded on the button, aria-controls to the body). js/case-study-
-   boardy.js flips the state and drives the cursor spotlight. */
+   Two tiles (open models, Granola's API): stacked on mobile, side by side
+   from 768px. Each tile is a hand-drawn card; a real <button> in its heading
+   toggles the body (aria-expanded on the button, aria-controls to the body).
+   js/case-study-boardy.js flips the state and drives the cursor spotlight. */
 .case-study-boardy .bd-bento {
   --x: -999px;
   --y: -999px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "funding"
-    "investor"
     "chemistry"
-    "granola"
-    "linkedin";
+    "granola";
   gap: var(--space-4);
   margin-top: var(--space-5);
 }
@@ -936,19 +931,7 @@
 @media (min-width: 768px) {
   .case-study-boardy .bd-bento {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas:
-      "funding funding"
-      "investor chemistry"
-      "granola linkedin";
-  }
-}
-
-@media (min-width: 1024px) {
-  .case-study-boardy .bd-bento {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-areas:
-      "funding funding investor"
-      "chemistry granola linkedin";
+    grid-template-areas: "chemistry granola";
   }
 }
 
@@ -956,11 +939,8 @@
    to match the open one (which would leave big empty cards beside it). */
 .case-study-boardy .bd-bento:has(.bd-tile.is-open) { align-items: start; }
 
-.case-study-boardy .bd-tile--funding { grid-area: funding; }
-.case-study-boardy .bd-tile--investor { grid-area: investor; }
 .case-study-boardy .bd-tile--chemistry { grid-area: chemistry; }
 .case-study-boardy .bd-tile--granola { grid-area: granola; }
-.case-study-boardy .bd-tile--linkedin { grid-area: linkedin; }
 
 .case-study-boardy .bd-tile {
   position: relative;

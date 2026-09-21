@@ -514,13 +514,13 @@
       <h3>Test 2: chemistry score, Wizard of Oz</h3>
       <p>For pairs who opt in, a human on Boardy's team hand-scores the meeting with the rubric above - no algorithm, just a person applying the same four signals. (Named for the classic UX test: fake the automation, let a human do the smart part, see if the concept holds up before anyone builds it.) If hand-assigned scores don't predict which connections stayed active, no amount of automation fixes that.</p>
 
-      <h3>Five flaws in this test design</h3>
+      <h3>Risks</h3>
       <ol class="bd-flaws">
         <li class="bd-flaw"><p>It proves the concept, not the operation. Thirty hand-scored cases is cheap; hand-scoring every intro Boardy makes is the exact scaling problem this feature exists to solve.</p></li>
         <li class="bd-flaw"><p>Inter-rater reliability is untested with one scorer. At least two people need to score the same batch and their agreement checked before the rubric is trusted.</p></li>
         <li class="bd-flaw"><p>Hindsight bias: a scorer who already knows how a relationship turned out will score toward that outcome without meaning to. Scoring has to happen blind, right after the meeting, before any outcome data shows up.</p></li>
         <li class="bd-flaw"><p>Validation exposes more privacy than the shipped product does. Production only ever sees the filtered signal; validation has a human reading real notes, which needs its own narrow, explicit consent, separate from the general opt-in.</p></li>
-        <li class="bd-flaw"><p>A human noticing hesitation in notes doesn't prove a model can. That's a separate, unresolved question (see Technical Feasibility).</p></li>
+        <li class="bd-flaw"><p>A human noticing hesitation in notes doesn't prove a model can. That's a separate, unresolved question.</p></li>
       </ol>
     </section>
 
@@ -529,29 +529,6 @@
       <p class="case-study-lede">Most of the stack already exists. Whether the hesitation signal survives a summary is still open.</p>
 
       <div class="bd-bento" data-bento>
-        <article class="bd-tile bd-tile--funding bd-tile--featured" data-expanded="false">
-          <h3><button class="bd-tile-toggle" type="button" aria-expanded="false" aria-controls="bd-tile-funding-body"><span class="bd-tile-title">SEC Form D, not Crunchbase</span><span class="bd-tile-icon" aria-hidden="true"></span></button></h3>
-          <p class="bd-tile-teaser">A free way to verify funding wins, but not until v1 has real intro history.</p>
-          <div class="bd-tile-body" id="bd-tile-funding-body">
-            <div class="bd-tile-body-inner">
-              <div class="bd-tile-body-content">
-              <p>Crunchbase's full funding-round API is now gated behind an enterprise contract, but SEC EDGAR is free: any US private raise under an exempt offering files a Form D, and each filing's structured <code>primary_doc.xml</code> has company name, offering amount, and date. No API key is needed, only a fair-access User-Agent header and a 10-request-per-second cap; <a href="https://github.com/dgunning/edgartools">EdgarTools</a>, a free open-source Python library, turns the filings into typed objects, and a scheduled job checks new ones against companies Boardy has introduced to investors in the past year, so a match becomes an automatic verified win, no self-report required.</p>
-              <p>Verification is not part of v1: the core loop needs real intro history before there's anything to check Form D against, so this is where the project goes next, not where it starts.</p>
-              </div>
-            </div>
-          </div>
-        </article>
-        <article class="bd-tile bd-tile--investor" data-expanded="false">
-          <h3><button class="bd-tile-toggle" type="button" aria-expanded="false" aria-controls="bd-tile-investor-body"><span class="bd-tile-title">OpenVC</span><span class="bd-tile-icon" aria-hidden="true"></span></button></h3>
-          <p class="bd-tile-teaser">Confirms that an introduced investor is legitimately listed.</p>
-          <div class="bd-tile-body" id="bd-tile-investor-body">
-            <div class="bd-tile-body-inner">
-              <div class="bd-tile-body-content">
-              <p>A free, browsable directory of roughly 5,000 investors, filterable by stage, sector, and check size. It isn't a funding-verification tool; it confirms that someone Boardy introduces as an investor is legitimately listed as one.</p>
-              </div>
-            </div>
-          </div>
-        </article>
         <article class="bd-tile bd-tile--chemistry" data-expanded="false">
           <h3><button class="bd-tile-toggle" type="button" aria-expanded="false" aria-controls="bd-tile-chemistry-body"><span class="bd-tile-title">Existing open models</span><span class="bd-tile-icon" aria-hidden="true"></span></button></h3>
           <p class="bd-tile-teaser">Free models already handle summary and tone, but hedging language is an open question.</p>
@@ -570,17 +547,6 @@
             <div class="bd-tile-body-inner">
               <div class="bd-tile-body-content">
               <p>Granola shipped an official API in the past few months, built for agents that analyze sentiment across calls; on the call this idea was still hypothetical. Keys require a Business or Enterprise plan, a named cost, and access is scoped to notes the key owner can already see, so every Boardy-arranged call would need to run through Granola with sharing configured, which folds back into the opt-in design.</p>
-              </div>
-            </div>
-          </div>
-        </article>
-        <article class="bd-tile bd-tile--linkedin" data-expanded="false">
-          <h3><button class="bd-tile-toggle" type="button" aria-expanded="false" aria-controls="bd-tile-linkedin-body"><span class="bd-tile-title">LinkedIn cross-referencing</span><span class="bd-tile-icon" aria-hidden="true"></span></button></h3>
-          <p class="bd-tile-teaser">Dropped: no usable public API, and scraping breaks its Terms of Service.</p>
-          <div class="bd-tile-body" id="bd-tile-linkedin-body">
-            <div class="bd-tile-body-inner">
-              <div class="bd-tile-body-content">
-              <p>The original verification concept checked LinkedIn for role updates, but LinkedIn has no usable public API for this and scraping it violates its Terms of Service. It's revised out of the v1 plan in favor of Form D and OpenVC, noted here as a self-correction.</p>
               </div>
             </div>
           </div>
@@ -653,10 +619,10 @@
     </section>
 
     <section class="case-study-section">
-      <h2>Risks</h2>
-      <p class="case-study-lede">Trust is the biggest risk, and Boardy has already seen what happens when it breaks.</p>
+      <h2>Tradeoffs</h2>
+      <p class="case-study-lede">Trust is the biggest tradeoff, and Boardy has already seen what happens when it breaks.</p>
       <div class="bd-risk bd-risk--featured">
-        <p class="bd-risk-eyebrow"><span class="bd-swatch bd-swatch--4" aria-hidden="true"></span>The biggest risk</p>
+        <p class="bd-risk-eyebrow"><span class="bd-swatch bd-swatch--4" aria-hidden="true"></span>The biggest tradeoff</p>
         <h3>Privacy and trust</h3>
         <p>The mitigation is strict opt-in and a filtered-only signal; the transcript itself is never shared. Boardy has direct, public experience with what happens when this line isn't respected: an unsolicited, presumptuous email campaign in January drew significant backlash and a public apology from the CEO. That's a concrete reason this design treats consent as a first principle rather than an afterthought, not an abstract concern.</p>
       </div>
