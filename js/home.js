@@ -27,7 +27,7 @@
   // own category/size fields.
   const HOME_COLUMNS = {
     left: ['intelkin', 'boardy', 'river-ai', 'looped'],
-    right: ['langchain-aggregator', 'research-aggregator', 'airbnb'],
+    right: ['langchain-aggregator', 'research-aggregator', 'operators-on-the-go', 'airbnb'],
   };
   const HOME_VISIBLE_IDS = [...HOME_COLUMNS.left, ...HOME_COLUMNS.right];
 

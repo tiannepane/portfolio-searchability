@@ -79,6 +79,25 @@ h1 {
   flex-wrap: wrap;
 }
 
+/* From --bp-lg the nav is three equal-flex columns (brand | links | pill),
+   so the links sit on the page's true center instead of drifting toward
+   whichever side is narrower. Below that the brand block needs its natural
+   width, so the flex layout above stays. */
+@media (min-width: 1024px) {
+  .site-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .site-nav-list {
+    justify-self: center;
+  }
+
+  .site-nav .chat-toggle {
+    justify-self: end;
+  }
+}
+
 /* --- Home layout: mobile-first, single column (no category rail — the
    main content fills the full width at every size). --- */
 .home-layout {

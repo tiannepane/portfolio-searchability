@@ -50,6 +50,32 @@
   --color-accent: #92140C;
   --color-accent-text: #ffffff;
 
+  /* Prototype-app palette (2026-09-21) — used only inside the Operators on
+     the Go case study's two embedded prototypes (SMS thread + dashboard),
+     which stand in for a real product (Micromart) and so keep an
+     authentic green iOS-style look instead of the site accent. Never used
+     for page chrome. The deep green carries white text at AA contrast. */
+  --color-app-green: #2F9E5C;
+  --color-app-green-deep: #24794A;
+  --color-app-green-tint: #E8F5EE;
+  --color-app-bubble-in: #E9E9EB;
+
+  /* Micromart dashboard palette (2026-09-21) — for the Price Nudges
+     dashboard prototype only; mirrors the real dashboard's visual system.
+     --color-app-muted is the spec's warm gray, kept for icons/rules;
+     --color-app-muted-text is a slightly darker step for small text so it
+     clears AA on white. */
+  --color-app-bg: #FBFAF8;
+  --color-app-card: #FFFFFF;
+  --color-app-line: rgba(0, 0, 0, 0.06);
+  --color-app-text: #171814;
+  --color-app-muted: #8B8577;
+  --color-app-muted-text: #6E685B;
+  --color-app-neg: #D6483E;
+  --color-app-grid: #E4E1D8;
+  --color-app-bar-current: #D9D5CA;
+  --color-app-card-shadow: 0 1px 2px rgba(23, 24, 20, 0.04), 0 6px 18px rgba(23, 24, 20, 0.05);
+
   /* Typeface system (CLAUDE.md §12 confirmed 2026-09-10 — see
      docs/superpowers/specs/2026-09-10-typography-system-design.md).
      Headline: Space Grotesk, weight 700 — H1s and every H2-equivalent

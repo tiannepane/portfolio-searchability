@@ -1,0 +1,793 @@
+/*
+  css/case-study-operators.css — the two embedded prototypes on
+  projects/operators-on-the-go.html (an SMS thread and a dashboard) plus the
+  page footer. The rest of the page reuses css/case-study-boardy.css: the
+  <main> carries both .case-study-boardy and .case-study-operators, so the
+  hand-drawn cards, watercolor swatches, bar chart and reveal all come from
+  there and nothing is restyled twice.
+
+  The prototypes stand in for a real product (Micromart), so inside them the
+  colors are the prototype-app tokens in tokens.css (--color-app-*): an iOS-style
+  gray/green message thread and a green, card-based dashboard. Everything
+  else is site tokens. Scoped under .case-study-operators, loaded by that
+  page alone.
+*/
+
+.case-study-operators .is-hidden { display: none !important; }
+
+.case-study-operators .case-study-category { margin-bottom: var(--space-2); }
+
+.case-study-operators code {
+  font-family: var(--font-label-mono, var(--font-mono));
+  font-size: 0.9em;
+  padding: 1px 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--bd-radius-hand-sm);
+}
+
+.case-study-operators .op-visual { display: grid; gap: var(--space-4); }
+
+/* --- Prototype A: phone ------------------------------------------------ */
+.case-study-operators .phone-prototype {
+  width: min(100%, 360px);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-text);
+  border-radius: 28px;
+  box-shadow: var(--bd-card-shadow);
+  overflow: hidden;
+  font-family: var(--font-body-sans, var(--font-body));
+}
+
+.case-study-operators .phone-header {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.case-study-operators .phone-back { font-size: 28px; line-height: 1; color: var(--color-app-green-deep); }
+.case-study-operators .phone-identity { display: grid; justify-items: center; gap: 2px; }
+.case-study-operators .phone-avatar {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-app-green-deep);
+  color: var(--color-accent-text);
+  font-weight: 600;
+  font-size: 14px;
+}
+.case-study-operators .phone-name { font-size: 12px; color: var(--color-text); }
+.case-study-operators .phone-reset {
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: 0;
+  color: var(--color-app-green-deep);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.case-study-operators .phone-thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-3);
+  overflow-y: auto;
+}
+
+.case-study-operators .bubble {
+  max-width: 82%;
+  padding: 8px 14px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.case-study-operators .bubble--in {
+  align-self: flex-start;
+  background: var(--color-app-bubble-in);
+  color: var(--color-text);
+  border-bottom-left-radius: 5px;
+}
+.case-study-operators .bubble--out {
+  align-self: flex-end;
+  background: var(--color-app-green-deep);
+  color: var(--color-accent-text);
+  border-bottom-right-radius: 5px;
+}
+
+.case-study-operators .phone-composer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+.case-study-operators .phone-plus {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-app-bubble-in);
+  color: var(--color-text-muted);
+  font-size: 22px;
+  cursor: default;
+}
+.case-study-operators .phone-field {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 22px;
+}
+.case-study-operators .phone-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--color-text);
+}
+.case-study-operators .phone-field input:focus { outline: none; }
+.case-study-operators .phone-field:focus-within { border-color: var(--color-app-green-deep); outline: 2px solid var(--color-app-green); outline-offset: 2px; }
+.case-study-operators .phone-mic { font-size: 12px; color: var(--color-text-muted); }
+.case-study-operators .phone-send {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin-right: -6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-app-green-deep);
+  color: var(--color-accent-text);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* --- Prototype A: morning timeline beside the phone -----------------------
+   Quiet support for the phone: five stops showing the text lands mid-task.
+   Side by side from a 560px container, stacked below the phone otherwise. */
+.case-study-operators .phone-stage { display: grid; justify-items: center; gap: var(--space-5); }
+@container op-visual (min-width: 560px) {
+  .case-study-operators .phone-stage { display: flex; justify-content: center; align-items: center; gap: var(--space-6); }
+}
+.case-study-operators .phone-stage .phone-prototype { flex: none; margin-inline: 0; }
+
+.case-study-operators .op-timeline {
+  --tl-gap: 52px;
+  display: grid;
+  gap: var(--tl-gap);
+  width: min(100%, 360px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@container op-visual (min-width: 560px) {
+  .case-study-operators .op-timeline { width: 170px; flex: none; }
+}
+.case-study-operators .tl-stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  column-gap: var(--space-3);
+  align-items: start;
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+/* The connector runs from this stop's dot down to the next one. */
+.case-study-operators .tl-stop:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 20px;
+  height: calc(100% + var(--tl-gap) - 20px);
+  border-left: 1.5px solid var(--color-border);
+}
+.case-study-operators .tl-stop--current::after { border-left-style: dashed; }
+.case-study-operators .tl-dot {
+  width: 10px;
+  height: 10px;
+  margin: 3px 3px 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.case-study-operators .tl-body { display: grid; gap: 2px; }
+.case-study-operators .tl-time {
+  font-family: var(--font-label-mono, var(--font-label));
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+}
+.case-study-operators .tl-label { display: flex; align-items: flex-start; gap: 6px; }
+.case-study-operators .tl-label .ic { flex: none; margin-top: 2px; color: var(--color-text-muted); }
+
+/* Current stop: bigger dot, a still ring (the pulse below only runs when
+   motion is allowed), bold label. */
+.case-study-operators .tl-stop--current { font-weight: 700; }
+.case-study-operators .tl-stop--current .tl-dot {
+  width: 14px;
+  height: 14px;
+  margin: 1px 1px 0;
+  position: relative;
+  box-shadow: 0 0 0 4px var(--color-border);
+}
+@supports (color: color-mix(in srgb, red, blue)) {
+  .case-study-operators .tl-stop--current .tl-dot { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 18%, transparent); }
+}
+.case-study-operators .tl-stop--current .tl-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-accent);
+  opacity: 0;
+}
+
+/* Upcoming stop: hollow dot, muted text, no pulse. */
+.case-study-operators .tl-stop--next { color: var(--color-text-muted); }
+.case-study-operators .tl-stop--next .tl-dot { background: transparent; border: 1.5px solid var(--color-text-muted); }
+
+/* Entrance: JS adds .is-armed only when motion is allowed. */
+.case-study-operators .tl-stop { transition: opacity 0.2s ease, transform 0.2s ease; }
+.case-study-operators .op-timeline.is-armed .tl-stop:not(.is-in) { opacity: 0; transform: translateY(4px); }
+@media (prefers-reduced-motion: no-preference) {
+  .case-study-operators .op-timeline.is-armed .tl-stop--current.is-live .tl-dot::after {
+    animation: tl-pulse 1.8s ease-out infinite;
+  }
+  .case-study-operators .bubble--enter { animation: bubble-in 0.25s ease both; }
+}
+@keyframes tl-pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* --- Prototype B: dashboard -------------------------------------------- */
+/* Mirrors the real Micromart dashboard: warm off-white page, white 16px
+   cards, sage-green accent, coral only for down-deltas. All colors are the
+   --color-app-* tokens. Layout keys off the container width (.op-visual),
+   not the viewport, because the case-study column is narrower than the
+   window. */
+.case-study-operators .op-visual { container: op-visual / inline-size; }
+
+.case-study-operators .dashboard-prototype {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  background: var(--color-app-bg);
+  border: 1px solid var(--color-app-line);
+  border-radius: 16px;
+  box-shadow: var(--color-app-card-shadow);
+  overflow: hidden;
+  font-family: var(--font-body-sans, var(--font-body));
+  font-size: 14px;
+  color: var(--color-app-text);
+}
+.case-study-operators .dashboard-prototype h3,
+.case-study-operators .dashboard-prototype h4 { font-family: var(--font-body-sans, var(--font-body)); }
+.case-study-operators .dashboard-prototype .ic { flex: none; }
+
+/* Sidebar */
+.case-study-operators .dash-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-app-card);
+  border-bottom: 1px solid var(--color-app-line);
+}
+.case-study-operators .dash-logo { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-2); }
+.case-study-operators .dash-logo__badge {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--color-app-text);
+  color: var(--color-app-card);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+}
+.case-study-operators .dash-logo__word { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+.case-study-operators .dash-logo__word sup { font-size: 8px; font-weight: 600; vertical-align: super; margin-left: 1px; }
+
+.case-study-operators .dash-operator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-app-card);
+  border: 1px solid var(--color-app-line);
+  border-radius: 12px;
+  color: var(--color-app-muted);
+}
+.case-study-operators .dash-operator__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--color-app-green);
+  color: var(--color-app-card);
+}
+.case-study-operators .dash-operator__text { display: grid; flex: 1; min-width: 0; line-height: 1.25; }
+.case-study-operators .dash-operator__label { font-size: 11px; color: var(--color-app-muted-text); }
+.case-study-operators .dash-operator__name { font-weight: 700; font-size: 13px; color: var(--color-app-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.case-study-operators .dash-nav__list { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.case-study-operators .dash-nav__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: 12px;
+  color: var(--color-app-text);
+  font-weight: 500;
+  text-decoration: none;
+}
+.case-study-operators .dash-nav__item .ic { color: var(--color-app-muted); }
+.case-study-operators .dash-nav__item.is-active {
+  background: var(--color-app-green-tint);
+  color: var(--color-app-green-deep);
+  font-weight: 600;
+}
+.case-study-operators .dash-nav__item.is-active .ic { color: var(--color-app-green-deep); }
+.case-study-operators .dash-collapse { display: none; margin-top: auto; color: var(--color-app-muted); }
+
+/* Header */
+.case-study-operators .dash-main { padding: var(--space-5); min-width: 0; }
+.case-study-operators .dash-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-5);
+}
+.case-study-operators .dash-greeting { margin: 0; font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem); font-weight: 700; letter-spacing: -0.01em; color: var(--color-app-text); }
+.case-study-operators .dash-header__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); color: var(--color-app-muted-text); font-size: 13px; }
+.case-study-operators .dash-select {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  background: var(--color-app-card);
+  border: 1px solid var(--color-app-line);
+  border-radius: 999px;
+  color: var(--color-app-text);
+  font-weight: 500;
+}
+.case-study-operators .dash-select .ic { color: var(--color-app-muted); }
+.case-study-operators .dash-theme { display: inline-grid; place-items: center; color: var(--color-app-muted); }
+.case-study-operators .dash-avatar {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-app-bar-current);
+  color: var(--color-app-text);
+  font-weight: 600;
+}
+.case-study-operators .dash-avatar__dot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-app-green);
+  border: 2px solid var(--color-app-bg);
+}
+
+.case-study-operators .dash-title { margin: 0 0 var(--space-1); font-size: 1.125rem; font-weight: 700; color: var(--color-app-text); }
+.case-study-operators .dash-desc { margin: 0 0 var(--space-4); color: var(--color-app-muted-text); }
+
+.case-study-operators .dash-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-app-grid);
+}
+.case-study-operators .dash-tabs button {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font: inherit;
+  color: var(--color-app-muted-text);
+  cursor: pointer;
+}
+.case-study-operators .dash-tabs button.is-active {
+  color: var(--color-app-green-deep);
+  border-bottom-color: var(--color-app-green);
+  font-weight: 600;
+}
+
+.case-study-operators .dash-panel { display: grid; gap: var(--space-4); }
+.case-study-operators .dash-panel.is-hidden { display: none; }
+
+/* Cards */
+.case-study-operators .stat,
+.case-study-operators .chart-card,
+.case-study-operators .store-row,
+.case-study-operators .notif-master {
+  background: var(--color-app-card);
+  border: 1px solid var(--color-app-line);
+  border-radius: 16px;
+  box-shadow: var(--color-app-card-shadow);
+}
+
+.case-study-operators .stat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); }
+@container op-visual (max-width: 479px) {
+  .case-study-operators .stat-row { grid-template-columns: minmax(0, 1fr); }
+}
+.case-study-operators .stat { display: grid; justify-items: start; gap: var(--space-1); padding: var(--space-5) var(--space-4); }
+.case-study-operators .stat__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: var(--space-2);
+  border-radius: 50%;
+  background: var(--color-app-bg);
+  border: 1px solid var(--color-app-line);
+  color: var(--color-app-muted);
+}
+.case-study-operators .stat__label { font-size: 13px; color: var(--color-app-muted-text); }
+.case-study-operators .stat__value { font-size: clamp(1.625rem, 1.3rem + 1vw, 2rem); font-weight: 700; line-height: 1.1; color: var(--color-app-text); font-variant-numeric: tabular-nums; }
+.case-study-operators .stat__unit { margin-left: var(--space-1); font-size: 0.5em; font-weight: 500; color: var(--color-app-muted-text); }
+.case-study-operators .stat__delta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); margin-top: var(--space-2); font-size: 12px; color: var(--color-app-green-deep); }
+.case-study-operators .stat__delta-pct { font-weight: 600; }
+.case-study-operators .stat__delta-note { color: var(--color-app-muted-text); }
+.case-study-operators .stat__delta.is-down { color: var(--color-app-neg); }
+
+.case-study-operators .chart-card { padding: var(--space-5); min-width: 0; }
+.case-study-operators .card-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.case-study-operators .card-head__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-app-bg);
+  border: 1px solid var(--color-app-line);
+  color: var(--color-app-muted);
+}
+.case-study-operators .card-head__title { margin: 0; font-size: 15px; font-weight: 700; color: var(--color-app-text); }
+.case-study-operators .card-head__link { margin-left: auto; font-size: 13px; color: var(--color-app-muted-text); }
+.case-study-operators .chart-card__sub { margin: var(--space-1) 0 var(--space-4); font-size: 13px; color: var(--color-app-muted-text); }
+.case-study-operators .card-head + .nudge-list { margin-top: var(--space-4); }
+
+.case-study-operators .chart-legend { display: inline-flex; flex-wrap: wrap; gap: var(--space-3); margin-left: auto; font-size: 12px; color: var(--color-app-muted-text); }
+.case-study-operators .chart-legend__item { display: inline-flex; align-items: center; gap: 6px; }
+.case-study-operators .chart-legend__sw { width: 10px; height: 10px; border-radius: 3px; }
+.case-study-operators .chart-legend__sw--current { background: var(--color-app-bar-current); border: 1px solid var(--color-app-muted); }
+.case-study-operators .chart-legend__sw--suggested { background: var(--color-app-green); }
+
+/* Grouped bar charts (built in js/case-study-operators.js) */
+.case-study-operators .bars { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--space-2); }
+.case-study-operators .bars__y { position: relative; height: 200px; }
+.case-study-operators .bars__tick {
+  position: absolute;
+  right: 0;
+  transform: translateY(50%);
+  font-size: 11px;
+  color: var(--color-app-muted-text);
+  font-variant-numeric: tabular-nums;
+}
+.case-study-operators .bars__plot { position: relative; height: 200px; }
+.case-study-operators .bars__grid { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--color-app-grid); }
+.case-study-operators .bars__grid--base { border-top-style: solid; }
+.case-study-operators .bars__groups { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.case-study-operators .bars__group { display: flex; align-items: flex-end; justify-content: center; gap: 6px; height: 100%; }
+.case-study-operators .bar { position: relative; width: min(38%, 36px); }
+.case-study-operators .bar__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 6px 0 0;
+  transform-origin: 50% 100%;
+}
+.case-study-operators .bar--current .bar__fill { background: var(--color-app-bar-current); border: 1px solid var(--color-app-muted); border-bottom: 0; }
+.case-study-operators .bar--suggested .bar__fill { background: var(--color-app-green); }
+.case-study-operators .bar__val {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-app-text);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.case-study-operators .bars__x { grid-column: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: var(--space-2); }
+.case-study-operators .bars__label { display: grid; justify-items: center; gap: 1px; text-align: center; font-size: 12px; line-height: 1.3; color: var(--color-app-text); }
+.case-study-operators .bars__label-sub { color: var(--color-app-muted-text); font-size: 11px; }
+
+/* Line chart (SVG drawn at the container's real pixel width) */
+.case-study-operators .line-chart { width: 100%; }
+.case-study-operators .line-chart svg { display: block; overflow: visible; }
+.case-study-operators .lc-grid { stroke: var(--color-app-grid); stroke-dasharray: 4 4; stroke-width: 1; }
+.case-study-operators .lc-grid--base { stroke-dasharray: none; }
+.case-study-operators .lc-tick { font-size: 11px; fill: var(--color-app-muted-text); font-variant-numeric: tabular-nums; }
+.case-study-operators .lc-line { fill: none; stroke: var(--color-app-green); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.case-study-operators .lc-dot { fill: var(--color-app-card); stroke: var(--color-app-green); stroke-width: 2.5; }
+.case-study-operators .lc-end { font-size: 12px; font-weight: 700; fill: var(--color-app-text); }
+
+/* Recent nudges list */
+.case-study-operators .nudge-list { display: grid; gap: var(--space-1); }
+.case-study-operators .nudge-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.case-study-operators .nudge-row:hover { background: var(--color-app-bg); }
+.case-study-operators .nudge-row__thumb {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: var(--color-app-text);
+}
+.case-study-operators .nudge-row__thumb--a { background: var(--color-app-green-tint); }
+.case-study-operators .nudge-row__thumb--b { background: var(--color-app-bar-current); }
+.case-study-operators .nudge-row__thumb--c { background: var(--color-app-bg); border: 1px solid var(--color-app-grid); }
+.case-study-operators .nudge-row__body { display: grid; min-width: 0; line-height: 1.3; }
+.case-study-operators .nudge-row__name { font-weight: 700; }
+.case-study-operators .nudge-row__sec { font-size: 12px; color: var(--color-app-muted-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.case-study-operators .nudge-row__amt { font-weight: 700; font-variant-numeric: tabular-nums; }
+.case-study-operators .nudge-row__status { padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.case-study-operators .nudge-row__status--accepted { background: var(--color-app-green-tint); color: var(--color-app-green-deep); }
+.case-study-operators .nudge-row__status--pending { background: var(--color-app-bg); color: var(--color-app-muted-text); border: 1px solid var(--color-app-grid); }
+.case-study-operators .nudge-detail {
+  margin: 0 0 var(--space-1) calc(40px + var(--space-3) * 2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-app-green-tint);
+  border-radius: 10px;
+  color: var(--color-app-green-deep);
+  font-size: 13px;
+}
+@container op-visual (max-width: 479px) {
+  .case-study-operators .nudge-row { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .case-study-operators .nudge-row__status { grid-column: 2 / -1; justify-self: start; }
+  .case-study-operators .nudge-detail { margin-left: var(--space-3); }
+}
+
+/* Other tabs, same card language */
+.case-study-operators .store-row,
+.case-study-operators .notif-master {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+.case-study-operators .notif-master { margin-bottom: var(--space-4); }
+.case-study-operators .notif-master__title { font-weight: 700; }
+.case-study-operators .notif-master__desc { margin-top: var(--space-1); color: var(--color-app-muted-text); }
+
+.case-study-operators .toggle {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-app-grid);
+  cursor: pointer;
+}
+.case-study-operators .toggle::before { content: ""; position: absolute; inset: -8px 0; } /* 44px tap target */
+.case-study-operators .toggle.is-on { background: var(--color-app-green); }
+.case-study-operators .toggle__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-app-card);
+  box-shadow: var(--color-app-card-shadow);
+  transition: transform 0.18s ease;
+}
+.case-study-operators .toggle.is-on .toggle__knob { transform: translateX(20px); }
+
+.case-study-operators .rule-group { margin-bottom: var(--space-4); }
+.case-study-operators .rule-group__label { display: block; margin-bottom: var(--space-2); font-weight: 700; }
+.case-study-operators .seg-group { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.case-study-operators .seg-btn {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  background: var(--color-app-card);
+  border: 1px solid var(--color-app-line);
+  border-radius: 999px;
+  font: inherit;
+  color: var(--color-app-text);
+  cursor: pointer;
+}
+.case-study-operators .seg-btn.is-selected {
+  background: var(--color-app-green-deep);
+  border-color: var(--color-app-green-deep);
+  color: var(--color-app-card);
+}
+.case-study-operators .dash-input {
+  width: min(100%, 260px);
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-app-line);
+  border-radius: 12px;
+  font: inherit;
+  color: var(--color-app-text);
+  background: var(--color-app-card);
+}
+.case-study-operators .notif-off {
+  padding: var(--space-4);
+  background: var(--color-app-card);
+  border: 1px dashed var(--color-app-grid);
+  border-radius: 16px;
+  color: var(--color-app-muted-text);
+}
+
+/* Wide container: sidebar on the left */
+@container op-visual (min-width: 700px) {
+  .case-study-operators .dashboard-prototype { grid-template-columns: 232px minmax(0, 1fr); }
+  .case-study-operators .dash-nav { border-bottom: 0; border-right: 1px solid var(--color-app-line); padding: var(--space-5) var(--space-4); }
+  .case-study-operators .dash-nav__list { flex-direction: column; flex-wrap: nowrap; }
+  .case-study-operators .dash-collapse { display: block; }
+}
+
+/* Entrance animation: JS adds .is-armed only when motion is allowed, so
+   without it (or under reduced motion) every final state shows at once. */
+.case-study-operators .stat__delta { transition: opacity 0.35s ease, transform 0.35s ease; }
+.case-study-operators .dashboard-prototype.is-armed .stat:not(.is-in) .stat__delta { opacity: 0; transform: translateY(4px); }
+.case-study-operators .bar__fill { transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1); transition-delay: calc(var(--i, 0) * 70ms); }
+.case-study-operators .bar__val { transition: opacity 0.3s ease; transition-delay: calc(var(--i, 0) * 70ms + 350ms); }
+.case-study-operators .dashboard-prototype.is-armed .bars:not(.is-in) .bar__fill { transform: scaleY(0); }
+.case-study-operators .dashboard-prototype.is-armed .bars:not(.is-in) .bar__val { opacity: 0; }
+
+.case-study-operators .phone-reset:focus-visible,
+.case-study-operators .phone-send:focus-visible,
+.case-study-operators .dash-tabs button:focus-visible,
+.case-study-operators .nudge-row:focus-visible,
+.case-study-operators .toggle:focus-visible,
+.case-study-operators .seg-btn:focus-visible,
+.case-study-operators .dash-input:focus-visible,
+.case-study-operators .dash-nav__item:focus-visible {
+  outline: 2px solid var(--color-app-green-deep);
+  outline-offset: 2px;
+}
+
+/* --- Vertical chart: interactive rows ---------------------------------
+   Each row is a focusable button. The active row gets a soft wash and a
+   heavier bar; the rest dim. Only opacity/transform/background move, so it
+   works on top of the hand-drawn SVG without redrawing it. */
+.case-study-operators .op-chart .bd-chart-row {
+  padding: var(--space-2) var(--space-3);
+  margin-inline: calc(var(--space-3) * -1);
+  border-radius: var(--bd-radius-hand-sm);
+  cursor: pointer;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+.case-study-operators .op-chart .bd-chart-svg { transition: transform 0.2s ease; transform-origin: 0 50%; }
+.case-study-operators .op-chart.has-active .bd-chart-row:not(.is-active) { opacity: 0.4; }
+.case-study-operators .op-chart .bd-chart-row.is-active {
+  background: var(--color-bg);
+  box-shadow: var(--bd-card-shadow), inset 0 0 0 1px var(--color-border);
+}
+.case-study-operators .op-chart .bd-chart-row.is-active .bd-chart-svg {
+  transform: scaleY(1.35);
+  filter: brightness(0.62);
+}
+.case-study-operators .op-chart .bd-chart-row.is-active .bd-chart-label,
+.case-study-operators .op-chart .bd-chart-row.is-active .bd-chart-range {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.case-study-operators .op-chart .bd-chart-row[aria-pressed="true"] { outline: 1.5px dashed var(--color-text-muted); outline-offset: 0; }
+.case-study-operators .op-chart .bd-chart-row:focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+
+.case-study-operators .op-chart-readout {
+  min-height: 4.25rem;
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--bd-radius-hand);
+  box-shadow: var(--bd-card-shadow);
+}
+.case-study-operators .op-chart-readout p { margin: 0; }
+.case-study-operators .op-chart-readout__hint { color: var(--color-text-muted); font-size: 0.875rem; }
+.case-study-operators .op-chart-readout__title { font-weight: 600; }
+.case-study-operators .op-chart-readout__body { margin-top: var(--space-1) !important; color: var(--color-text-muted); font-size: 0.875rem; }
+
+/* --- How It Works / Edge Cases: expandable detail --------------------------
+   Reuses Boardy's tile accordion (.bd-tile, toggled by initBento). The
+   .bd-bento base assumes two named tiles, so the areas are cleared here:
+   one column, or two from 768px with the featured tile and any .op-tile--wide
+   tile spanning both. */
+.case-study-operators .op-tiles { grid-template-areas: none; }
+@media (min-width: 768px) {
+  .case-study-operators .op-tiles--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .case-study-operators .op-tiles--two .bd-tile--featured,
+  .case-study-operators .op-tiles--two .op-tile--wide { grid-column: 1 / -1; }
+}
+.case-study-operators .op-diagram { margin: 0 0 var(--space-4); }
+.case-study-operators .bd-tile-body-content .op-diagram + p { margin-top: var(--space-3); }
+
+.case-study-operators .op-tiles:not(.op-tiles--two) { grid-template-columns: minmax(0, 1fr); }
+.case-study-operators .op-svg-title--sm { font-size: 16px; }
+
+.case-study-operators .op-svg-sub {
+  font-family: var(--font-body-sans, var(--font-body));
+  font-size: 12px;
+  fill: var(--color-text-muted);
+}
+
+/* --- Big number: no box, just the figure with its caption underneath --- */
+.case-study-operators .op-bignum { margin-block: var(--space-6); text-align: center; }
+.case-study-operators .op-countup { display: inline-block; font-variant-numeric: tabular-nums; text-align: center; }
+.case-study-operators .op-bignum .bd-stat-num { font-size: clamp(3.5rem, 2.5rem + 5vw, 5.5rem); }
+.case-study-operators .op-bignum__cap { margin: var(--space-2) 0 0; font-size: 1rem; line-height: 1.4; }
+.case-study-operators .op-bignum .bd-chart-note { margin-top: var(--space-2); }
+
+/* Research collage under Why This, Why Now: a wide image, so no extra chrome. */
+.case-study-operators .op-collage { margin: var(--space-5) 0 0; }
+
+/* --- Footer ------------------------------------------------------------ */
+.case-study-operators .op-footer {
+  margin-block: var(--space-7) var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+.case-study-operators .op-footer p { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .case-study-operators .toggle__knob,
+  .case-study-operators .tl-stop,
+  .case-study-operators .stat__delta,
+  .case-study-operators .bar__fill,
+  .case-study-operators .bar__val,
+  .case-study-operators .op-chart .bd-chart-row,
+  .case-study-operators .op-chart .bd-chart-svg { transition: none; }
+}

@@ -167,5 +167,24 @@
     "thumbnail": "/assets/images/board-thumb.jpg",
     "links": { "caseStudy": "/projects/boardy.html" },
     "images": []
+  },
+  {
+    "id": "operators-on-the-go",
+    "title": "Operators on the Go",
+    "category": "Projects",
+    "size": "sm",
+    "summary": "A Micromart product concept for Golden Ventures: Price Nudges, an SMS recommendation that tells an apartment or residential operator when a store's price is out of step with similar stores nearby, with a one-reply way to fix it.",
+    "tagline": "Operators on the Go",
+    "status": "Concept",
+    "year": "2026",
+    "attribution": "Micromart Golden Ventures Case Study 2026",
+    "previewPrompt": "Tell me about the Micromart Price Nudges project.",
+    "tags": ["Product Strategy", "Prototyping", "Metrics", "Pricing", "SMS"],
+    "narrative": "Micromart's dashboard reports what happened (sales, transactions, top products) but never tells an operator what to do next, and pricing is a single field buried in the Products page. I built a case study for Golden Ventures around Price Nudges: a text message that flags a price out of step with similar stores nearby and lets the operator fix it with one reply. I started with gyms as the instinct, then checked about 85 profiles in Micromart's Pro Operators directory: apartments and residential were named 24 times and offices 20, against 9 for gyms, so v0 targets apartment and residential operators, with gyms as a secondary example. I weighed four options (a dashboard panel, a dedicated operator app, SMS, and auto-applied prices) and chose SMS because it rides a channel operators already use and lands in a spare moment of their day, like a coffee line, and I ruled out auto-apply because it removes the human approval step. The north star is the share of active operators who make at least one pricing or promotion decision through Micromart in a month. The page includes two working prototypes, an SMS thread and a Price Nudges dashboard. The status is Concept, not shipped.",
+    "thumbnail": "/assets/video/micromart-thumbnail.mp4",
+    "thumbnailType": "video",
+    "thumbnailPoster": "/assets/images/micromart-thumbnail-poster.jpg",
+    "links": { "caseStudy": "/projects/operators-on-the-go.html" },
+    "images": []
   }
 ]
