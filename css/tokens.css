@@ -69,7 +69,8 @@
      tokens.css" holds even for this exception. */
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  /* Page-scoped alternate type system (2026-09-11) — Instrument Serif /
+  /* Page-scoped alternate type system (2026-09-11) — Newsreader (headline
+     serif; replaced Instrument Serif site-wide on 2026-09-20) /
      Public Sans / IBM Plex Mono, applied only on the homepage and case
      study pages via css/typography-v2.css (NOT the site-wide default
      above, which stays Space Grotesk/DM Sans/Geist Pixel everywhere
@@ -79,10 +80,14 @@
      2026-09-10 — Intelkin does NOT currently carry these fonts (that
      exception was fully deleted, not just disabled), so it gets this
      scoped system applied like every other case study now, not
-     skipped as "already matching." Instrument Serif ships only weight
-     400 — no bold — see the font-weight overrides in
-     typography-v2.css for where that matters. */
-  --font-headline-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+     skipped as "already matching." Instrument Serif shipped only weight
+     400 (no bold), which is why typography-v2.css used to force 400 on
+     every headline; Newsreader has real weights, so those rules now read
+     --font-headline-serif-weight instead. */
+  --font-headline-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  /* Newsreader is a variable font (weights 400-700). Headlines in the serif
+     system use 600: at 400 it reads thin next to the body copy. */
+  --font-headline-serif-weight: 600;
   --font-body-sans: "Public Sans", -apple-system, "Segoe UI", sans-serif;
   --font-label-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }

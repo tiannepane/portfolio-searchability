@@ -13,13 +13,11 @@
   (--color-accent) is used only for two tiny moments: the "Chosen"
   swatch and the Sustain Rate target dot.
 
-  TYPOGRAPHY EXCEPTION (disclosed, deliberate, page-scoped): this page's
-  headline serif is Newsreader, not the shared Instrument Serif. The override
-  is one re-declaration of --font-headline on <main class="case-study-boardy">
-  (below), so it reaches every headline inside this page and nothing else.
-  --font-headline-serif in tokens.css and css/typography-v2.css are untouched,
-  and every other case study still renders Instrument Serif. Body (Public
-  Sans) and labels (IBM Plex Mono) are unchanged.
+  Headline serif: this page used to override it locally (Newsreader while the
+  rest of the site was on Instrument Serif). Newsreader is now the site-wide
+  serif (tokens.css, typography-v2.css), so nothing here overrides it any more;
+  the weight list below only extends the shared weight to this page's own
+  headline components.
 
   Static state first: everything below looks finished with no JS. The
   reveal/scrolly/chart-draw states are layered on by
@@ -28,17 +26,9 @@
 */
 
 .case-study-boardy {
-  /* Headline serif override, this page only. typography-v2 sets
-     --font-headline to Instrument Serif on .case-study-page; redefining it
-     here, one level down on <main>, changes every var(--font-headline) user
-     inside the page (h1, every h2/h3/h4, card mini-headlines, big numerals,
-     SVG stage titles) without editing the shared variable. */
-  --font-headline-boardy: "Newsreader", Georgia, "Times New Roman", serif;
-  --font-headline: var(--font-headline-boardy);
-  /* Instrument Serif has no bold, so typography-v2 forces every headline to
-     400. Newsreader has real weights up to 700, and at headline size 400 reads
-     thin next to the rest of the page. */
-  --bd-headline-weight: 600;
+  /* Headline weight for this page's own components; the shared headings get
+     theirs from typography-v2.css (--font-headline-weight). */
+  --bd-headline-weight: var(--font-headline-weight, 600);
 
   /* Hand-drawn radii: deliberately asymmetric corners. */
   --bd-radius-hand: 14px 17px 13px 16px / 16px 13px 18px 14px;
@@ -57,7 +47,7 @@
   --bd-bar-neg: var(--color-border);
 }
 
-/* Headline weight for Newsreader (typography-v2 forces 400 on these). */
+/* Headline weight for this page's headline components (Newsreader is real-weight). */
 .case-study-boardy h1,
 .case-study-boardy .case-study-section h2,
 .case-study-boardy .case-study-section h3,
@@ -494,130 +484,153 @@
   margin: var(--space-4) 0 var(--space-5);
 }
 
+/* iPhone Voice Memos look: title, a waveform that scrolls under a fixed
+   playhead, elapsed / remaining time, then skip-back / play / skip-forward.
+   The red playhead is the site's Oxblood accent, kept to one thin line. */
 .case-study-boardy .bd-player {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-3);
   background: var(--color-bg);
   border: 1.5px solid var(--color-border);
-  border-radius: var(--bd-radius-hand);
+  border-radius: 22px;
   box-shadow: var(--bd-card-shadow);
 }
 
-.case-study-boardy .bd-play {
+.case-study-boardy .bd-vm-head { text-align: left; }
+
+.case-study-boardy .bd-vm-title {
+  margin: 0;
+  font-family: var(--font-headline);
+  font-weight: var(--bd-headline-weight);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.case-study-boardy .bd-vm-sub {
+  margin: 2px 0 0;
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-wave {
+  position: relative;
+  height: 76px;
+  margin-top: var(--space-2);
+  border-radius: 10px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+}
+
+.case-study-boardy .bd-wave.is-dragging { cursor: grabbing; }
+.case-study-boardy .bd-scrubber:not(.has-audio) .bd-wave { cursor: default; }
+
+.case-study-boardy .bd-wave-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.case-study-boardy .bd-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--color-accent);
+  pointer-events: none;
+}
+
+.case-study-boardy .bd-playhead::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* The real range input stays in the DOM for keyboard and screen-reader
+   seeking, but the waveform is what people see and drag. */
+.case-study-boardy .bd-range {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.case-study-boardy .bd-vm-times {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-label);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.case-study-boardy .bd-vm-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 8vw, 2.75rem);
+  padding-top: var(--space-1);
+}
+
+.case-study-boardy .bd-play,
+.case-study-boardy .bd-skip {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  min-width: 48px;
+  height: 48px;
   padding: 0;
   color: var(--color-text);
-  background: var(--color-bg);
-  border: 1.5px solid var(--color-text);
-  border-radius: 50% 46% 50% 48%;
+  background: none;
+  border: 0;
+  border-radius: 50%;
   cursor: pointer;
 }
 
-.case-study-boardy .bd-play svg { fill: currentColor; }
+.case-study-boardy .bd-play { width: 56px; height: 56px; }
+.case-study-boardy .bd-play svg,
+.case-study-boardy .bd-skip svg { fill: currentColor; }
+.case-study-boardy .bd-skip text { font-family: var(--font-body); }
 .case-study-boardy .bd-icon-pause { display: none; }
 .case-study-boardy .bd-scrubber.is-playing .bd-icon-play { display: none; }
 .case-study-boardy .bd-scrubber.is-playing .bd-icon-pause { display: block; }
 
-.case-study-boardy .bd-play:disabled {
+.case-study-boardy .bd-play:disabled,
+.case-study-boardy .bd-skip:disabled {
   color: var(--color-text-muted);
-  border-color: var(--color-border);
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .case-study-boardy .bd-play:focus-visible,
-.case-study-boardy .bd-range:focus-visible,
+.case-study-boardy .bd-skip:focus-visible,
+.case-study-boardy .bd-wave:focus-within,
 .case-study-boardy .bd-moment:focus-visible,
 .case-study-boardy .bd-transcript:focus-visible {
   outline: 2px solid var(--color-text);
   outline-offset: 3px;
 }
 
-.case-study-boardy .bd-track {
-  position: relative;
-  min-width: 0;
-}
-
-.case-study-boardy .bd-range {
-  -webkit-appearance: none;
-  appearance: none;
-  display: block;
-  width: 100%;
-  height: 24px;
-  margin: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.case-study-boardy .bd-range:disabled { cursor: not-allowed; }
-
-.case-study-boardy .bd-range::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 6px;
-  background: linear-gradient(to right, var(--color-text) var(--bd-progress, 0%), var(--color-border) var(--bd-progress, 0%));
-}
-
-.case-study-boardy .bd-range::-moz-range-track {
-  height: 6px;
-  border-radius: 6px;
-  background: linear-gradient(to right, var(--color-text) var(--bd-progress, 0%), var(--color-border) var(--bd-progress, 0%));
-}
-
-.case-study-boardy .bd-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  margin-top: -6px;
-  border: 1.5px solid var(--color-text);
-  border-radius: 50% 46% 50% 48%;
-  background: var(--color-bg);
-}
-
-.case-study-boardy .bd-range::-moz-range-thumb {
-  width: 15px;
-  height: 15px;
-  border: 1.5px solid var(--color-text);
-  border-radius: 50% 46% 50% 48%;
-  background: var(--color-bg);
-}
-
-.case-study-boardy .bd-range:disabled::-webkit-slider-thumb { border-color: var(--color-text-muted); }
-.case-study-boardy .bd-range:disabled::-moz-range-thumb { border-color: var(--color-text-muted); }
-
-/* Moment ticks sit just above the track, inset by half a thumb so they line
-   up with where the thumb's center actually lands. */
-.case-study-boardy .bd-markers {
-  position: absolute;
-  inset: 0 9px;
-  pointer-events: none;
-}
-
-.case-study-boardy .bd-marker {
-  position: absolute;
-  top: 0;
-  width: 2px;
-  height: 6px;
-  margin-left: -1px;
-  background: var(--color-text-muted);
-}
-
-.case-study-boardy .bd-marker--range {
-  margin-left: 0;
-  height: 4px;
-  background: var(--color-text-muted);
-  opacity: 0.5;
-}
-
-.case-study-boardy .bd-time {
-  font-family: var(--font-label);
-  font-size: 0.75rem;
-  white-space: nowrap;
-  color: var(--color-text-muted);
+@media (hover: hover) {
+  .case-study-boardy .bd-play:not(:disabled):hover,
+  .case-study-boardy .bd-skip:not(:disabled):hover { opacity: 0.7; }
 }
 
 .case-study-boardy .bd-player-status {
@@ -1124,6 +1137,15 @@
 .case-study-boardy .bd-options.is-live {
   gap: 100vh;
   padding-block: 8vh 0; /* no bottom padding: the bridge must meet the chosen card's edge */
+}
+
+/* Live mode: a screen and a half of space between the four-stage overview row and
+   "Each stage, in detail", so the two are never on screen together (same
+   idea as the gaps between options). Reduced motion / no JS keep the normal
+   heading spacing. The general-sibling selector keys off the same .is-live
+   class the options list gets, so it only applies when that mode is on. */
+.case-study-boardy .bd-options.is-live ~ .bd-detail-heading {
+  margin-top: 150vh;
 }
 
 .case-study-boardy .bd-option {

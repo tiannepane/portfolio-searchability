@@ -1,6 +1,9 @@
 /*
-  css/typography-v2.css — page-scoped alternate type system (Instrument
-  Serif / Public Sans / IBM Plex Mono), homepage + case studies only.
+  css/typography-v2.css — page-scoped alternate type system (Newsreader /
+  Public Sans / IBM Plex Mono), homepage + case studies only. The headline
+  serif was Instrument Serif until 2026-09-20, when Newsreader replaced it
+  site-wide within this system (one token change in tokens.css; no selector
+  here was re-targeted).
 
   DISCLOSURE: this is a deliberate exception to the site-wide type
   system confirmed 2026-09-10 (Space Grotesk / DM Sans / Geist Pixel,
@@ -29,22 +32,22 @@
   scope) — having it change fonts on navigation would read as broken,
   not as a considered per-page choice.
 
-  Font-weight: Instrument Serif ships only weight 400 (no bold) —
-  every selector below that previously paired --font-headline with
-  font-weight: 700 gets an explicit 400 override in this scope, or
-  the browser would synthesize a fake bold.
+  Font-weight: Newsreader is a variable font with real weights 400-700, so
+  headlines use --font-headline-weight (600, from tokens.css) here instead of
+  the explicit 400 this file needed for Instrument Serif, which had no bold
+  and would otherwise get a synthesized fake bold.
 
-  Font-size: Instrument Serif reads noticeably smaller than Space
-  Grotesk at the same declared size (lower x-height, no bold weight to
-  lean on for hierarchy), so headline sizes are bumped roughly 10-15%
-  here to keep the same visual weight — see the file's own comments
-  below for each specific before -> after value. Nothing else (layout,
-  spacing, copy) changes.
+  Font-size: the headline sizes below were bumped roughly 10-15% for
+  Instrument Serif, a narrow face that reads small at a given size. Newsreader
+  is wider, so those same sizes now read larger and headlines wrap earlier on
+  narrow screens. They are deliberately unchanged in this swap; revisit them
+  (about 10-15% smaller) if the wrapping is a problem.
 */
 
 .home-layout,
 .case-study-page {
   --font-headline: var(--font-headline-serif);
+  --font-headline-weight: var(--font-headline-serif-weight);
   --font-body: var(--font-body-sans);
   --font-label: var(--font-label-mono);
 }
@@ -54,26 +57,32 @@
 .home-layout h1,
 .case-study-page h1,
 .case-study-page .case-study-section h2 {
-  font-weight: 400;
+  font-weight: var(--font-headline-weight);
   font-size: clamp(2.6rem, 1.75rem + 4.5vw, 3.75rem);
 }
 
 /* case-study-section h3 (subbeat/column headings):
    1.25rem/1.5rem -> 1.4rem/1.7rem (+~13%). */
 .case-study-page .case-study-section h3 {
-  font-weight: 400;
+  font-weight: var(--font-headline-weight);
   font-size: clamp(1.4rem, 1.2rem + 0.85vw, 1.7rem);
+}
+
+/* section h4 (layout.css gives it 700, meant for the old bold sans): keep it in
+   step with the other headlines. */
+.case-study-page .case-study-section h4 {
+  font-weight: var(--font-headline-weight);
 }
 
 /* friction-point h3 (Key Friction Points cards): 1.125rem -> 1.25rem
    (+~11%). */
 .case-study-page .friction-point h3 {
-  font-weight: 400;
+  font-weight: var(--font-headline-weight);
   font-size: 1.25rem;
 }
 
 /* Homepage project-card titles: base 1rem, +10% to 1.1rem for the
-   Instrument Serif swap above. A later request bumped this further to
+   Newsreader swap above. A later request bumped this further to
    1.65rem, then walked back down here — at that size, several of the
    real taglines (50+ characters) wrapped to 2 lines on narrower cards.
    .bento-card-caption/.bento-card-tagline/.bento-card-meta (components.css)
@@ -81,13 +90,22 @@
    as a hard backstop, but a smaller size means the ellipsis rarely
    has to kick in at all. */
 .home-layout .bento-card-tagline {
-  font-weight: 400;
+  font-weight: var(--font-headline-weight);
   font-size: 1.1rem;
 }
 
+/* Newsreader runs wider than Instrument Serif did, so at phone width the
+   single-line card titles hit the ellipsis. A slightly smaller size there
+   keeps them whole; wider screens are unaffected. */
+@media (max-width: 480px) {
+  .home-layout .bento-card-tagline {
+    font-size: 0.95rem;
+  }
+}
+
 /* Card meta line ("CDW / SHIPPED 2026") — same walk-back, back to the
-   pre-1.5x 0.75rem base (components.css). Not part of the Instrument
-   Serif pass (this line was already on --font-label/IBM Plex Mono via
+   pre-1.5x 0.75rem base (components.css). Not part of the serif
+   pass (this line was already on --font-label/IBM Plex Mono via
    the token redefinition above; only the size changed here). */
 .home-layout .bento-card-meta {
   font-size: 0.75rem;

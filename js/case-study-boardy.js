@@ -309,8 +309,11 @@
     const play = root.querySelector('.bd-play');
     const range = root.querySelector('.bd-range');
     const timeEl = root.querySelector('.bd-time');
+    const remainEl = root.querySelector('.bd-remaining');
+    const wave = root.querySelector('.bd-wave');
+    const canvas = wave.querySelector('.bd-wave-canvas');
+    const skips = Array.from(root.querySelectorAll('.bd-skip'));
     const status = root.querySelector('.bd-player-status');
-    const markersEl = root.querySelector('.bd-markers');
     const transcript = root.querySelector('.bd-transcript');
     const cards = Array.from(root.querySelectorAll('.bd-moment'));
     const lines = Array.from(transcript.querySelectorAll('.bd-tx-line'));
@@ -322,37 +325,123 @@
     let hasAudio = false;
     let dragging = false;
 
-    function render(t) {
-      range.value = t;
-      const pct = duration ? Math.min(100, (t / duration) * 100) : 0;
-      range.style.setProperty('--bd-progress', pct + '%');
-      const text = formatClock(t) + ' of ' + formatClock(duration);
-      range.setAttribute('aria-valuetext', text);
-      timeEl.textContent = formatClock(t) + ' / ' + formatClock(duration);
+    // Waveform: one bar per 1/barsPerSec of audio, pre-computed from the
+    // recording into assets/audio/boardy-waveform.json. It scrolls under a
+    // fixed playhead in the middle. If that file is missing the bars stay flat;
+    // nothing is invented.
+    const PITCH = 3; // px per bar
+    const ctx = canvas.getContext('2d');
+    let levels = null;
+    let barsPerSec = 6;
+    let cur = 0;
+    let raf = 0;
+    let cw = 0;
+    let ch = 0;
+
+    function sizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      cw = wave.clientWidth;
+      ch = wave.clientHeight;
+      canvas.width = Math.round(cw * dpr);
+      canvas.height = Math.round(ch * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    function drawMarkers() {
-      markersEl.textContent = '';
+    function draw() {
+      if (!cw) return;
+      const cs = getComputedStyle(root);
+      const ahead = cs.getPropertyValue('--color-text').trim() || '#111';
+      const behind = cs.getPropertyValue('--color-text-muted').trim() || '#888';
+      const pps = barsPerSec * PITCH;
+      const cx = cw / 2;
+      const top = 14; // headroom for the moment markers
+      const maxH = ch - top - 2;
+      ctx.clearRect(0, 0, cw, ch);
+
+      const first = Math.floor((cur - cx / pps) * barsPerSec) - 1;
+      const last = Math.ceil((cur + (cw - cx) / pps) * barsPerSec) + 1;
+      for (let i = first; i <= last; i++) {
+        const x = cx + ((i + 0.5) / barsPerSec - cur) * pps;
+        const inRange = i >= 0 && i < (levels ? levels.length : Math.floor(duration * barsPerSec));
+        const lv = inRange ? (levels ? levels[i] / 255 : 0.1) : 0;
+        const h = Math.max(2, lv * maxH);
+        ctx.fillStyle = (i + 0.5) / barsPerSec < cur ? behind : ahead;
+        ctx.globalAlpha = inRange ? 1 : 0.35;
+        const y = top + (maxH - h) / 2;
+        if (ctx.roundRect) {
+          ctx.beginPath();
+          ctx.roundRect(x - 1, y, 2, h, 1);
+          ctx.fill();
+        } else {
+          ctx.fillRect(x - 1, y, 2, h);
+        }
+      }
+
+      // Moment markers: a dot at each clip's start, a thin bar across its span.
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = ahead;
       cards.forEach((card) => {
         const start = +card.dataset.time;
-        const tick = document.createElement('span');
-        tick.className = 'bd-marker';
-        tick.style.left = (start / duration) * 100 + '%';
-        markersEl.appendChild(tick);
+        const x = cx + (start - cur) * pps;
         if (card.dataset.end) {
-          const band = document.createElement('span');
-          band.className = 'bd-marker bd-marker--range';
-          band.style.left = (start / duration) * 100 + '%';
-          band.style.width = ((+card.dataset.end - start) / duration) * 100 + '%';
-          markersEl.appendChild(band);
+          const x2 = cx + (+card.dataset.end - cur) * pps;
+          ctx.globalAlpha = 0.35;
+          ctx.fillRect(x, 5, Math.max(2, x2 - x), 2);
+          ctx.globalAlpha = 1;
+        }
+        if (x > -4 && x < cw + 4) {
+          ctx.beginPath();
+          ctx.arc(x, 6, 3, 0, Math.PI * 2);
+          ctx.fill();
         }
       });
+      ctx.globalAlpha = 1;
+    }
+
+    function render(t) {
+      cur = t;
+      range.value = t;
+      range.setAttribute('aria-valuetext', formatClock(t) + ' of ' + formatClock(duration));
+      timeEl.textContent = formatClock(t);
+      remainEl.textContent = '-' + formatClock(Math.max(0, duration - t));
+      draw();
     }
 
     function setDuration(d) {
       duration = d;
       range.max = String(Math.floor(d));
-      drawMarkers();
+      remainEl.textContent = '-' + formatClock(Math.max(0, d - cur));
+      draw();
+    }
+
+    // Smooth scroll while playing; with reduced motion the waveform just
+    // steps on the audio's own timeupdate ticks.
+    function tick() {
+      if (audio.paused) { raf = 0; return; }
+      if (!dragging) render(audio.currentTime);
+      raf = requestAnimationFrame(tick);
+    }
+
+    sizeCanvas();
+    if (typeof ResizeObserver === 'function') {
+      new ResizeObserver(() => { sizeCanvas(); draw(); }).observe(wave);
+    } else {
+      window.addEventListener('resize', () => { sizeCanvas(); draw(); });
+    }
+
+    if (root.dataset.waveSrc && window.fetch) {
+      fetch(root.dataset.waveSrc)
+        .then((r) => (r.ok ? r.json() : Promise.reject()))
+        .then((data) => {
+          const hex = data.levels || '';
+          const out = new Uint8Array(Math.floor(hex.length / 2));
+          for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
+          if (!out.length) return;
+          levels = out;
+          barsPerSec = data.barsPerSecond || 6;
+          draw();
+        })
+        .catch(() => {});
     }
 
     // Live mode: no card starts selected. The full transcript becomes a drawer
@@ -472,6 +561,39 @@
     });
     range.addEventListener('change', () => { dragging = false; });
 
+    // Drag the waveform like a tape: it moves opposite to the finger.
+    let dragX = 0;
+    let dragT = 0;
+    wave.addEventListener('pointerdown', (e) => {
+      if (!hasAudio || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      dragging = true;
+      dragX = e.clientX;
+      dragT = cur;
+      wave.classList.add('is-dragging');
+      try { wave.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ }
+    });
+    wave.addEventListener('pointermove', (e) => {
+      if (!dragging || !wave.classList.contains('is-dragging')) return;
+      const pps = barsPerSec * PITCH;
+      const t = Math.min(duration, Math.max(0, dragT - (e.clientX - dragX) / pps));
+      audio.currentTime = t;
+      render(t);
+    });
+    const endDrag = () => {
+      if (!wave.classList.contains('is-dragging')) return;
+      wave.classList.remove('is-dragging');
+      dragging = false;
+    };
+    wave.addEventListener('pointerup', endDrag);
+    wave.addEventListener('pointercancel', endDrag);
+
+    skips.forEach((btn) => btn.addEventListener('click', () => {
+      if (!hasAudio) return;
+      const t = Math.min(duration, Math.max(0, audio.currentTime + +btn.dataset.skip));
+      audio.currentTime = t;
+      render(t);
+    }));
+
     play.addEventListener('click', () => {
       if (!hasAudio) return;
       if (audio.paused) {
@@ -489,6 +611,7 @@
       render(audio.currentTime);
       play.disabled = false;
       range.disabled = false;
+      skips.forEach((b) => { b.disabled = false; });
       if (status) status.hidden = true;
       root.classList.add('has-audio');
     });
@@ -496,6 +619,7 @@
     audio.addEventListener('play', () => {
       root.classList.add('is-playing');
       play.setAttribute('aria-label', 'Pause recording');
+      if (!reduceMotion && !raf) raf = requestAnimationFrame(tick);
     });
     const stopped = () => {
       root.classList.remove('is-playing');

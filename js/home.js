@@ -26,8 +26,8 @@
   // deliberate homepage-only arrangement, independent of each project's
   // own category/size fields.
   const HOME_COLUMNS = {
-    left: ['intelkin', 'research-aggregator', 'boardy', 'looped'],
-    right: ['langchain-aggregator', 'river-ai', 'airbnb'],
+    left: ['intelkin', 'boardy', 'river-ai', 'looped'],
+    right: ['langchain-aggregator', 'research-aggregator', 'airbnb'],
   };
   const HOME_VISIBLE_IDS = [...HOME_COLUMNS.left, ...HOME_COLUMNS.right];
 

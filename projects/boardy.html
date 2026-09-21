@@ -17,14 +17,7 @@
     rel="stylesheet"
   />
   <link
-    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
-    rel="stylesheet"
-  />
-  <!-- Newsreader: this page's headline serif (an intentional, page-scoped exception,
-       see css/case-study-boardy.css). Variable font, optical size + weight 400-700.
-       Every other case study still uses Instrument Serif. -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400..700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
     rel="stylesheet"
   />
   <noscript><style>.case-study-boardy .bd-transcript[hidden] { display: block; } .case-study-boardy .bd-tile-body { grid-template-rows: 1fr; visibility: visible; }</style></noscript>
@@ -62,28 +55,43 @@
 
     <section class="case-study-section">
       <h2>Interviewing Boardy</h2>
-      <p class="case-study-lede">Boardy is good at the spark, and it told me itself that it's flying blind on what happens after.</p>
+      <p class="case-study-lede">Boardy is good at the spark, and he told me himself that he's flying blind on what happens after.</p>
       <ul>
-        <li>It nails the spark: matches on a real "vibe," not keywords, and gets genuine "I can't believe I didn't know this person existed" reactions.</li>
-        <li>It only actively follows up on 20-30% of intros. The other 70%, its own words, are "out in the wild."</li>
-        <li>It has almost zero data on the maybe-connections, just wins or silence, and told me to design for that gray area, not just the clear hits.</li>
-        <li>Mid-call we coined "relational intelligence" and "Sustain Rate" together, the metric this whole project is now built around.</li>
-        <li>Its own team doesn't audit the wins it posts about. Day-to-day, the numbers run on friends self-reporting back to it.</li>
+        <li>He nails the spark: matches on a real "vibe," not keywords, and gets genuine "I can't believe I didn't know this person existed" reactions.</li>
+        <li>He only actively follows up on 20-30% of intros. The other 70%, his own words, are "out in the wild."</li>
+        <li>He has almost zero data on the maybe-connections, just wins or silence, and told me to design for that gray area, not just the clear hits.</li>
+        <li>His own team doesn't audit the wins he posts about. Day-to-day, the numbers run on friends self-reporting back to him.</li>
       </ul>
 
       <p>Here's snippets of my user interview with Boardy:</p>
 
-      <div class="bd-scrubber" data-scrubber data-audio-src="/assets/audio/boardy-interview.mp3" data-duration="1752">
+      <div class="bd-scrubber" data-scrubber data-audio-src="/assets/audio/boardy-interview.mp3" data-wave-src="/assets/audio/boardy-waveform.json" data-duration="1955">
         <div class="bd-player" role="group" aria-label="Interview recording player">
           <audio class="bd-audio" preload="metadata"></audio>
-          <button class="bd-play" type="button" aria-label="Play recording" disabled>
-            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path class="bd-icon-play" d="M4 2.5v11l9-5.5z" /><path class="bd-icon-pause" d="M4 2.5h3v11H4zM9 2.5h3v11H9z" /></svg>
-          </button>
-          <div class="bd-track">
-            <input class="bd-range" type="range" min="0" max="1752" step="1" value="0" aria-label="Seek interview recording" disabled />
-            <span class="bd-markers" aria-hidden="true"></span>
+          <div class="bd-vm-head">
+            <p class="bd-vm-title">Boardy interview</p>
+            <p class="bd-vm-sub">Live call &middot; 32:35</p>
           </div>
-          <output class="bd-time">0:00 / 29:12</output>
+          <div class="bd-wave">
+            <canvas class="bd-wave-canvas" aria-hidden="true"></canvas>
+            <span class="bd-playhead" aria-hidden="true"></span>
+            <input class="bd-range" type="range" min="0" max="1955" step="1" value="0" aria-label="Seek interview recording" disabled />
+          </div>
+          <div class="bd-vm-times">
+            <output class="bd-time">0:00</output>
+            <output class="bd-remaining">-32:35</output>
+          </div>
+          <div class="bd-vm-controls">
+            <button class="bd-skip" type="button" data-skip="-15" aria-label="Back 15 seconds" disabled>
+              <svg viewBox="0 0 28 28" width="30" height="30" aria-hidden="true" focusable="false"><path d="M14 6a9 9 0 1 1-8.5 6M17.5 2.8 14 6l3.5 3.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /><text x="14" y="18.6" text-anchor="middle" font-size="8.5" font-weight="600" fill="currentColor">15</text></svg>
+            </button>
+            <button class="bd-play" type="button" aria-label="Play recording" disabled>
+              <svg viewBox="0 0 16 16" width="34" height="34" aria-hidden="true" focusable="false"><path class="bd-icon-play" d="M4 2.5v11l9-5.5z" /><path class="bd-icon-pause" d="M3.5 2.5h3.2v11H3.5zM9.3 2.5h3.2v11H9.3z" /></svg>
+            </button>
+            <button class="bd-skip" type="button" data-skip="15" aria-label="Forward 15 seconds" disabled>
+              <svg viewBox="0 0 28 28" width="30" height="30" aria-hidden="true" focusable="false"><path d="M14 6a9 9 0 1 0 8.5 6M10.5 2.8 14 6l-3.5 3.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" /><text x="14" y="18.6" text-anchor="middle" font-size="8.5" font-weight="600" fill="currentColor">15</text></svg>
+            </button>
+          </div>
         </div>
         <p class="bd-player-status" role="status">Recording coming soon. Choosing a moment below still opens its transcript.</p>
 
@@ -213,8 +221,6 @@
           <p>The percentage of introductions where both parties re-engage within 30 days of their first meeting</p>
         </div>
       </div>
-
-      <p>This reframes the product from counting activity (introductions made) to counting outcomes (relationships that actually held). Boardy coined the phrase itself, on the call, once the conversation moved from "follow up more" to "know whether the follow-up mattered."</p>
     </section>
 
     <section class="case-study-section">
@@ -238,7 +244,7 @@
     <section class="case-study-section">
       <h2>Pain Point</h2>
       <p class="case-study-lede">Boardy has no visibility into what happens after an introduction is made.</p>
-      <p>Success tracking today is binary and self-reported: someone posts a win, or there's silence, with nothing in between. Boardy estimated it actively follows up on roughly a third of intros, informally, and later clarified that figure wasn't measured. Even Boardy doesn't know its own follow-up rate. That's the problem statement, stated by the product itself rather than assumed by me.</p>
+      <p>Success tracking today is binary and self-reported: someone posts a win, or there's silence, with nothing in between. Boardy estimated he actively follows up on roughly a third of intros, informally, and later clarified that figure wasn't measured. Even Boardy doesn't know his own follow-up rate. That's the problem statement, stated by the product itself rather than assumed by me.</p>
     </section>
 
     <section class="case-study-section">
@@ -291,7 +297,7 @@
         </li>
       </ol>
 
-      <h3>Each stage, in detail</h3>
+      <h3 class="bd-detail-heading">Each stage, in detail</h3>
 
       <div class="bd-scrolly" data-scrolly>
         <div class="bd-scrolly-visual">
@@ -663,18 +669,6 @@
         <div class="bd-risk">
           <h3>Cost, time, and quality</h3>
           <p>Full real-time monitoring across every pair, for every possible nurture trigger, is expensive and technically uncertain to ship well. So the tradeoff is to narrow to a rules-based trigger list on one pilot segment first, prioritizing a few well-built nurture sequences over broad, shallow automation.</p>
-        </div>
-        <div class="bd-risk">
-          <h3>Data reliability</h3>
-          <p>Self-reported wins are noisy. Public-data verification (Form D) is a secondary layer added once the core mechanism is proven, not a launch requirement.</p>
-        </div>
-        <div class="bd-risk">
-          <h3>Platform dependency</h3>
-          <p>The original plan leaned on LinkedIn for role-change signals, but LinkedIn's Terms of Service rule that out. It's removed from the v1 plan (see Technical Feasibility).</p>
-        </div>
-        <div class="bd-risk">
-          <h3>Adoption risk</h3>
-          <p>If the opt-in's value isn't obvious immediately, take-up stays low and the loop never gets enough data to improve. The proposed fix is showing a participant their own action items back, right away.</p>
         </div>
       </div>
     </section>
