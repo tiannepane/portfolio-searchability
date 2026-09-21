@@ -105,6 +105,20 @@ h1 {
   padding: var(--space-4);
 }
 
+/* Generous outer margins on wider screens: the grid sits inset from the
+   window edges rather than running edge to edge. */
+@media (min-width: 768px) {
+  .home-layout {
+    padding: var(--space-4) var(--space-7);
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-layout {
+    padding: var(--space-4) var(--space-8);
+  }
+}
+
 .home-main {
   display: block;
 }
@@ -750,6 +764,18 @@ p.case-study-callout {
   color: var(--color-text-muted);
 }
 
+/* Wide screenshots (Intelkin's Recollab before/after) stay stacked at every
+   size: side by side each would shrink to unreadable. */
+@media (min-width: 768px) {
+  .case-study-visual-pair.case-study-visual-pair--stacked {
+    flex-direction: column;
+  }
+
+  .case-study-visual-pair--stacked .case-study-visual-arrow {
+    transform: rotate(90deg);
+  }
+}
+
 .case-study-visual-arrow {
   display: block;
   font-size: 1.5rem;
@@ -1060,7 +1086,6 @@ p.case-study-callout {
 .terminal-card {
   display: block;
   width: 100%;
-  max-width: 560px;
   margin: 0 0 var(--space-3);
   border-radius: 10px;
   background: #0d0d0f;
@@ -1141,14 +1166,18 @@ p.case-study-callout {
 }
 
 .terminal-line--cursor {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   margin-top: 4px;
 }
 
 .terminal-prompt {
   color: #5fd97a;
+}
+
+/* The hint is typed on the live prompt line (js/intelkin-terminal.js), as if
+   entered at the shell; the cursor follows the last typed character. */
+.terminal-typed {
+  margin-left: 8px;
+  color: #e8e8e8;
 }
 
 .terminal-dir {
@@ -1175,6 +1204,8 @@ p.case-study-callout {
   display: inline-block;
   width: 8px;
   height: 15px;
+  margin-left: 2px;
+  vertical-align: text-bottom;
   background: #e8e8e8;
   animation: terminal-blink 1s steps(1) infinite;
 }
@@ -1188,17 +1219,9 @@ p.case-study-callout {
   }
 }
 
-.terminal-hint {
-  margin: var(--space-2) 0 var(--space-4);
-  font-size: 12.5px;
-  color: var(--color-text-muted);
-  animation: terminal-blink 2.4s steps(1) infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .terminal-card,
-  .terminal-cursor,
-  .terminal-hint {
+  .terminal-cursor {
     animation: none;
   }
 }
@@ -1230,15 +1253,3 @@ p.case-study-callout {
   letter-spacing: 0.02em;
 }
 
-@media (min-width: 768px) {
-  .home-layout {
-    padding: var(--space-5);
-  }
-}
-
-@media (min-width: 1280px) {
-  .home-layout {
-    max-width: 1440px;
-    margin-inline: auto;
-  }
-}

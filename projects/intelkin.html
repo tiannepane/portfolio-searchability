@@ -4,11 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Intelkin — Tianne</title>
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/images/favicon-48.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/images/favicon-512.png" />
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png" />
   <link rel="stylesheet" href="/css/reset.css" />
   <link rel="stylesheet" href="/css/tokens.css" />
   <link rel="stylesheet" href="/css/layout.css" />
   <link rel="stylesheet" href="/css/components.css" />
   <link rel="stylesheet" href="/css/typography-v2.css" />
+  <link rel="stylesheet" href="/css/case-study-boardy.css" />
+  <link rel="stylesheet" href="/css/case-study-intelkin.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -24,7 +29,7 @@
   <div id="shared-nav"></div>
   <div class="case-study-page">
     <div id="case-study-sidenav" class="case-study-sidenav"></div>
-    <main class="case-study" data-project-id="intelkin">
+    <main class="case-study case-study-boardy case-study-intelkin" data-project-id="intelkin">
     <header class="case-study-header">
       <p class="case-study-category">Projects</p>
       <h1>Intelkin</h1>
@@ -54,10 +59,13 @@
       <p class="case-study-lede">Every churn tool available today tells you what already happened.</p>
       <p>Every Software as a Service (SaaS) company has a churn problem, and the tools built to fight it (Churnkey, ChurnZero) are built the same way: watch what customers do after a feature ships, then react.</p>
 
-      <figure class="case-study-figure">
-        <img src="/assets/images/intelkin-moodboard.jpg" alt="Research moodboard — competitor tool screenshots, Reddit threads about churn tools, and the Tribe V2 paper" />
-        <figcaption>Six weeks of competitor dashboards, Reddit threads, and papers shaped this research pass.</figcaption>
-      </figure>
+      <div class="case-study-visual">
+        <p class="case-study-visual-label">Research moodboard</p>
+        <figure class="case-study-figure">
+          <img src="/assets/images/intelkin-moodboard.jpg" alt="Research moodboard — competitor tool screenshots, Reddit threads about churn tools, and the Tribe V2 paper" />
+          <figcaption>Six weeks of competitor dashboards, Reddit threads, and papers shaped this research pass.</figcaption>
+        </figure>
+      </div>
 
       <p>That creates three problems. The evaluation is always retroactive, waiting for cancellation sessions or billing events to accumulate before a pattern shows up. Churnkey's own numbers put that at tens of millions of cancellation sessions and 500 million billing events before a signal is legible. By the time it is, the churn has already happened; the customer who was going to leave over a specific piece of friction is already gone. And feedback from customers who've already churned is famously hard to get, closer to pulling teeth than a survey response.</p>
     </section>
@@ -67,26 +75,36 @@
       <p class="case-study-lede">Every alternative still requires a real customer to see something first.</p>
       <p>Retention tools and pre-launch testing solve different problems, but they share one requirement: something has to ship before either produces an answer.</p>
 
-      <div class="case-study-scroll">
-        <img
-          src="/assets/images/intelkin-marketresearch.jpg"
-          alt="Positioning line, left to right: Churnkey and ChurnZero act after it happens; A/B testing acts after it ships; Intelkin acts before it ships"
-        />
+      <div class="case-study-visual">
+        <p class="case-study-visual-label">Positioning line</p>
+        <svg class="in-positioning-svg" viewBox="0 0 640 170" role="img" aria-label="Positioning line, left to right: Churnkey and ChurnZero act after it happens; A/B testing acts after it ships; Intelkin acts before it ships">
+          <g data-rough>
+            <polyline class="bd-arrow" points="20,88 618,88" />
+            <polyline class="bd-arrow" points="608,80 618,88 608,96" />
+            <circle class="bd-dot bd-dot--muted" cx="120" cy="88" r="16" />
+            <circle class="bd-dot bd-dot--muted" cx="320" cy="88" r="16" />
+            <circle class="bd-dot" cx="520" cy="88" r="16" />
+          </g>
+          <text class="bd-svg-eyebrow" x="120" y="52" text-anchor="middle">AFTER IT HAPPENS</text>
+          <text class="bd-svg-eyebrow" x="320" y="52" text-anchor="middle">AFTER IT SHIPS</text>
+          <text class="bd-svg-eyebrow" x="520" y="52" text-anchor="middle">BEFORE IT SHIPS</text>
+          <text class="bd-svg-title" x="120" y="140" text-anchor="middle">Churnkey / ChurnZero</text>
+          <text class="bd-svg-title" x="320" y="140" text-anchor="middle">A/B testing</text>
+          <text class="bd-svg-title" x="520" y="140" text-anchor="middle">Intelkin</text>
+        </svg>
       </div>
 
-      <div class="case-study-columns case-study-columns--3">
-        <div class="case-study-column">
-          <h3>Reactive Retention Tools</h3>
+      <div class="bd-options">
+        <div class="friction-point bd-option" data-option>
+          <h3>Reactive Retention Tools<span class="friction-meta"><span class="bd-swatch bd-swatch--1" aria-hidden="true"></span>After it happens</span></h3>
           <p>Churnkey and ChurnZero are both built on data from customers already using the product: cancellation sessions, billing events, usage and onboarding patterns. Churnkey's own Intelligence Suite is powered by examining tens of millions of cancellation sessions and 500 million billing events. That's real signal, but it only exists after a customer has already lived through whatever's driving them to leave.</p>
         </div>
-
-        <div class="case-study-column">
-          <h3>A/B Testing &amp; Sampling</h3>
+        <div class="friction-point bd-option" data-option>
+          <h3>A/B Testing &amp; Sampling<span class="friction-meta"><span class="bd-swatch bd-swatch--2" aria-hidden="true"></span>After it ships</span></h3>
           <p>The current alternative to waiting for churn data is testing a change with a smaller group of real customers before a full rollout. Faster than waiting for churn patterns to emerge at scale, but it still means shipping to real people and waiting for real usage to accumulate before there's an answer.</p>
         </div>
-
-        <div class="case-study-column">
-          <h3>Intelkin</h3>
+        <div class="friction-point bd-option bd-option--chosen" data-option>
+          <h3>Intelkin<span class="friction-meta"><span class="bd-swatch bd-swatch--accent" aria-hidden="true"></span>Before it ships</span></h3>
           <p>Runs the design through a predictive model before either of those has to happen. No customer has to churn, get sampled into a test, or use the product at all for the read to exist.</p>
         </div>
       </div>
@@ -97,8 +115,19 @@
       <p class="case-study-lede">Tested against our own investor demo before it went anywhere else.</p>
       <p>Six weeks on the same screens had made our own team blind to friction sitting right in front of us. Intelkin caught three friction points we'd completely missed.</p>
 
-      <div class="media-placeholder" role="img" aria-label="Recollab demo, before and after — file upload with no confirmation of what was understood, versus an AI Processing panel naming exactly what each agent extracted">
-        Image placeholder: before/after screenshots pending
+      <div class="case-study-visual">
+        <p class="case-study-visual-label">Recollab demo</p>
+        <div class="case-study-visual-pair case-study-visual-pair--stacked">
+          <figure class="case-study-visual-item">
+            <img src="/assets/images/recollab-before.png" width="1822" height="712" alt="Recollab's 'Connect your building data' screen: photo, document and voice-note upload tiles, and a list of uploaded files with green checkmarks, but nothing saying what was understood from them" />
+            <figcaption>Before</figcaption>
+          </figure>
+          <span class="case-study-visual-arrow" aria-hidden="true">&#8594;</span>
+          <figure class="case-study-visual-item">
+            <img src="/assets/images/recollab-after.png" width="1819" height="853" alt="The same onboarding step after the change: an AI Processing panel where the Vision, Document and Audio agents each list exactly what they extracted, ending in 'Ingestion complete: 3 sources processed by 3 AI agents'" />
+            <figcaption>After</figcaption>
+          </figure>
+        </div>
       </div>
     </section>
 
@@ -125,16 +154,6 @@
 
     <section class="case-study-section">
       <h2>The Solution</h2>
-      <p class="case-study-lede">Catches what a usability test would take weeks to find, before you ship anything.</p>
-      <p>Teams already try to get ahead of this with A/B tests, sampling a change with real customers before a full rollout, but that still means shipping to real people and waiting for real data. Intelkin skips both: no sample, no rollout, no customer required at all.</p>
-
-      <div class="media-placeholder" role="img" aria-label="Comparison — A/B testing (ship, wait, measure) versus Intelkin (upload, predict)">
-        Image placeholder: comparison graphic pending
-      </div>
-    </section>
-
-    <section class="case-study-section">
-      <h2>How It Works</h2>
       <p>Upload two versions of a design and instead of "version B has less friction," you get why.</p>
 
       <div class="case-study-subbeat">
@@ -230,14 +249,10 @@
           <div class="terminal-line"><span class="terminal-prompt">➜</span><span class="terminal-dir"> intelkin-interpretation-layer</span><span class="terminal-git"> git:(<span class="terminal-branch">main</span>)</span><span class="terminal-cmd"> npm run dev</span></div>
           <div class="terminal-output">&gt; requires a local GPU: not built for serverless hosting</div>
           <div class="terminal-line terminal-line--cursor">
-            <span class="terminal-prompt">➜</span>
-            <span class="terminal-cmd">&nbsp;</span>
-            <span class="terminal-cursor"></span>
+            <span class="terminal-prompt">➜</span><span class="terminal-typed" data-typed>↵ press enter, or click, to open the repo</span><span class="terminal-cursor"></span>
           </div>
         </div>
       </div>
-
-      <p class="terminal-hint">↵ press enter, or click, to open the repo</p>
 
       <p><a href="https://github.com/tiannepane/intelkin-interpretation-layer">github.com/tiannepane/intelkin-interpretation-layer →</a></p>
 
@@ -274,5 +289,7 @@
   <script src="/js/chat.js" defer></script>
   <script src="/js/case-study-nav.js" defer></script>
   <script src="/js/intelkin-terminal.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rough.js/3.1.0/rough.umd.js" integrity="sha384-bwAbErwscEIw3EayAhAVhW3c0Qo8XE6bDzRBZBz+0KswjUu/Qh4BlOsAKM3xfB1/" crossorigin="anonymous" defer></script>
+  <script src="/js/case-study-boardy.js" defer></script>
 </body>
 </html>

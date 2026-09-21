@@ -1,0 +1,18 @@
+/*
+  css/case-study-intelkin.css — small additions for projects/intelkin.html on
+  top of css/case-study-boardy.css (the page carries both .case-study-boardy
+  and .case-study-intelkin, so the hand-drawn cards, swatches, visuals and
+  reveal all come from the Boardy stylesheet). Scoped under
+  .case-study-intelkin; loaded by that page alone.
+*/
+
+/* Market Research positioning line, redrawn as a hand-drawn SVG. */
+.case-study-intelkin .in-positioning-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Boardy's .bd-dot is the accent; the two "after" points stay neutral. */
+.case-study-intelkin .bd-dot--muted { fill: var(--bd-tone-3); }

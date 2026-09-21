@@ -1,10 +1,11 @@
 /*
   js/home.js — homepage project grid render + prompt box UI.
 
-  The homepage shows a curated six cards, not the full project list —
-  HOME_COLUMNS below is the single source of truth for which projects
-  are visible and which of the two explicit columns each sits in
-  (2026-09-11). Every other project's data stays intact in
+  The homepage shows a curated set of cards, not the full project list —
+  HOME_ORDER below is the single source of truth for which projects are
+  visible and in what reading order (2026-09-21: the two hand-assigned
+  columns became a Pinterest-style masonry; each card, in this order,
+  goes into whichever column is currently shorter). Every other project's data stays intact in
   data/projects.json and its case-study page stays reachable directly;
   it's just off this grid, including from Tianne search (the visible
   set is what search filters against too — see initQueryFlow).
@@ -21,15 +22,22 @@
   const DATA_URL = '/data/projects.json';
   const STICKY_THRESHOLD = 96; // px scrolled before the prompt box floats
 
-  // Homepage curation (2026-09-11): exactly these six, in these two
-  // columns, top to bottom. Not derived from the data — this is a
-  // deliberate homepage-only arrangement, independent of each project's
-  // own category/size fields.
-  const HOME_COLUMNS = {
-    left: ['intelkin', 'boardy', 'river-ai', 'looped'],
-    right: ['langchain-aggregator', 'research-aggregator', 'operators-on-the-go', 'airbnb'],
-  };
-  const HOME_VISIBLE_IDS = [...HOME_COLUMNS.left, ...HOME_COLUMNS.right];
+  // Homepage curation: exactly these projects, in this reading order. Not
+  // derived from the data: a deliberate homepage-only arrangement,
+  // independent of each project's own category/size fields. Cards are
+  // placed one at a time into the shorter of the two columns (masonry), so
+  // this order runs left-to-right, top-to-bottom, not down one column.
+  const HOME_ORDER = [
+    'intelkin',
+    'langchain-aggregator',
+    'boardy',
+    'research-aggregator',
+    'river-ai',
+    'operators-on-the-go',
+    'looped',
+  ];
+  const HOME_VISIBLE_IDS = HOME_ORDER;
+  const TWO_COLUMNS = window.matchMedia('(min-width: 1024px)');
 
   async function loadProjects() {
     try {
@@ -136,35 +144,72 @@
     return article;
   }
 
-  // projects: whatever subset should render right now (the curated six by
-  // default, or a query's matches within that same six). Column
-  // membership always comes from HOME_COLUMNS, never from render order —
-  // that's what guarantees a card lands in its designated column
-  // regardless of card height or which subset is currently showing.
-  function renderGrid(projects, emptyMessage) {
+  // Resolves with a thumbnail's width/height ratio so a card can reserve its
+  // real height before the media has downloaded (the masonry measures
+  // column heights as it places each card). Videos use their poster.
+  function loadRatio(project) {
+    const src = project.thumbnailType === 'video' ? project.thumbnailPoster : project.thumbnail;
+    const fallback = 16 / 9;
+    if (!src) return Promise.resolve(fallback);
+    return new Promise((resolve) => {
+      const img = new Image();
+      const timer = setTimeout(() => resolve(fallback), 4000);
+      img.onload = () => {
+        clearTimeout(timer);
+        resolve(img.naturalWidth && img.naturalHeight ? img.naturalWidth / img.naturalHeight : fallback);
+      };
+      img.onerror = () => {
+        clearTimeout(timer);
+        resolve(fallback);
+      };
+      img.src = src;
+    });
+  }
+
+  let renderToken = 0;
+  let lastRender = null;
+
+  // projects: whatever subset should render right now (all visible cards by
+  // default, or a query's matches within that same set). Order always comes
+  // from HOME_ORDER; each card goes into whichever column is shorter right
+  // now (ties go left). Below 1024px there is a single column.
+  async function renderGrid(projects, emptyMessage) {
     const leftColumn = document.querySelector('[data-grid-column="left"]');
     const rightColumn = document.querySelector('[data-grid-column="right"]');
     const emptyEl = document.querySelector('[data-grid-empty]');
     if (!leftColumn || !rightColumn) return;
 
-    leftColumn.innerHTML = '';
-    rightColumn.innerHTML = '';
-
+    lastRender = { projects, emptyMessage };
+    const token = ++renderToken;
     const byId = {};
     projects.forEach((project) => {
       byId[project.id] = project;
     });
+    const ordered = HOME_ORDER.filter((id) => byId[id]).map((id) => byId[id]);
 
-    const leftIds = HOME_COLUMNS.left.filter((id) => byId[id]);
-    const rightIds = HOME_COLUMNS.right.filter((id) => byId[id]);
+    const ratios = await Promise.all(ordered.map(loadRatio));
+    if (token !== renderToken) return; // a newer render superseded this one
 
-    leftIds.forEach((id) => leftColumn.append(createCard(byId[id])));
-    rightIds.forEach((id) => rightColumn.append(createCard(byId[id])));
+    leftColumn.innerHTML = '';
+    rightColumn.innerHTML = '';
+    const columns = TWO_COLUMNS.matches ? [leftColumn, rightColumn] : [leftColumn];
 
-    const isEmpty = leftIds.length === 0 && rightIds.length === 0;
+    ordered.forEach((project, i) => {
+      const card = createCard(project);
+      const media = card.querySelector('.bento-card-thumb');
+      if (media) media.style.aspectRatio = String(ratios[i]);
+
+      // Pick the shorter column by real, laid-out height (gaps included).
+      let target = columns[0];
+      columns.forEach((column) => {
+        if (column.offsetHeight < target.offsetHeight) target = column;
+      });
+      target.append(card);
+    });
+
     if (emptyEl) {
-      emptyEl.hidden = !(isEmpty && emptyMessage);
-      emptyEl.textContent = isEmpty && emptyMessage ? emptyMessage : '';
+      emptyEl.hidden = !(ordered.length === 0 && emptyMessage);
+      emptyEl.textContent = ordered.length === 0 && emptyMessage ? emptyMessage : '';
     }
 
     document.dispatchEvent(new CustomEvent('bento:grid-rendered'));
@@ -393,7 +438,7 @@
   async function init() {
     const allProjects = await loadProjects();
     // Homepage-visible set only — search filters against this same list
-    // (see initQueryFlow), so a project left off HOME_COLUMNS is fully
+    // (see initQueryFlow), so a project left off HOME_ORDER is fully
     // hidden, not just absent from the default view.
     const visibleProjects = allProjects.filter((project) => HOME_VISIBLE_IDS.includes(project.id));
     renderGrid(visibleProjects);
@@ -401,6 +446,11 @@
     initPromptBoxSticky();
     initQueryFlow(visibleProjects);
   }
+
+  // Crossing the two-column breakpoint re-places every card.
+  TWO_COLUMNS.addEventListener('change', () => {
+    if (lastRender) renderGrid(lastRender.projects, lastRender.emptyMessage);
+  });
 
   document.addEventListener('DOMContentLoaded', init);
 })();

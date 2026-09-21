@@ -274,11 +274,13 @@
   }
 }
 
-/* --- Homepage project grid — two explicit, independent columns
-   (js/home.js's HOME_COLUMNS assigns each card to left/right and an
-   order within it — not CSS multi-column auto-distribution, which
-   can't guarantee a specific card lands in a specific column once
-   heights vary). Full curated list by default, or just the current
+/* --- Homepage project grid — two-column masonry (2026-09-21). js/home.js
+   places each card, in HOME_ORDER, into whichever column is currently
+   shorter (not CSS multi-column, which would read down one column before
+   starting the next). One gap value, --space-5 (24px), is used both
+   between the columns and between stacked cards, so the whitespace is
+   uniform in both directions. Cards carry no border, shadow or
+   background: the media sits directly on the page. Full curated list by default, or just the current
    query's matches within that same set (js/home.js, CLAUDE.md §5/§6).
    One grid, two states — never a separate results panel. Columns
    stack to one below --bp-sm (480px), matching the site's named-
@@ -286,7 +288,7 @@
 .bento-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
 /* Was --bp-sm (480px) — raised to --bp-lg (1024px) so each column
@@ -304,9 +306,13 @@
 .bento-grid-column {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
   flex: 1;
   min-width: 0;
+}
+
+.bento-grid-column:empty {
+  display: none; /* single-column view leaves the right one empty: no phantom gap */
 }
 
 .bento-empty {
@@ -315,10 +321,16 @@
   color: var(--color-text-muted);
 }
 
+.bento-card {
+  /* Lets the caption size itself off the card's own width, so title +
+     company + status always fit on one line (typography-v2.css). */
+  container-type: inline-size;
+}
+
 .bento-card-link {
   display: block;
   min-height: 44px;
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   transition: opacity 0.15s ease;
 }
 
@@ -336,9 +348,7 @@
 
 .bento-card-thumb-wrap {
   position: relative;
-  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--color-surface);
 }
 
 .bento-card-thumb {
@@ -355,24 +365,30 @@
    to it in the grid instead of rendering visibly shorter. */
 .bento-card-thumb-placeholder {
   margin-bottom: 0;
-  border-radius: var(--radius-lg);
+  border: 0;
+  border-radius: 0;
   min-height: 0;
   aspect-ratio: 16 / 9;
 }
 
-/* Stacked (title, then meta), not side-by-side — a side-by-side row
-   with justify-content:space-between let a long title fight the meta
-   line for width and wrap to 2 lines. Each line now gets the card's
-   full width to itself, and both are forced to a single line via
-   nowrap/ellipsis below regardless of title length or card width. */
+/* Title, then company / status, on one baseline row (2026-09-21). Font sizes
+   scale with the card (typography-v2.css) so it fits; the meta never shrinks,
+   and if a row is ever still too narrow the title gets the ellipsis (its
+   full text stays in the native title tooltip). */
 .bento-card-caption {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding-top: var(--space-3);
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  gap: 2px var(--space-3);
+  min-width: 0;
+  padding-top: var(--space-2);
 }
 
 .bento-card-tagline {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
   overflow: hidden;
   font-family: var(--font-headline);
   font-weight: 700;
@@ -383,6 +399,7 @@
 }
 
 .bento-card-meta {
+  flex: none;
   overflow: hidden;
   font-family: var(--font-label);
   font-size: 0.75rem;

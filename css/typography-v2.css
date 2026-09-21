@@ -81,32 +81,22 @@
   font-size: 1.25rem;
 }
 
-/* Homepage project-card titles: base 1rem, +10% to 1.1rem for the
-   Newsreader swap above. A later request bumped this further to
-   1.65rem, then walked back down here — at that size, several of the
-   real taglines (50+ characters) wrapped to 2 lines on narrower cards.
-   .bento-card-caption/.bento-card-tagline/.bento-card-meta (components.css)
-   now also force each line to stay single-line via nowrap + ellipsis
-   as a hard backstop, but a smaller size means the ellipsis rarely
-   has to kick in at all. */
+/* Homepage project-card text (2026-09-21): title and meta set in the
+   typewriter face (IBM Plex Mono, --font-label-mono), on one line
+   (components.css .bento-card-caption). Plex Mono is only loaded at weight
+   500, so both lines use it; the title is ink, the meta muted. Sizes are
+   small on purpose: mono runs wide, and title + company + status share
+   one row, so the title ellipsizes last-resort while the meta stays whole. */
 .home-layout .bento-card-tagline {
-  font-weight: var(--font-headline-weight);
-  font-size: 1.1rem;
+  font-family: var(--font-label-mono);
+  font-weight: 500;
+  /* Scales with the card (container query units) so the longest title plus
+     its company/status stays on one line at any column width. */
+  font-size: clamp(0.625rem, 2.15cqw, 1rem);
 }
 
-/* Newsreader runs wider than Instrument Serif did, so at phone width the
-   single-line card titles hit the ellipsis. A slightly smaller size there
-   keeps them whole; wider screens are unaffected. */
-@media (max-width: 480px) {
-  .home-layout .bento-card-tagline {
-    font-size: 0.95rem;
-  }
-}
-
-/* Card meta line ("CDW / SHIPPED 2026") — same walk-back, back to the
-   pre-1.5x 0.75rem base (components.css). Not part of the serif
-   pass (this line was already on --font-label/IBM Plex Mono via
-   the token redefinition above; only the size changed here). */
 .home-layout .bento-card-meta {
-  font-size: 0.75rem;
+  font-family: var(--font-label-mono);
+  font-weight: 500;
+  font-size: clamp(0.5625rem, 1.8cqw, 0.8125rem);
 }
